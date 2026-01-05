@@ -2,50 +2,33 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Todo App</title>
+    <title>Todo</title>
 
-    <!-- Bootstrap -->
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-            rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          rel="stylesheet">
 
     <style>
         body {
-            background: #eef1f6;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
             min-height: 100vh;
         }
 
-        .app-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
+        .todo-card {
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
         .side-panel {
-            background: linear-gradient(180deg, #4f46e5, #6366f1);
-            border-radius: 20px;
-            color: white;
-            padding: 30px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 16px;
+            padding: 24px;
             height: 100%;
-        }
-
-        .todo-card {
-            border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
         }
 
         .completed {
             text-decoration: line-through;
             color: #999;
-        }
-
-        .todo-item:hover {
-            background-color: #f8f9fa;
-        }
-
-        .add-btn {
-            white-space: nowrap;
-            min-width: 72px;
         }
 
         .checkbox-btn {
@@ -56,27 +39,23 @@
             font-weight: bold;
         }
 
-        .deadline {
-            font-size: 0.8rem;
-            color: #6c757d;
-        }
-
-        .overdue {
-            color: #dc3545;
-            font-weight: 600;
+        .add-btn {
+            white-space: nowrap;
+            min-width: 72px;
         }
     </style>
 </head>
 
 <body>
 
-<div class="app-wrapper">
+<div class="container mt-5">
     <div class="row g-4">
 
-        <!-- 좌측 패널 -->
+        <!-- ✅ 좌측 패널 (완전 복구) -->
         <div class="col-lg-4 d-none d-lg-block">
             <div class="side-panel">
                 <h5>📋 Task Overview</h5>
+
                 <p class="mt-3">
                     할 일을 기한 기준으로<br>
                     관리하세요.
@@ -99,66 +78,52 @@
             </div>
         </div>
 
-        <!-- 메인 영역 -->
-        <div class="col-12 col-lg-8">
+        <!-- 우측 Todo 영역 -->
+        <div class="col-lg-8 col-12">
             <div class="card todo-card p-4">
 
                 <!-- 입력 -->
                 <form th:action="@{/todo/add}" method="post" class="row g-2 mb-3">
-                    <div class="col-12 col-md-6">
-                        <input type="text"
-                               name="title"
+                    <div class="col-6">
+                        <input type="text" name="title"
                                class="form-control form-control-lg"
-                               placeholder="할 일을 입력하세요"
-                               required>
+                               placeholder="할 일을 입력하세요" required>
                     </div>
 
-                    <div class="col-12 col-md-4">
-                        <input type="date"
-                               name="deadline"
+                    <div class="col-4">
+                        <input type="date" name="deadline"
                                class="form-control form-control-lg">
                     </div>
 
-                    <div class="col-12 col-md-2 d-grid">
-                        <button type="submit"
-                                class="btn btn-primary btn-lg add-btn">
-                            추가
-                        </button>
+                    <div class="col-2 d-grid">
+                        <button class="btn btn-primary btn-lg add-btn">추가</button>
                     </div>
                 </form>
 
-                <!-- 요약 -->
-                <div class="d-flex justify-content-between align-items-center mb-3">
+                <!-- 진행 요약 -->
+                <div class="d-flex justify-content-between mb-3">
                     <small class="text-muted">
                         완료
                         <span th:text="${#lists.size(todos.?[completed])}"></span>
                         /
                         <span th:text="${todos.size()}"></span>
                     </small>
-
-                    <small class="text-muted"
-                           th:if="${todos.size() > 0}"
-                           th:text="'진행률 ' + (${#lists.size(todos.?[completed])} * 100 / ${todos.size()}) + '%'">
-                    </small>
-                </div>
-
-                <!-- 진행률 -->
-                <div class="progress mb-4" th:if="${todos.size() > 0}">
-                    <div class="progress-bar bg-success"
-                         role="progressbar"
-                         th:style="'width:' + (${#lists.size(todos.?[completed])} * 100 / ${todos.size()}) + '%'">
-                    </div>
                 </div>
 
                 <!-- 리스트 -->
                 <ul class="list-group list-group-flush">
                     <li th:each="todo : ${todos}"
-                        class="list-group-item d-flex justify-content-between align-items-center todo-item">
+                        th:with="today=${T(java.time.LocalDate).now()},
+                                dDay=${todo.deadline != null ?
+                                    T(java.time.temporal.ChronoUnit)
+                                        .DAYS.between(today, todo.deadline)
+                                        : 999}"
+                        class="list-group-item d-flex justify-content-between align-items-center">
 
-                        <div class="d-flex align-items-center">
-                            <!-- 체크 -->
+                        <div class="d-flex align-items-center gap-2">
+
                             <form th:action="@{/todo/toggle/{id}(id=${todo.id})}"
-                                  method="post" class="me-3">
+                                  method="post">
                                 <button type="submit"
                                         class="btn checkbox-btn"
                                         th:classappend="${todo.completed} ? 'btn-success' : 'btn-outline-success'">
@@ -166,25 +131,24 @@
                                 </button>
                             </form>
 
-                            <!-- 제목 + 기한 -->
-                            <div class="d-flex flex-column">
-                                <span th:text="${todo.title}"
-                                      th:classappend="${todo.completed} ? 'completed'"></span>
+                            <span th:text="${todo.title}"
+                                  th:classappend="${todo.completed} ? 'completed'"></span>
 
-                                <span th:if="${todo.deadline != null}"
-                                      class="deadline"
-                                      th:classappend="${!todo.completed and todo.deadline.isBefore(T(java.time.LocalDate).now())} ? 'overdue'"
-                                      th:text="'마감: ' + ${todo.deadline}">
-                                </span>
-                            </div>
+                            <span th:if="${todo.deadline != null}"
+                                  class="badge"
+                                  th:classappend="${dDay == 0 ? 'bg-danger' :
+                                                   dDay == 1 ? 'bg-warning text-dark' :
+                                                   dDay < 0 ? 'bg-dark' :
+                                                   'bg-secondary'}"
+                                  th:text="${dDay == 0 ? 'D-day' :
+                                            dDay > 0 ? 'D-' + dDay :
+                                            '지연'}">
+                            </span>
                         </div>
 
-                        <!-- 삭제 -->
                         <form th:action="@{/todo/delete/{id}(id=${todo.id})}"
                               method="post">
-                            <button class="btn btn-sm btn-outline-danger">
-                                삭제
-                            </button>
+                            <button class="btn btn-sm btn-outline-danger">삭제</button>
                         </form>
                     </li>
                 </ul>
