@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Calendar Test</title>
+
+    <!-- FullCalendar core -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #eef1f6;
+            padding: 40px;
+        }
+        #calendar {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            min-height: 700px; /* ⭐ 중요 */
+        }
+    </style>
+</head>
+<body>
+
+<h3> Task 캘린더</h3>
+
+<div id="calendar"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const calendarEl = document.getElementById('calendar');
+
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            height: 650,
+            events: '/api/calendar/todos'
+        });
+
+        calendar.render();
+    });
+</script>
+
+</body>
+</html>
