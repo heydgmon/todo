@@ -29,8 +29,12 @@ public class CalendarController {
             if (todo.getDeadline() == null) continue;
 
             Map<String, Object> event = new HashMap<>();
+
+            // ✅ 상태를 title 앞에 표시
+            String statusLabel = todo.isCompleted() ? "[완료]" : "[미완료]";
+            event.put("title", statusLabel + " " + todo.getTitle());
+
             event.put("id", todo.getId());
-            event.put("title", todo.getTitle());
             event.put("start", todo.getDeadline().toString());
 
             // 색상 규칙

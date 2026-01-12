@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo Dashboard</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- FullCalendar -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+
+    <style>
+        body {
+            background: #f4f6f9;
+            min-height: 100vh;
+        }
+        .panel {
+            background: #fff;
+            border-radius: 14px;
+            padding: 16px;
+            height: 100%;
+        }
+        #calendar {
+            min-height: 650px;
+        }
+        .todo-item {
+            cursor: pointer;
+        }
+        .todo-item.active {
+            background: #e7f1ff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid p-4">
+    <h4 class="mb-4"> 할일 확인하기</h4>
+
+    <div class="row g-3">
+        <!-- 📅 Calendar -->
+        <div class="col-lg-4">
+            <div class="panel">
+                <div id="calendar"></div>
+            </div>
+        </div>
+
+        <!-- 📋 Todo List -->
+        <div class="col-lg-5">
+            <div class="panel">
+                <h6>Todo List</h6>
+
+                <form id="todoForm" class="row g-2 mb-3">
+                    <div class="col-6">
+                        <input type="text" id="title" class="form-control" placeholder="할 일" required>
+                    </div>
+                    <div class="col-4">
+                        <input type="date" id="deadline" class="form-control">
+                    </div>
+                    <div class="col-2 d-grid">
+                        <button class="btn btn-primary" type="submit">+</button>
+                    </div>
+                </form>
+
+                <ul class="list-group" id="todoList">
+                    <li th:each="todo : ${todos}"
+                        class="list-group-item todo-item"
+                        th:data-id="${todo.id}"
+                        th:data-title="${todo.title}"
+                        th:data-deadline="${todo.deadline}"
+                        th:data-completed="${todo.completed}">
+                        <span th:text="${todo.title}"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 📝 Detail Panel -->
+        <div class="col-lg-3">
+            <div class="panel">
+                <h6>Detail</h6>
+
+                <div id="detailEmpty" class="text-muted">
+                    "Todo List에서 할 일을 선택하세요"
+                </div>
+
+                <div id="detailContent" style="display:none;">
+                    <p><strong>제목</strong></p>
+                    <p id="detailTitle"></p>
+
+                    <p><strong>마감일</strong></p>
+                    <p id="detailDeadline"></p>
+
+                    <p><strong>상태</strong></p>
+                    <p id="detailStatus"></p>
+
+                    <!-- ✅ 완료 / 미완료 토글 버튼 -->
+                    <button id="toggleBtn" class="btn btn-sm mt-2"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedTodoId = null;
+    let selectedCompleted = false;
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        /* 📅 Calendar */
+        const calendar = new FullCalendar.Calendar(
+            document.getElementById('calendar'),
+            {
+                initialView: 'dayGridMonth',
+                height: 650,
+                events: '/api/calendar/todos'
+            }
+        );
+        calendar.render();
+
+        /* ➕ Todo 추가 */
+        document.getElementById('todoForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            fetch('/todo/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    title: title.value,
+                    deadline: deadline.value
+                })
+            }).then(() => location.reload());
+        });
+
+        /* 📋 Todo 클릭 → Detail 표시 */
+        document.querySelectorAll('.todo-item').forEach(item => {
+            item.addEventListener('click', function () {
+
+                document.querySelectorAll('.todo-item')
+                    .forEach(el => el.classList.remove('active'));
+                this.classList.add('active');
+
+                selectedTodoId = this.dataset.id;
+                selectedCompleted = this.dataset.completed === 'true';
+
+                detailEmpty.style.display = 'none';
+                detailContent.style.display = 'block';
+
+                detailTitle.innerText = this.dataset.title;
+                detailDeadline.innerText =
+                    this.dataset.deadline ? this.dataset.deadline : '없음';
+                detailStatus.innerText =
+                    selectedCompleted ? '완료' : '미완료';
+
+                updateToggleButton();
+            });
+        });
+
+        /* ✅ 완료 / 미완료 토글 */
+        document.getElementById('toggleBtn').addEventListener('click', function () {
+            if (!selectedTodoId) return;
+
+            fetch(`/todo/toggle/${selectedTodoId}`, {
+                method: 'POST'
+            }).then(() => location.reload());
+        });
+    });
+
+    function updateToggleButton() {
+        const btn = document.getElementById('toggleBtn');
+        if (selectedCompleted) {
+            btn.innerText = '미완료로 변경';
+            btn.className = 'btn btn-warning btn-sm mt-2';
+        } else {
+            btn.innerText = '완료로 변경';
+            btn.className = 'btn btn-success btn-sm mt-2';
+        }
+    }
+</script>
+
+</body>
+</html>
