@@ -20,54 +20,18 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                // 개발 단계: CSRF 끔
                 .csrf(csrf -> csrf.disable())
 
-                // 접근 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/login",
-                                "/error",
-                                "/css/**",
-                                "/js/**",
-                                "/images/**",
-                                "/h2-console/**"
-                        ).permitAll()
+                        .requestMatchers("/", "/css/**", "/js/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
 
-                // 로그인 설정
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/dashboard", true)
-                        .permitAll()
-                )
-
-                // 로그아웃 설정
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/login")
-                        .permitAll()
+                .oauth2Login(oauth -> oauth
+                        .defaultSuccessUrl("/dashboard", true)   // ⭐ 이 줄 추가
                 );
 
         return http.build();
     }
-
-    // 임시 사용자 (로그인 테스트용)
-    @Bean
-    public UserDetailsService userDetailsService() {
-
-        UserDetails user = User.builder()
-                .username("test")
-                .password(passwordEncoder().encode("1234"))
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(user);
-    }
-
-    // 비밀번호 인코더
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }
+
