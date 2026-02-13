@@ -26,16 +26,9 @@ dependencies {
     /*implementation 'org.springframework.boot:spring-boot-starter-webmvc'*/ //에러 발생
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security' //spring security 로그인 추가
-
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'// cognito 로그인 인증 추가
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server' // cognito 로그인 인증 추가
-    implementation 'org.springframework.boot:spring-boot-starter-security' // cognito 로그인 인증 추가
-
-
     runtimeOnly 'com.h2database:h2'
-    testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
-    testImplementation 'org.springframework.boot:spring-boot-starter-thymeleaf-test'
-    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

@@ -1,34 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Calendar Test</title>
+    <title>Calendar</title>
 
-    <!-- FullCalendar core -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css">
+    <!-- 공통 레이아웃 CSS -->
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+
+    <!-- FullCalendar -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
 
     <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            background: #eef1f6;
-            padding: 40px;
-        }
-        #calendar {
-            background: white;
-            padding: 16px;
-            border-radius: 12px;
-            min-height: 700px; /* ⭐ 중요 */
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          rel="stylesheet">
 </head>
+
 <body>
 
-<h3> Task 캘린더</h3>
+<div class="layout">
 
-<div id="calendar"></div>
+    <!-- ✅ 사이드바 유지 -->
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+
+    <!-- ✅ 메인 -->
+    <div class="content">
+
+        <h3 class="mb-4">Task 캘린더</h3>
+
+        <div id="calendar" class="panel"></div>
+
+    </div>
+
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -37,7 +42,7 @@
         const calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             height: 650,
-            events: '/api/calendar/todos'
+            events: '/api/calendar/todo'
         });
 
         calendar.render();

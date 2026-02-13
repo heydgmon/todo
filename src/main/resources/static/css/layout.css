@@ -1,0 +1,71 @@
+/* ===== 전체 레이아웃 ===== */
+.layout {
+    display: flex;
+    height: 100vh;
+    background: #f4f6f9;
+}
+
+/* ===== 사이드바 ===== */
+.sidebar {
+    width: 230px;
+    background-color: #1e293b;
+    color: white;
+    padding: 25px 20px;
+}
+
+.sidebar .logo {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+.sidebar .menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar .menu li {
+    margin-bottom: 18px;
+}
+
+.sidebar .menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    display: block;
+    padding: 8px 10px;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+}
+
+.sidebar .menu a:hover {
+    background-color: #334155;
+}
+
+/* ===== 메인 컨텐츠 ===== */
+.content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+/* ===== 기존 패널 스타일 ===== */
+.panel {
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px;
+    height: 100%;
+}
+
+#calendar {
+    min-height: 650px;
+}
+
+.todo-item {
+    cursor: pointer;
+}
+
+.todo-item.active {
+    background: #e7f1ff;
+}

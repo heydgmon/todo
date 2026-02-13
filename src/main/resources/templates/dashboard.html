@@ -10,97 +10,169 @@
     <!-- FullCalendar -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
-
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
     <style>
         body {
             background: #f4f6f9;
             min-height: 100vh;
         }
+
+        /* ===== 레이아웃 ===== */
+        .layout {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* ===== 사이드바 ===== */
+        .sidebar {
+            width: 230px;
+            background-color: #1e293b;
+            color: white;
+            padding: 25px 20px;
+        }
+
+        .sidebar .logo {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+
+        .sidebar .menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar .menu li {
+            margin-bottom: 18px;
+        }
+
+        .sidebar .menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            display: block;
+            padding: 8px 10px;
+            border-radius: 6px;
+        }
+
+        .sidebar .menu a:hover {
+            background-color: #334155;
+        }
+
+        /* ===== 메인 ===== */
+        .content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
         .panel {
             background: #fff;
             border-radius: 14px;
             padding: 16px;
             height: 100%;
         }
+
         #calendar {
             min-height: 650px;
         }
+
         .todo-item {
             cursor: pointer;
         }
+
         .todo-item.active {
             background: #e7f1ff;
         }
     </style>
 </head>
+
 <body>
 
-<div class="container-fluid p-4">
-    <h4 class="mb-4"> 업무 일정 관리</h4>
+<div class="layout">
 
-    <div class="row g-3">
-        <!-- 📅 Calendar -->
-        <div class="col-lg-4">
-            <div class="panel">
-                <div id="calendar"></div>
-            </div>
-        </div>
+    <!-- ✅ 사이드바 -->
+    <aside class="sidebar">
+        <div class="logo">TODO APP</div>
+        <ul class="menu">
+            <li><a th:href="@{/dashboard}">📊 대시보드</a></li>
+            <li><a th:href="@{/calendar}">📅 캘린더</a></li>
+            <li><a th:href="@{/todo}">📝 할 일 관리</a></li>
+            <li><a th:href="@{/settings}">⚙ 설정</a></li>
+            <li><a th:href="@{/logout}">🚪 로그아웃</a></li>
+        </ul>
+    </aside>
 
-        <!-- 📋 Todo List -->
-        <div class="col-lg-5">
-            <div class="panel">
-                <h6>Todo List</h6>
+    <!-- ✅ 기존 화면 -->
+    <div class="content">
+        <div class="container-fluid">
+            <h4 class="mb-4"></h4>
 
-                <form id="todoForm" class="row g-2 mb-3">
-                    <div class="col-6">
-                        <input type="text" id="title" class="form-control" placeholder="할 일" required>
+            <div class="row g-3">
+                <!-- 📅 Calendar -->
+                <div class="col-lg-4">
+                    <div class="panel">
+                        <div id="calendar"></div>
                     </div>
-                    <div class="col-4">
-                        <input type="date" id="deadline" class="form-control">
-                    </div>
-                    <div class="col-2 d-grid">
-                        <button class="btn btn-primary" type="submit">+</button>
-                    </div>
-                </form>
-
-                <ul class="list-group" id="todoList">
-                    <li th:each="todo : ${todos}"
-                        class="list-group-item todo-item"
-                        th:data-id="${todo.id}"
-                        th:data-title="${todo.title}"
-                        th:data-deadline="${todo.deadline}"
-                        th:data-completed="${todo.completed}">
-                        <span th:text="${todo.title}"></span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- 📝 Detail Panel -->
-        <div class="col-lg-3">
-            <div class="panel">
-                <h6>Detail</h6>
-
-                <div id="detailEmpty" class="text-muted">
-                    "Todo List에서 할 일을 선택하세요"
                 </div>
 
-                <div id="detailContent" style="display:none;">
-                    <p><strong>제목</strong></p>
-                    <p id="detailTitle"></p>
+                <!-- 📋 Todo List -->
+                <div class="col-lg-5">
+                    <div class="panel">
+                        <h6>Todo List</h6>
 
-                    <p><strong>마감일</strong></p>
-                    <p id="detailDeadline"></p>
+                        <form id="todoForm" class="row g-2 mb-3">
+                            <div class="col-6">
+                                <input type="text" id="title" class="form-control" placeholder="할 일" required>
+                            </div>
+                            <div class="col-4">
+                                <input type="date" id="deadline" class="form-control">
+                            </div>
+                            <div class="col-2 d-grid">
+                                <button class="btn btn-primary" type="submit">+</button>
+                            </div>
+                        </form>
 
-                    <p><strong>상태</strong></p>
-                    <p id="detailStatus"></p>
+                        <ul class="list-group" id="todoList">
+                            <li th:each="todo : ${todos}"
+                                class="list-group-item todo-item"
+                                th:data-id="${todo.id}"
+                                th:data-title="${todo.title}"
+                                th:data-deadline="${todo.deadline}"
+                                th:data-completed="${todo.completed}">
+                                <span th:text="${todo.title}"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
 
-                    <!-- ✅ 완료 / 미완료 토글 버튼 -->
-                    <button id="toggleBtn" class="btn btn-sm mt-2"></button>
+                <!-- 📝 Detail Panel -->
+                <div class="col-lg-3">
+                    <div class="panel">
+                        <h6>Detail</h6>
+
+                        <div id="detailEmpty" class="text-muted">
+                            "Todo List에서 할 일을 선택하세요"
+                        </div>
+
+                        <div id="detailContent" style="display:none;">
+                            <p><strong>제목</strong></p>
+                            <p id="detailTitle"></p>
+
+                            <p><strong>마감일</strong></p>
+                            <p id="detailDeadline"></p>
+
+                            <p><strong>상태</strong></p>
+                            <p id="detailStatus"></p>
+
+                            <button id="toggleBtn" class="btn btn-sm mt-2"></button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 
 <script>
@@ -109,18 +181,16 @@
 
     document.addEventListener('DOMContentLoaded', function () {
 
-        /* 📅 Calendar */
         const calendar = new FullCalendar.Calendar(
             document.getElementById('calendar'),
             {
                 initialView: 'dayGridMonth',
                 height: 650,
-                events: '/api/calendar/todos'
+                events: '/api/calendar/todo'
             }
         );
         calendar.render();
 
-        /* ➕ Todo 추가 */
         document.getElementById('todoForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
@@ -134,7 +204,6 @@
             }).then(() => location.reload());
         });
 
-        /* 📋 Todo 클릭 → Detail 표시 */
         document.querySelectorAll('.todo-item').forEach(item => {
             item.addEventListener('click', function () {
 
@@ -158,7 +227,6 @@
             });
         });
 
-        /* ✅ 완료 / 미완료 토글 */
         document.getElementById('toggleBtn').addEventListener('click', function () {
             if (!selectedTodoId) return;
 

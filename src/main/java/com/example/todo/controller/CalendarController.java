@@ -17,7 +17,7 @@ public class CalendarController {
         this.todoService = todoService;
     }
 
-    @GetMapping("/todos")
+    @GetMapping("/todo")
     public List<Map<String, Object>> getTodosForCalendar() {
 
         List<Todo> todos = todoService.findAll();
