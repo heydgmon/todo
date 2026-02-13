@@ -32,6 +32,9 @@ public class TodoController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDate deadline
     ) {
+        if (deadline == null) {
+            deadline = LocalDate.now();
+        }
         todoService.add(title, deadline);
         return "redirect:/todo";
     }
