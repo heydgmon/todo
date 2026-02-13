@@ -19,7 +19,10 @@
             <a th:href="@{/todo}">📝 할 일 관리</a>
         </li>
         <li>
-            <a th:href="@{/settings}">⚙ 설정</a>
+            <a th:href="@{/settings}">⚙ 설정
+            th:classappend="${#httpServletRequest.requestURI == '/settings'} ? 'active'">
+            ⚙ 설정
+            </a>
         </li>
         <li>
             <a th:href="@{/logout}">🚪 로그아웃</a>

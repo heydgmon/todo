@@ -43,6 +43,10 @@
     background-color: #334155;
 }
 
+.sidebar .menu a.active {
+    background-color: #334155;
+}
+
 /* ===== 메인 컨텐츠 ===== */
 .content {
     flex: 1;
