@@ -15,7 +15,7 @@
 <div class="layout">
 
     <!-- ✅ 사이드바 유지 -->
-    <div th:replace="fragments/sidebar :: sidebar"></div>
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
     <!-- ✅ 메인 -->
     <div class="content">
@@ -43,31 +43,14 @@
                     </div>
                 </div>
 
-                <!-- 우측 Todo -->
+                <!-- 우측 Todo 목록 (입력 제거됨) -->
                 <div class="col-lg-8 col-12">
                     <div class="panel">
 
-                        <form th:action="@{/todo/add}" method="post"
-                              class="row g-2 mb-3">
-
-                            <div class="col-6">
-                                <input type="text" name="title"
-                                       class="form-control"
-                                       placeholder="할 일을 입력하세요" required>
-                            </div>
-
-                            <div class="col-4">
-                                <input type="date" name="deadline"
-                                       class="form-control">
-                            </div>
-
-                            <div class="col-2 d-grid">
-                                <button class="btn btn-primary">추가</button>
-                            </div>
-
-                        </form>
+                        <h5 class="mb-3">📝 Todo 목록</h5>
 
                         <ul class="list-group list-group-flush">
+
                             <li th:each="todo : ${todos}"
                                 class="list-group-item d-flex justify-content-between align-items-center">
 
@@ -75,6 +58,11 @@
                                     <span th:text="${todo.title}"
                                           th:classappend="${todo.completed} ? 'text-decoration-line-through text-muted'">
                                     </span>
+
+                                    <small class="text-muted ms-2"
+                                           th:if="${todo.deadline != null}">
+                                        (<span th:text="${todo.deadline}"></span>)
+                                    </small>
                                 </div>
 
                                 <div class="d-flex gap-2">
@@ -96,6 +84,12 @@
                                 </div>
 
                             </li>
+
+                            <li class="list-group-item text-muted text-center"
+                                th:if="${#lists.isEmpty(todos)}">
+                                등록된 할 일이 없습니다.
+                            </li>
+
                         </ul>
 
                     </div>

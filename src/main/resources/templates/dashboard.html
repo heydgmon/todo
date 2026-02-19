@@ -4,85 +4,22 @@
     <meta charset="UTF-8">
     <title>Todo Dashboard</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- FullCalendar -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <link rel="stylesheet" th:href="@{/css/layout.css}">
+
     <style>
-        body {
-            background: #f4f6f9;
-            min-height: 100vh;
-        }
-
-        /* ===== 레이아웃 ===== */
-        .layout {
-            display: flex;
-            height: 100vh;
-        }
-
-        /* ===== 사이드바 ===== */
-        .sidebar {
-            width: 230px;
-            background-color: #1e293b;
-            color: white;
-            padding: 25px 20px;
-        }
-
-        .sidebar .logo {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 40px;
-        }
-
-        .sidebar .menu {
-            list-style: none;
-            padding: 0;
-        }
-
-        .sidebar .menu li {
-            margin-bottom: 18px;
-        }
-
-        .sidebar .menu a {
-            color: white;
-            text-decoration: none;
-            font-size: 15px;
-            display: block;
-            padding: 8px 10px;
-            border-radius: 6px;
-        }
-
-        .sidebar .menu a:hover {
-            background-color: #334155;
-        }
-
-        /* ===== 메인 ===== */
         .content {
-            flex: 1;
-            padding: 30px;
-            overflow-y: auto;
+            max-width: 1400px;
+            margin: 0 auto;
+
+            /* 🔥 화면 전체 높이 채우기 */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        .panel {
-            background: #fff;
+        .card {
             border-radius: 14px;
-            padding: 16px;
-            height: 100%;
-        }
-
-        #calendar {
-            min-height: 650px;
-        }
-
-        .todo-item {
-            cursor: pointer;
-        }
-
-        .todo-item.active {
-            background: #e7f1ff;
         }
     </style>
 </head>
@@ -103,150 +40,121 @@
         </ul>
     </aside>
 
-    <!-- ✅ 기존 화면 -->
+    <!-- ✅ 메인 -->
     <div class="content">
-        <div class="container-fluid">
-            <h4 class="mb-4"></h4>
+        <div class="container-fluid d-flex flex-column flex-grow-1">
 
-            <div class="row g-3">
-                <!-- 📅 Calendar -->
-                <div class="col-lg-4">
-                    <div class="panel">
-                        <div id="calendar"></div>
+            <!-- 🔥 상단 통계 카드 -->
+            <div class="row mb-4 g-4">
+
+                <div class="col-md-3">
+                    <div class="card shadow-sm p-4 text-center h-100">
+                        <h6>📌 오늘 할 일</h6>
+                        <h2 class="fw-bold text-primary"
+                            th:text="${#lists.size(todayTasks)}">0</h2>
                     </div>
                 </div>
 
-                <!-- 📋 Todo List -->
-                <div class="col-lg-5">
-                    <div class="panel">
-                        <h6>Todo List</h6>
+                <div class="col-md-3">
+                    <div class="card shadow-sm p-4 text-center h-100">
+                        <h6>📅 이번 주 일정</h6>
+                        <h2 class="fw-bold text-success"
+                            th:text="${#lists.size(weekTasks)}">0</h2>
+                    </div>
+                </div>
 
-                        <form id="todoForm" class="row g-2 mb-3">
-                            <div class="col-6">
-                                <input type="text" id="title" class="form-control" placeholder="할 일" required>
-                            </div>
-                            <div class="col-4">
-                                <input type="date" id="deadline" class="form-control">
-                            </div>
-                            <div class="col-2 d-grid">
-                                <button class="btn btn-primary" type="submit">+</button>
-                            </div>
-                        </form>
+                <div class="col-md-3">
+                    <div class="card shadow-sm p-4 text-center h-100">
+                        <h6>⏳ 지연 일정</h6>
+                        <h2 class="fw-bold text-danger"
+                            th:text="${#lists.size(overdueTasks)}">0</h2>
+                    </div>
+                </div>
 
-                        <ul class="list-group" id="todoList">
-                            <li th:each="todo : ${todos}"
-                                class="list-group-item todo-item"
-                                th:data-id="${todo.id}"
-                                th:data-title="${todo.title}"
-                                th:data-deadline="${todo.deadline}"
-                                th:data-completed="${todo.completed}">
-                                <span th:text="${todo.title}"></span>
+                <div class="col-md-3">
+                    <div class="card shadow-sm p-4 h-100">
+                        <h6>🔥 가장 임박한 일정</h6>
+                        <ul class="mb-0 small mt-2">
+                            <li th:each="task : ${urgentTasks}">
+                                <span th:text="${task.title}"></span>
+                                (<span th:text="${task.deadline}"></span>)
                             </li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- 📝 Detail Panel -->
-                <div class="col-lg-3">
-                    <div class="panel">
-                        <h6>Detail</h6>
+            </div>
 
-                        <div id="detailEmpty" class="text-muted">
-                            "Todo List에서 할 일을 선택하세요"
+            <!-- 🔥 하단 영역 -->
+            <div class="row g-4 mt-2">
+
+                <!-- 좌측 큰 카드 -->
+                <div class="col-lg-8">
+                    <div class="card shadow-sm p-5 h-100">
+
+                        <div class="row">
+
+                            <!-- 오늘 -->
+                            <div class="col-md-6">
+                                <h5>📌 오늘 해야 할 작업</h5>
+                                <hr>
+                                <ul class="list-group list-group-flush mt-3">
+                                    <li class="list-group-item"
+                                        th:each="task : ${todayTasks}"
+                                        th:text="${task.title}">
+                                    </li>
+                                    <li class="list-group-item text-muted"
+                                        th:if="${#lists.isEmpty(todayTasks)}">
+                                        오늘 일정이 없습니다
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- 지연 -->
+                            <div class="col-md-6">
+                                <h5 class="text-danger">⏳ 지연된 작업</h5>
+                                <hr class="text-danger">
+                                <ul class="list-group list-group-flush mt-3">
+                                    <li class="list-group-item text-danger"
+                                        th:each="task : ${overdueTasks}">
+                                        <span th:text="${task.title}"></span>
+                                        (<span th:text="${task.deadline}"></span>)
+                                    </li>
+                                    <li class="list-group-item text-muted"
+                                        th:if="${#lists.isEmpty(overdueTasks)}">
+                                        지연된 일정이 없습니다 🎉
+                                    </li>
+                                </ul>
+                            </div>
+
                         </div>
 
-                        <div id="detailContent" style="display:none;">
-                            <p><strong>제목</strong></p>
-                            <p id="detailTitle"></p>
-
-                            <p><strong>마감일</strong></p>
-                            <p id="detailDeadline"></p>
-
-                            <p><strong>상태</strong></p>
-                            <p id="detailStatus"></p>
-
-                            <button id="toggleBtn" class="btn btn-sm mt-2"></button>
-                        </div>
                     </div>
                 </div>
+
+                <!-- 우측 Tip -->
+                <div class="col-lg-4">
+                    <div class="card shadow-sm p-5 h-100">
+                        <h5>💡 Tip</h5>
+                        <hr>
+                        <p class="text-muted mt-3">
+                            지연 일정은 빨간색으로 표시됩니다.
+                        </p>
+                        <p class="text-muted">
+                            오늘 할 일을 먼저 처리하세요 🔥
+                        </p>
+                        <p class="text-muted">
+                            일정은 캘린더에서 관리하세요.
+                        </p>
+                    </div>
+                </div>
+
             </div>
+
         </div>
     </div>
 
 </div>
-
-<script>
-    let selectedTodoId = null;
-    let selectedCompleted = false;
-
-    document.addEventListener('DOMContentLoaded', function () {
-
-        const calendar = new FullCalendar.Calendar(
-            document.getElementById('calendar'),
-            {
-                initialView: 'dayGridMonth',
-                height: 650,
-                events: '/api/calendar/todo'
-            }
-        );
-        calendar.render();
-
-        document.getElementById('todoForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            fetch('/todo/add', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({
-                    title: title.value,
-                    deadline: deadline.value
-                })
-            }).then(() => location.reload());
-        });
-
-        document.querySelectorAll('.todo-item').forEach(item => {
-            item.addEventListener('click', function () {
-
-                document.querySelectorAll('.todo-item')
-                    .forEach(el => el.classList.remove('active'));
-                this.classList.add('active');
-
-                selectedTodoId = this.dataset.id;
-                selectedCompleted = this.dataset.completed === 'true';
-
-                detailEmpty.style.display = 'none';
-                detailContent.style.display = 'block';
-
-                detailTitle.innerText = this.dataset.title;
-                detailDeadline.innerText =
-                    this.dataset.deadline ? this.dataset.deadline : '없음';
-                detailStatus.innerText =
-                    selectedCompleted ? '완료' : '미완료';
-
-                updateToggleButton();
-            });
-        });
-
-        document.getElementById('toggleBtn').addEventListener('click', function () {
-            if (!selectedTodoId) return;
-
-            fetch(`/todo/toggle/${selectedTodoId}`, {
-                method: 'POST'
-            }).then(() => location.reload());
-        });
-    });
-
-    function updateToggleButton() {
-        const btn = document.getElementById('toggleBtn');
-        if (selectedCompleted) {
-            btn.innerText = '미완료로 변경';
-            btn.className = 'btn btn-warning btn-sm mt-2';
-        } else {
-            btn.innerText = '완료로 변경';
-            btn.className = 'btn btn-success btn-sm mt-2';
-        }
-    }
-</script>
 
 </body>
 </html>
