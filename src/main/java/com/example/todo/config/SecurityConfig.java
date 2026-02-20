@@ -4,12 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -23,15 +17,20 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
+                        // ✅ ALB Health Check 허용
+                        .requestMatchers("/actuator/health").permitAll()
+
+                        // 기존 정적 리소스 허용
                         .requestMatchers("/", "/css/**", "/js/**", "/images/**").permitAll()
+
+                        // 나머지는 인증 필요
                         .anyRequest().authenticated()
                 )
 
                 .oauth2Login(oauth -> oauth
-                        .defaultSuccessUrl("/dashboard", true)   // ⭐ 이 줄 추가
+                        .defaultSuccessUrl("/dashboard", true)
                 );
 
         return http.build();
     }
 }
-
