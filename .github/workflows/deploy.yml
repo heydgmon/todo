@@ -1,0 +1,53 @@
+name: Deploy to ECS
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: ap-northeast-2
+  ECR_REPOSITORY: todo-app
+  ECS_CLUSTER: test1
+  ECS_SERVICE: todo
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::418272785046:role/github-ecs-deploy-role
+          aws-region: ap-northeast-2
+
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Docker image
+        run: docker build -t todo-app:${{ github.sha }} .
+
+      - name: Tag image
+        run: |
+          docker tag todo-app:${{ github.sha }} \
+          418272785046.dkr.ecr.ap-northeast-2.amazonaws.com/todo-app:${{ github.sha }}
+
+      - name: Push image
+        run: |
+          docker push \
+          418272785046.dkr.ecr.ap-northeast-2.amazonaws.com/todo-app:${{ github.sha }}
+
+      - name: Force ECS deployment
+        run: |
+          aws ecs update-service \
+            --cluster test1 \
+            --service todo \
+            --force-new-deployment
