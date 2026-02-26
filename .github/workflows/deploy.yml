@@ -44,18 +44,20 @@ jobs:
       - name: Login to ECR
         uses: aws-actions/amazon-ecr-login@v2
 
+      # 🔥 latest 태그로 빌드
       - name: Build Docker image
-        run: docker build -t todo-app:${{ github.sha }} .
+        run: docker build -t todo-app:latest .
 
+      # 🔥 ECR latest 태그로 덮어쓰기
       - name: Tag image
         run: |
-          docker tag todo-app:${{ github.sha }} \
-          418272785046.dkr.ecr.ap-northeast-2.amazonaws.com/todo-app:${{ github.sha }}
+          docker tag todo-app:latest \
+          418272785046.dkr.ecr.ap-northeast-2.amazonaws.com/todo-app:latest
 
       - name: Push image
         run: |
           docker push \
-          418272785046.dkr.ecr.ap-northeast-2.amazonaws.com/todo-app:${{ github.sha }}
+          418272785046.dkr.ecr.ap-northeast-2.amazonaws.com/todo-app:latest
 
       - name: Force ECS deployment
         run: |
