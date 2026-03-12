@@ -11,9 +11,10 @@ permissions:
 
 env:
   AWS_REGION: ap-northeast-2
-  ECR_REPOSITORY: todo-app
-  ECS_CLUSTER: test1
-  ECS_SERVICE: todo-service-sz9bxsxk
+  AWS_ACCOUNT_ID: 604227045332
+  ECR_REPOSITORY: todo
+  ECS_CLUSTER: todo-cluster
+  ECS_SERVICE: todo-service-xvus9n3z
 
 jobs:
   deploy:
@@ -38,30 +39,29 @@ jobs:
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::418272785046:role/github-web-identity
-          aws-region: ap-northeast-2
+          role-to-assume: arn:aws:iam::604227045332:role/github-web-identity
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      # 🔥 latest 태그로 빌드
       - name: Build Docker image
-        run: docker build -t todo-app:latest .
-
-      # 🔥 ECR latest 태그로 덮어쓰기
-      - name: Tag image
         run: |
-          docker tag todo-app:latest \
-          418272785046.dkr.ecr.ap-northeast-2.amazonaws.com/todo-app:latest
+          docker build -t $ECR_REPOSITORY:latest .
 
-      - name: Push image
+      - name: Tag Docker image
+        run: |
+          docker tag $ECR_REPOSITORY:latest \
+          $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:latest
+
+      - name: Push image to ECR
         run: |
           docker push \
-          418272785046.dkr.ecr.ap-northeast-2.amazonaws.com/todo-app:latest
+          $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:latest
 
-      - name: Force ECS deployment
+      - name: Deploy to ECS
         run: |
           aws ecs update-service \
-            --cluster test1 \
-            --service todo-service-sz9bxsxk \
+            --cluster $ECS_CLUSTER \
+            --service $ECS_SERVICE \
             --force-new-deployment
