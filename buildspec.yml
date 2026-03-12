@@ -1,0 +1,32 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_DEFAULT_REGION: ap-northeast-2
+    ECR_REPOSITORY_URI: 604227045332.dkr.ecr.ap-northeast-2.amazonaws.com/todo
+    IMAGE_TAG: latest
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR
+      - aws --version
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY_URI
+
+  build:
+    commands:
+      - echo Build started on `date`
+      - chmod +x gradlew
+      - ./gradlew build
+      - docker build -t todo .
+      - docker tag todo:latest $ECR_REPOSITORY_URI:$IMAGE_TAG
+
+  post_build:
+    commands:
+      - echo Pushing Docker image
+      - docker push $ECR_REPOSITORY_URI:$IMAGE_TAG
+      - echo Build completed on `date`
