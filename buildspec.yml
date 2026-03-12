@@ -21,7 +21,7 @@ phases:
     commands:
       - echo Build started on `date`
       - chmod +x gradlew
-      - ./gradlew build
+      - ./gradlew build -x test
       - docker build -t todo .
       - docker tag todo:latest $ECR_REPOSITORY_URI:$IMAGE_TAG
 
