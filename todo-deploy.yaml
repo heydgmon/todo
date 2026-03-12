@@ -16,4 +16,4 @@ spec:
         - name: todo
           image: 418272785046.dkr.ecr.ap-northeast-2.amazonaws.com/todo:1.0
           ports:
-            - containerPort: 8081
+            - containerPort: 8080
