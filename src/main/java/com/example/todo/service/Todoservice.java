@@ -20,9 +20,50 @@ public class Todoservice {
     }
 
     public List<Todo> findAll() {
-        return repo.findAll(Sort.by("completed").and(Sort.by("id")));
+        return repo.findAll(
+                Sort.by("sortOrder").ascending()
+        );
     }
+    public void reorder(List<Long> ids) {
 
+        int order = 0;
+
+        for(Long id : ids){
+
+            Todo todo = repo.findById(id).orElseThrow();
+
+            todo.setSortOrder(order++);
+
+        }
+
+    }
+    public List<Todo> findByProject(String project){
+        return repo.findByProject(project);
+    }
+    public List<Todo> todayTasks(){
+
+        LocalDate today = LocalDate.now();
+
+        return repo.findAll().stream()
+                .filter(t -> t.getDeadline()!=null)
+                .filter(t -> t.getDeadline().isEqual(today))
+                .toList();
+
+    }
+    public List<Todo> weekTasks(){
+
+        LocalDate today = LocalDate.now();
+
+        LocalDate startOfWeek = today.with(java.time.DayOfWeek.MONDAY);
+        LocalDate endOfWeek = today.with(java.time.DayOfWeek.SUNDAY);
+
+        return repo.findAll().stream()
+                .filter(t -> t.getDeadline() != null)
+                .filter(t -> !t.getDeadline().isBefore(startOfWeek))
+                .filter(t -> !t.getDeadline().isAfter(endOfWeek))
+                .toList();
+
+    }
     public Todo findById(Long id) {
         return repo.findById(id).orElseThrow();
     }

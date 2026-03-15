@@ -34,7 +34,37 @@ public class TodoController {
         model.addAttribute("todos", todos);
         return "todo";
     }
+    @PostMapping("/todo/reorder")
+    @ResponseBody
+    public void reorder(@RequestBody List<Long> ids){
 
+        todoService.reorder(ids);
+
+    }
+    @GetMapping("/todo/today")
+    public String today(Model model){
+
+        model.addAttribute("todos", todoService.todayTasks());
+
+        return "todo";
+
+    }
+    @GetMapping("/todo/week")
+    public String week(Model model){
+
+        model.addAttribute("todos", todoService.weekTasks());
+
+        return "todo";
+
+    }
+    @GetMapping("/todo/project/{name}")
+    public String project(@PathVariable String name, Model model){
+
+        model.addAttribute("todos", todoService.findByProject(name));
+
+        return "todo";
+
+    }
     // 추가
     @PostMapping("/todo/add")
     public String add(

@@ -13,7 +13,9 @@ public class Todo {
     private Long id;
 
     private String title;
+    private Integer sortOrder;
 
+    private LocalDate remindDate;
     @Column(length = 500)
     private String description;
 
@@ -71,4 +73,20 @@ public class Todo {
 
     public Set<String> getTags() { return tags; }
     public void setTags(Set<String> tags) { this.tags = tags; }
+
+    public Integer getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(Integer sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
+    public LocalDate getRemindDate() {
+        return remindDate;
+    }
+
+    public void setRemindDate(LocalDate remindDate) {
+        this.remindDate = remindDate;
+    }
 }

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+
     <meta charset="UTF-8">
     <title>Todo</title>
 
@@ -8,6 +9,10 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
           rel="stylesheet">
+
+    <!-- Drag 정렬 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
 </head>
 
 <body>
@@ -22,8 +27,9 @@
         <div class="container mt-4">
             <div class="row g-4">
 
-                <!-- 좌측 통계 -->
+                <!-- 좌측 패널 -->
                 <div class="col-lg-4 d-none d-lg-block">
+
                     <div class="panel">
 
                         <h5>📋 Task Overview</h5>
@@ -47,24 +53,50 @@
 
                         <!-- 검색 -->
                         <form method="get" action="/todo">
+
                             <input type="text"
                                    name="q"
                                    class="form-control"
                                    placeholder="검색 (제목 / 설명 / 프로젝트)">
+
                         </form>
 
+                        <hr>
+
+                        <!-- 필터 -->
+                        <h6>📂 필터</h6>
+
+                        <div class="d-grid gap-2">
+
+                            <a href="/todo" class="btn btn-outline-secondary btn-sm">
+                                전체
+                            </a>
+
+                            <a href="/todo/today" class="btn btn-outline-primary btn-sm">
+                                오늘
+                            </a>
+
+                            <a href="/todo/week" class="btn btn-outline-success btn-sm">
+                                이번주
+                            </a>
+
+                        </div>
+
                     </div>
+
                 </div>
 
-                <!-- Todo 목록 -->
+                <!-- Todo 리스트 -->
                 <div class="col-lg-8 col-12">
+
                     <div class="panel">
 
                         <h5 class="mb-3">📝 Todo 목록</h5>
 
-                        <ul class="list-group list-group-flush">
+                        <ul id="todoList" class="list-group list-group-flush">
 
                             <li th:each="todo : ${todos}"
+                                th:attr="data-id=${todo.id}"
                                 class="list-group-item d-flex justify-content-between align-items-center">
 
                                 <div>
@@ -110,9 +142,11 @@
                                     <!-- 완료 -->
                                     <form th:action="@{/todo/toggle/{id}(id=${todo.id})}"
                                           method="post">
+
                                         <button class="btn btn-sm btn-outline-success">
                                             완료
                                         </button>
+
                                     </form>
 
                                     <!-- 수정 -->
@@ -132,9 +166,11 @@
                                     <!-- 삭제 -->
                                     <form th:action="@{/todo/delete/{id}(id=${todo.id})}"
                                           method="post">
+
                                         <button class="btn btn-sm btn-outline-danger">
                                             삭제
                                         </button>
+
                                     </form>
 
                                 </div>
@@ -143,12 +179,15 @@
 
                             <li class="list-group-item text-muted text-center"
                                 th:if="${#lists.isEmpty(todos)}">
+
                                 등록된 할 일이 없습니다.
+
                             </li>
 
                         </ul>
 
                     </div>
+
                 </div>
 
             </div>
@@ -157,6 +196,44 @@
     </div>
 
 </div>
+
+
+<script>
+
+    const el = document.getElementById("todoList");
+
+    Sortable.create(el, {
+
+        animation:150,
+
+        onEnd: function () {
+
+            const ids = [];
+
+            document.querySelectorAll("#todoList li")
+            .forEach(li => {
+
+                ids.push(li.dataset.id);
+
+            });
+
+            fetch("/todo/reorder",{
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify(ids)
+
+            });
+
+        }
+
+    });
+
+</script>
 
 </body>
 </html>

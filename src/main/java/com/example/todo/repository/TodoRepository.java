@@ -11,4 +11,6 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
     List<Todo> findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrProjectContainingIgnoreCase(
             String title, String description, String project
     );
+
+    List<Todo> findByProject(String project);
 }
