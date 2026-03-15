@@ -2,11 +2,12 @@ package com.example.todo.service;
 
 import com.example.todo.domain.Todo;
 import com.example.todo.repository.TodoRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.data.domain.Sort;
-import java.util.List;
+
 import java.time.LocalDate;
+import java.util.*;
 
 @Service
 @Transactional
@@ -19,35 +20,50 @@ public class Todoservice {
     }
 
     public List<Todo> findAll() {
-        return repo.findAll(
-                Sort.by("completed").and(Sort.by("id"))
-        );
+        return repo.findAll(Sort.by("completed").and(Sort.by("id")));
     }
+
+    public Todo findById(Long id) {
+        return repo.findById(id).orElseThrow();
+    }
+
+    public void save(Todo todo) {
+        repo.save(todo);
+    }
+
+    // 기본 추가 (프로젝트/태그/서브태스크 포함)
     public void add(
             String title,
             String description,
             LocalDate deadline,
             String priority,
             String color,
-            String repeatType
+            String repeatType,
+            String project,
+            Long parentId,
+            String tagsCsv
     ) {
 
         Todo todo = new Todo();
 
         todo.setTitle(title);
         todo.setDescription(description);
-        todo.setCompleted(false);
         todo.setDeadline(deadline);
         todo.setPriority(priority);
         todo.setColor(color);
         todo.setRepeatType(repeatType);
+        todo.setProject(project);
+        todo.setCompleted(false);
 
-        repo.save(todo);
-    }
-    public Todo findById(Long id) {
-        return repo.findById(id).orElseThrow();
-    }
-    public void save(Todo todo){
+        if (parentId != null) {
+            todo.setParent(findById(parentId));
+        }
+
+        if (tagsCsv != null && !tagsCsv.isBlank()) {
+            Set<String> tags = new HashSet<>(Arrays.asList(tagsCsv.split(",")));
+            todo.setTags(tags);
+        }
+
         repo.save(todo);
     }
 
@@ -56,9 +72,14 @@ public class Todoservice {
     }
 
     public void toggle(Long id) {
-        Todo todo = repo.findById(id).orElseThrow();
+        Todo todo = findById(id);
         todo.setCompleted(!todo.isCompleted());
     }
 
-
+    // 검색
+    public List<Todo> search(String q) {
+        return repo.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrProjectContainingIgnoreCase(
+                q, q, q
+        );
+    }
 }

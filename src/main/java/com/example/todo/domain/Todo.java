@@ -2,7 +2,8 @@ package com.example.todo.domain;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Todo {
@@ -20,89 +21,54 @@ public class Todo {
 
     private LocalDate deadline;
 
-    private LocalDateTime startTime;
+    private String priority;   // LOW / MEDIUM / HIGH
+    private String color;      // hex
+    private String repeatType; // NONE / DAILY / WEEKLY / MONTHLY
 
-    private LocalDateTime endTime;
+    // 1) 서브태스크: 부모 Todo
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Todo parent;
 
-    private String priority;
+    // 2) 프로젝트/리스트
+    private String project;
 
-    private String color;
+    // 3) 태그(간단: 문자열 세트)
+    @ElementCollection
+    @CollectionTable(name = "todo_tags", joinColumns = @JoinColumn(name = "todo_id"))
+    @Column(name = "tag")
+    private Set<String> tags = new HashSet<>();
 
-    private String repeatType;
+    // getters/setters
+    public Long getId() { return id; }
 
-    public Long getId() {
-        return id;
-    }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
-    public String getTitle() {
-        return title;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public boolean isCompleted() { return completed; }
+    public void setCompleted(boolean completed) { this.completed = completed; }
 
-    public boolean isCompleted() {
-        return completed;
-    }
+    public LocalDate getDeadline() { return deadline; }
+    public void setDeadline(LocalDate deadline) { this.deadline = deadline; }
 
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
+    public String getPriority() { return priority; }
+    public void setPriority(String priority) { this.priority = priority; }
 
-    public LocalDate getDeadline() {
-        return deadline;
-    }
+    public String getColor() { return color; }
+    public void setColor(String color) { this.color = color; }
 
-    public void setDeadline(LocalDate deadline) {
-        this.deadline = deadline;
-    }
+    public String getRepeatType() { return repeatType; }
+    public void setRepeatType(String repeatType) { this.repeatType = repeatType; }
 
-    public String getDescription() {
-        return description;
-    }
+    public Todo getParent() { return parent; }
+    public void setParent(Todo parent) { this.parent = parent; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public String getProject() { return project; }
+    public void setProject(String project) { this.project = project; }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
-
-    public String getPriority() {
-        return priority;
-    }
-
-    public void setPriority(String priority) {
-        this.priority = priority;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getRepeatType() {
-        return repeatType;
-    }
-
-    public void setRepeatType(String repeatType) {
-        this.repeatType = repeatType;
-    }
+    public Set<String> getTags() { return tags; }
+    public void setTags(Set<String> tags) { this.tags = tags; }
 }

@@ -14,6 +14,7 @@
 
 <div class="layout">
 
+    <!-- 사이드바 -->
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
     <div class="content">
@@ -21,8 +22,10 @@
         <div class="container mt-4">
             <div class="row g-4">
 
+                <!-- 좌측 통계 -->
                 <div class="col-lg-4 d-none d-lg-block">
                     <div class="panel">
+
                         <h5>📋 Task Overview</h5>
 
                         <p class="mt-3">
@@ -39,9 +42,21 @@
                             • 미완료 :
                             <strong th:text="${todos.size() - #lists.size(todos.?[completed])}"></strong>
                         </p>
+
+                        <hr>
+
+                        <!-- 검색 -->
+                        <form method="get" action="/todo">
+                            <input type="text"
+                                   name="q"
+                                   class="form-control"
+                                   placeholder="검색 (제목 / 설명 / 프로젝트)">
+                        </form>
+
                     </div>
                 </div>
 
+                <!-- Todo 목록 -->
                 <div class="col-lg-8 col-12">
                     <div class="panel">
 
@@ -54,14 +69,35 @@
 
                                 <div>
 
+                                    <!-- 우선순위 -->
                                     <span th:if="${todo.priority == 'HIGH'}">🔥</span>
                                     <span th:if="${todo.priority == 'MEDIUM'}">⚡</span>
                                     <span th:if="${todo.priority == 'LOW'}">•</span>
 
+                                    <!-- 제목 -->
                                     <span th:text="${todo.title}"
                                           th:classappend="${todo.completed} ? 'text-decoration-line-through text-muted'">
                                     </span>
 
+                                    <!-- 서브태스크 표시 -->
+                                    <small class="text-muted"
+                                           th:if="${todo.parent != null}">
+                                        (sub)
+                                    </small>
+
+                                    <!-- 프로젝트 -->
+                                    <small class="text-primary ms-2"
+                                           th:if="${todo.project != null}">
+                                        [<span th:text="${todo.project}"></span>]
+                                    </small>
+
+                                    <!-- 태그 -->
+                                    <small class="text-muted ms-1"
+                                           th:each="tag : ${todo.tags}">
+                                        #<span th:text="${tag}"></span>
+                                    </small>
+
+                                    <!-- 날짜 -->
                                     <small class="text-muted ms-2"
                                            th:if="${todo.deadline != null}">
                                         (<span th:text="${todo.deadline}"></span>)
@@ -71,6 +107,7 @@
 
                                 <div class="d-flex gap-2">
 
+                                    <!-- 완료 -->
                                     <form th:action="@{/todo/toggle/{id}(id=${todo.id})}"
                                           method="post">
                                         <button class="btn btn-sm btn-outline-success">
@@ -78,6 +115,21 @@
                                         </button>
                                     </form>
 
+                                    <!-- 수정 -->
+                                    <form th:action="@{/todo/update/{id}(id=${todo.id})}"
+                                          method="post">
+
+                                        <input type="hidden"
+                                               name="title"
+                                               th:value="${todo.title}">
+
+                                        <button class="btn btn-sm btn-outline-primary">
+                                            수정
+                                        </button>
+
+                                    </form>
+
+                                    <!-- 삭제 -->
                                     <form th:action="@{/todo/delete/{id}(id=${todo.id})}"
                                           method="post">
                                         <button class="btn btn-sm btn-outline-danger">

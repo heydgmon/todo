@@ -1,5 +1,6 @@
 package com.example.todo.controller;
 
+import com.example.todo.domain.Todo;
 import com.example.todo.service.Todoservice;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -7,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 public class TodoController {
@@ -17,65 +19,103 @@ public class TodoController {
         this.todoService = todoService;
     }
 
-    // ==========================
-    // TODO 목록 페이지
-    // ==========================
+    // 목록 + 검색
     @GetMapping("/todo")
-    public String list(Model model) {
-        model.addAttribute("todos", todoService.findAll());
+    public String list(@RequestParam(required = false) String q, Model model) {
+
+        List<Todo> todos;
+
+        if (q == null || q.isBlank()) {
+            todos = todoService.findAll();
+        } else {
+            todos = todoService.search(q);
+        }
+
+        model.addAttribute("todos", todos);
         return "todo";
     }
 
-    // ==========================
-    // 기존 TODO 추가 (todo 페이지용)
-    // ==========================
+    // 추가
     @PostMapping("/todo/add")
     public String add(
             @RequestParam String title,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate deadline
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate deadline,
+            @RequestParam(required = false) String priority,
+            @RequestParam(required = false) String color,
+            @RequestParam(required = false) String repeatType,
+            @RequestParam(required = false) String project,
+            @RequestParam(required = false) Long parentId,
+            @RequestParam(required = false) String tags
     ) {
 
-        if (deadline == null) {
-            deadline = LocalDate.now();
-        }
+        if (deadline == null) deadline = LocalDate.now();
 
         todoService.add(
                 title,
-                null,
+                description,
                 deadline,
-                "LOW",
-                "#0d6efd",
-                "NONE"
+                priority,
+                color,
+                repeatType,
+                project,
+                parentId,
+                tags
         );
 
         return "redirect:/todo";
     }
 
-    // ==========================
-    // 캘린더에서 추가
-    // ==========================
+    // 5) 일정 수정
+    @PostMapping("/todo/update/{id}")
+    public String update(
+            @PathVariable Long id,
+            @RequestParam String title,
+            @RequestParam(required = false) String description
+    ) {
+
+        Todo todo = todoService.findById(id);
+        todo.setTitle(title);
+        todo.setDescription(description);
+
+        todoService.save(todo);
+
+        return "redirect:/todo";
+    }
+
+    @PostMapping("/todo/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        todoService.delete(id);
+        return "redirect:/todo";
+    }
+
+    @PostMapping("/todo/toggle/{id}")
+    public String toggle(@PathVariable Long id) {
+        todoService.toggle(id);
+        return "redirect:/todo";
+    }
     @PostMapping("/todoNew")
     public String addFromCalendar(
 
             @RequestParam String title,
 
-            @RequestParam(required = false)
-            String description,
+            @RequestParam(required = false) String description,
 
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDate dueDate,
 
-            @RequestParam(required = false)
-            String priority,
+            @RequestParam(required = false) String priority,
 
-            @RequestParam(required = false)
-            String color,
+            @RequestParam(required = false) String color,
 
-            @RequestParam(required = false)
-            String repeatType
+            @RequestParam(required = false) String repeatType,
+
+            @RequestParam(required = false) String project,
+
+            @RequestParam(required = false) Long parentId,
+
+            @RequestParam(required = false) String tags
     ) {
 
         todoService.add(
@@ -84,27 +124,12 @@ public class TodoController {
                 dueDate,
                 priority,
                 color,
-                repeatType
+                repeatType,
+                project,
+                parentId,
+                tags
         );
 
         return "redirect:/calendar";
-    }
-
-    // ==========================
-    // 삭제
-    // ==========================
-    @PostMapping("/todo/delete/{id}")
-    public String delete(@PathVariable Long id) {
-        todoService.delete(id);
-        return "redirect:/todo";
-    }
-
-    // ==========================
-    // 완료 토글
-    // ==========================
-    @PostMapping("/todo/toggle/{id}")
-    public String toggle(@PathVariable Long id) {
-        todoService.toggle(id);
-        return "redirect:/todo";
     }
 }
