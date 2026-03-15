@@ -23,11 +23,31 @@ public class Todoservice {
                 Sort.by("completed").and(Sort.by("id"))
         );
     }
-    public void add(String title, LocalDate deadline) {
+    public void add(
+            String title,
+            String description,
+            LocalDate deadline,
+            String priority,
+            String color,
+            String repeatType
+    ) {
+
         Todo todo = new Todo();
+
         todo.setTitle(title);
+        todo.setDescription(description);
         todo.setCompleted(false);
         todo.setDeadline(deadline);
+        todo.setPriority(priority);
+        todo.setColor(color);
+        todo.setRepeatType(repeatType);
+
+        repo.save(todo);
+    }
+    public Todo findById(Long id) {
+        return repo.findById(id).orElseThrow();
+    }
+    public void save(Todo todo){
         repo.save(todo);
     }
 

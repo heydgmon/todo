@@ -22,10 +22,10 @@
 
 <div class="layout">
 
-    <!-- ✅ 사이드바 유지 -->
+    <!-- 사이드바 -->
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <!-- ✅ 메인 -->
+    <!-- 메인 -->
     <div class="content">
 
         <h3 class="mb-4"></h3>
@@ -36,29 +36,68 @@
 
 </div>
 
-<!-- ✅ 일정 등록 모달 -->
+
+<!-- 일정 등록 모달 -->
 <div class="modal fade" id="todoModal" tabindex="-1">
     <div class="modal-dialog">
         <form method="post" th:action="@{/todoNew}">
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title">할 일 등록</h5>
+                    <h5 class="modal-title">일정 등록</h5>
                     <button type="button" class="btn-close"
                             data-bs-dismiss="modal"></button>
                 </div>
 
                 <div class="modal-body">
 
-                    <!-- 선택한 날짜 저장 -->
                     <input type="hidden" name="dueDate" id="selectedDate">
 
+                    <!-- 제목 -->
                     <div class="mb-3">
                         <input type="text"
                                name="title"
                                class="form-control"
-                               placeholder=""
+                               placeholder="제목"
                                required>
+                    </div>
+
+                    <!-- 설명 -->
+                    <div class="mb-3">
+                        <textarea name="description"
+                                  class="form-control"
+                                  placeholder="설명"></textarea>
+                    </div>
+
+                    <!-- 우선순위 -->
+                    <div class="mb-3">
+                        <label class="form-label">우선순위</label>
+                        <select name="priority" class="form-control">
+                            <option value="LOW">LOW</option>
+                            <option value="MEDIUM">MEDIUM</option>
+                            <option value="HIGH">HIGH</option>
+                        </select>
+                    </div>
+
+                    <!-- 색상 -->
+                    <div class="mb-3">
+                        <label class="form-label">색상</label>
+                        <select name="color" class="form-control">
+                            <option value="#0d6efd">파랑</option>
+                            <option value="#dc3545">빨강</option>
+                            <option value="#198754">초록</option>
+                        </select>
+                    </div>
+
+                    <!-- 반복 -->
+                    <div class="mb-3">
+                        <label class="form-label">반복 일정</label>
+                        <select name="repeatType" class="form-control">
+                            <option value="NONE">없음</option>
+                            <option value="DAILY">매일</option>
+                            <option value="WEEKLY">매주</option>
+                            <option value="MONTHLY">매월</option>
+                        </select>
                     </div>
 
                 </div>
@@ -72,31 +111,55 @@
     </div>
 </div>
 
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
         const calendarEl = document.getElementById('calendar');
 
         const calendar = new FullCalendar.Calendar(calendarEl, {
+
             initialView: 'dayGridMonth',
+
             height: 650,
+
             events: '/api/calendar/todo',
 
-            // ✅ 날짜 클릭 시 모달 열기
+            editable: true, // ⭐ 드래그 이동 활성화
+
+            eventDrop: function(info) {
+
+                const id = info.event.id;
+                const newDate = info.event.startStr;
+
+                fetch('/api/calendar/updateDate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: id,
+                        date: newDate
+                    })
+                });
+
+            },
+
             dateClick: function(info) {
 
-                // 선택 날짜 hidden input에 세팅
                 document.getElementById("selectedDate").value = info.dateStr;
 
-                // 모달 열기
                 const modal = new bootstrap.Modal(
                     document.getElementById('todoModal')
                 );
+
                 modal.show();
             }
+
         });
 
         calendar.render();
+
     });
 </script>
 

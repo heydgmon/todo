@@ -41,22 +41,51 @@ public class TodoController {
             deadline = LocalDate.now();
         }
 
-        todoService.add(title, deadline);
+        todoService.add(
+                title,
+                null,
+                deadline,
+                "LOW",
+                "#0d6efd",
+                "NONE"
+        );
+
         return "redirect:/todo";
     }
 
     // ==========================
-    // 🔥 캘린더에서 추가
+    // 캘린더에서 추가
     // ==========================
     @PostMapping("/todoNew")
     public String addFromCalendar(
+
             @RequestParam String title,
+
+            @RequestParam(required = false)
+            String description,
+
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate dueDate
+            LocalDate dueDate,
+
+            @RequestParam(required = false)
+            String priority,
+
+            @RequestParam(required = false)
+            String color,
+
+            @RequestParam(required = false)
+            String repeatType
     ) {
 
-        todoService.add(title, dueDate);
+        todoService.add(
+                title,
+                description,
+                dueDate,
+                priority,
+                color,
+                repeatType
+        );
 
         return "redirect:/calendar";
     }
