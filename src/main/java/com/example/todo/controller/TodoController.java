@@ -124,11 +124,22 @@ public class TodoController {
         todoService.toggle(id);
         return "redirect:/todo";
     }
+    @PostMapping("/todo/deleteRepeat")
+    public String deleteRepeat(
+
+            @RequestParam String title,
+            @RequestParam String repeatType
+
+    ) {
+
+        todoService.deleteRepeat(title, repeatType);
+
+        return "redirect:/todo";
+    }
     @PostMapping("/todoNew")
     public String addFromCalendar(
 
             @RequestParam String title,
-
             @RequestParam(required = false) String description,
 
             @RequestParam
@@ -136,29 +147,103 @@ public class TodoController {
             LocalDate dueDate,
 
             @RequestParam(required = false) String priority,
-
             @RequestParam(required = false) String color,
-
             @RequestParam(required = false) String repeatType,
-
             @RequestParam(required = false) String project,
-
             @RequestParam(required = false) Long parentId,
-
             @RequestParam(required = false) String tags
     ) {
 
-        todoService.add(
-                title,
-                description,
-                dueDate,
-                priority,
-                color,
-                repeatType,
-                project,
-                parentId,
-                tags
-        );
+        if (repeatType == null || repeatType.equals("NONE")) {
+
+            todoService.add(
+                    title,
+                    description,
+                    dueDate,
+                    priority,
+                    color,
+                    "NONE",
+                    project,
+                    parentId,
+                    tags
+            );
+
+        }
+
+        else if (repeatType.equals("DAILY")) {
+
+            LocalDate endDate = dueDate.plusYears(1);
+
+            LocalDate current = dueDate;
+
+            while (!current.isAfter(endDate)) {
+
+                todoService.add(
+                        title,
+                        description,
+                        current,
+                        priority,
+                        color,
+                        "NONE",
+                        project,
+                        parentId,
+                        tags
+                );
+
+                current = current.plusDays(1);
+            }
+
+        }
+
+        else if (repeatType.equals("WEEKLY")) {
+
+            LocalDate endDate = dueDate.plusYears(1);
+
+            LocalDate current = dueDate;
+
+            while (!current.isAfter(endDate)) {
+
+                todoService.add(
+                        title,
+                        description,
+                        current,
+                        priority,
+                        color,
+                        "NONE",
+                        project,
+                        parentId,
+                        tags
+                );
+
+                current = current.plusWeeks(1);
+            }
+
+        }
+
+        else if (repeatType.equals("MONTHLY")) {
+
+            LocalDate endDate = dueDate.plusYears(1);
+
+            LocalDate current = dueDate;
+
+            while (!current.isAfter(endDate)) {
+
+                todoService.add(
+                        title,
+                        description,
+                        current,
+                        priority,
+                        color,
+                        "NONE",
+                        project,
+                        parentId,
+                        tags
+                );
+
+                current = current.plusMonths(1);
+            }
+
+        }
 
         return "redirect:/calendar";
     }

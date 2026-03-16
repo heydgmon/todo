@@ -13,4 +13,5 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
     );
 
     List<Todo> findByProject(String project);
+    void deleteByTitleAndRepeatType(String title, String repeatType);
 }

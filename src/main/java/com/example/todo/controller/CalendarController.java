@@ -45,7 +45,8 @@ public class CalendarController {
             event.put("id", todo.getId());
             event.put("title", prefix + todo.getTitle());
             event.put("start", todo.getDeadline().toString());
-
+            // 🔥 설명 추가
+            event.put("description", todo.getDescription());
             events.add(event);
         }
 

@@ -153,6 +153,16 @@
                 });
 
             },
+            //달력 클릭 시 상세 내용 확인 가능
+           eventClick: function(info) {
+
+           const title = info.event.title;
+           const description = info.event.extendedProps.description;
+
+           alert(title + "\n\n" + description);
+
+            },
+
 
             dateClick: function(info) {
 

@@ -160,7 +160,17 @@
                                         </button>
 
                                     </form>
+                                    <!-- 반복 일정 삭제 -->
+                                    <form action="/todo/deleteRepeat" method="post">
 
+                                        <input type="hidden" name="title" th:value="${todo.title}">
+                                        <input type="hidden" name="repeatType" th:value="${todo.repeatType}">
+
+                                        <button class="btn btn-sm btn-warning">
+                                            반복 일정 삭제
+                                        </button>
+
+                                    </form>
                                 </div>
 
                             </li>

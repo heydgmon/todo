@@ -37,6 +37,11 @@ public class Todoservice {
         }
 
     }
+    public void deleteRepeat(String title, String repeatType){
+
+        repo.deleteByTitleAndRepeatType(title, repeatType);
+
+    }
     public List<Todo> findByProject(String project){
         return repo.findByProject(project);
     }
