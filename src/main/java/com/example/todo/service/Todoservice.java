@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -97,6 +98,14 @@ public class Todoservice {
         todo.setDeadline(deadline);
         todo.setPriority(priority);
         todo.setColor(color);
+
+        //10분전 알림
+        LocalDateTime reminderTime =
+                deadline.atStartOfDay().minusMinutes(10);
+
+        todo.setReminderTime(reminderTime);
+        todo.setNotified(false);
+
         todo.setRepeatType(repeatType);
         todo.setProject(project);
         todo.setCompleted(false);

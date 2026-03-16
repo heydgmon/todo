@@ -2,6 +2,7 @@ package com.example.todo.domain;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,6 +41,19 @@ public class Todo {
     @CollectionTable(name = "todo_tags", joinColumns = @JoinColumn(name = "todo_id"))
     @Column(name = "tag")
     private Set<String> tags = new HashSet<>();
+
+    //aws ses 알림기능 테스트
+    private String email;                 // 사용자 이메일
+    private LocalDateTime reminderTime;
+    private boolean notified;
+
+    public void setReminderTime(LocalDateTime reminderTime) {
+        this.reminderTime = reminderTime;
+    }
+
+    public void setNotified(boolean notified) {
+        this.notified = notified;
+    }
 
     // getters/setters
     public Long getId() { return id; }
