@@ -73,7 +73,7 @@
 
                 <div class="col-md-3">
                     <div class="card shadow-sm p-4 h-100">
-                        <h6>🔥 가장 임박한 일정</h6>
+                        <h6>📋일정 요약</h6>
                         <ul class="mb-0 small mt-2">
                             <li th:each="task : ${urgentTasks}">
                                 <span th:text="${task.title}"></span>
@@ -141,10 +141,7 @@
                             지연 일정은 빨간색으로 표시됩니다.
                         </p>
                         <p class="text-muted">
-                            오늘 할 일을 먼저 처리하세요 🔥
-                        </p>
-                        <p class="text-muted">
-                            일정은 캘린더에서 관리하세요.배포 자동화 테스트
+                            일정은 캘린더에서 관리하세요.
                         </p>
                     </div>
                 </div>

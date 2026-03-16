@@ -38,8 +38,8 @@ public class CalendarController {
                 prefix = "⚡ ";
                 event.put("color", "#ffc107");
             } else {
-                prefix = "• ";
-                event.put("color", "#0d6efd");
+                prefix = "🌿 ";
+                event.put("color", "#198754");
             }
 
             event.put("id", todo.getId());

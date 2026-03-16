@@ -104,7 +104,7 @@
                                     <!-- 우선순위 -->
                                     <span th:if="${todo.priority == 'HIGH'}">🔥</span>
                                     <span th:if="${todo.priority == 'MEDIUM'}">⚡</span>
-                                    <span th:if="${todo.priority == 'LOW'}">•</span>
+                                    <span th:if="${todo.priority == 'LOW'}">🌿</span>
 
                                     <!-- 제목 -->
                                     <span th:text="${todo.title}"
@@ -149,19 +149,7 @@
 
                                     </form>
 
-                                    <!-- 수정 -->
-                                    <form th:action="@{/todo/update/{id}(id=${todo.id})}"
-                                          method="post">
 
-                                        <input type="hidden"
-                                               name="title"
-                                               th:value="${todo.title}">
-
-                                        <button class="btn btn-sm btn-outline-primary">
-                                            수정
-                                        </button>
-
-                                    </form>
 
                                     <!-- 삭제 -->
                                     <form th:action="@{/todo/delete/{id}(id=${todo.id})}"
