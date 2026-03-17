@@ -13,28 +13,34 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf(csrf -> csrf.disable())   // POST/DELETE 403 방지
+                .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/",
-                                "/dashboard",
-                                "/calendar",
-                                "/todo",
-                                "/css/**",
-                                "/js/**",
-                                "/h2-console/**"
+                                "/", "/dashboard", "/calendar", "/todo",
+                                "/css/**", "/js/**", "/api/calendar/**","/h2-console/**",
+
+                                // 🔥 추가 (중요)
+                                "/todoNew",
+                                "/todo/add",
+                                "/todo/delete/**",
+                                "/todo/update/**",
+                                "/todo/toggle/**",
+                                "/todo/reorder",
+                                "/todo/deleteRepeat"
                         ).permitAll()
-                        .anyRequest().authenticated()   // 로그인만 하면 모든 기능 사용
+
+                        .anyRequest().authenticated()
                 )
 
                 .oauth2Login(oauth -> oauth
                         .defaultSuccessUrl("/dashboard", true)
                 )
 
-                .logout(Customizer.withDefaults());
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/")
+                );
 
-        // H2 콘솔 사용 시 필요
         http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
 
         return http.build();

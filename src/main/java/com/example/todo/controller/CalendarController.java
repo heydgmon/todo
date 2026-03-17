@@ -1,5 +1,5 @@
 package com.example.todo.controller;
-
+import java.util.Arrays;
 import com.example.todo.domain.Todo;
 import com.example.todo.service.Todoservice;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +28,10 @@ public class CalendarController {
             if (todo.getDeadline() == null) continue;
 
             Map<String, Object> event = new HashMap<>();
+            // ⭐ 여기 추가
+            if (todo.isCompleted()) {
+                event.put("classNames", Arrays.asList("completed-event"));
+            }
 
             String prefix = "";
 

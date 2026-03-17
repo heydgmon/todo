@@ -73,3 +73,14 @@
 .todo-item.active {
     background: #e7f1ff;
 }
+
+/* ===== 캘린더 완료 이벤트 스타일 ===== */
+.fc-event.completed-event {
+    background-color: #999 !important;
+    border-color: #999 !important;
+}
+
+.fc-event.completed-event .fc-event-title {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
