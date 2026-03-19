@@ -18,7 +18,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/", "/dashboard", "/calendar", "/todo",
-                                "/css/**", "/js/**", "/api/calendar/**","/h2-console/**",
+                                "/css/**", "/js/**", "/api/calendar/**","/h2-console/**","/api/map/**",
 
                                 // 🔥 추가 (중요)
                                 "/todoNew",

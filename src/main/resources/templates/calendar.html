@@ -28,7 +28,6 @@
           font-family: 'DM Sans', sans-serif;
         }
 
-        /* NAV */
         nav {
           display:flex;
           justify-content:space-between;
@@ -40,23 +39,19 @@
           font-family: 'Instrument Serif';
         }
 
-        /* 캘린더 */
         #calendar {
           margin-top:20px;
         }
 
-        /* TODAY */
         .fc-day-today {
           background-color: #eef2ff !important;
           border: 2px solid #5b7fff !important;
         }
 
-        /* hover */
         .fc-daygrid-day:hover {
           background-color: #f9fafb;
         }
 
-        /* 버튼 */
         .fc-button {
           background:#5b7fff !important;
           border:none !important;
@@ -67,9 +62,24 @@
           font-weight:600;
         }
 
-        /* text */
         .muted {
           color:#6b7280;
+        }
+
+        /* 지도 */
+        #map-wrap {
+            width: 100%;
+            height: 250px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            background: #f3f4f6;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
@@ -78,10 +88,8 @@
 
 <div class="layout">
 
-    <!-- 사이드바 -->
     <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
-    <!-- 본문 -->
     <div class="content">
 
         <div>
@@ -130,6 +138,23 @@
                                   class="form-control"
                                   placeholder="설명"></textarea>
                     </div>
+
+                    <!-- 장소 검색 -->
+                    <div class="mb-3">
+                        <input type="text"
+                               id="place"
+                               class="form-control"
+                               placeholder="장소 검색 (예: 강남역)">
+                    </div>
+
+                    <!-- 지도 -->
+                    <div id="map-wrap">
+                        <div id="map"></div>
+                    </div>
+
+                    <!-- 좌표 -->
+                    <input type="hidden" name="lat" id="lat">
+                    <input type="hidden" name="lng" id="lng">
 
                     <div class="mb-3">
                         <label class="form-label">우선순위</label>
@@ -199,6 +224,77 @@
         calendar.render();
     });
 </script>
+
+<script>
+    let map;
+    let marker;
+
+    function naverMapReady() {
+
+        const modal = document.getElementById('todoModal');
+
+        modal.addEventListener('shown.bs.modal', function () {
+
+            setTimeout(() => {
+
+                if (!map) {
+                    map = new naver.maps.Map('map', {
+                        center: new naver.maps.LatLng(37.5665, 126.9780),
+                        zoom: 15
+                    });
+                } else {
+                    naver.maps.Event.trigger(map, 'resize');
+                }
+
+            }, 300);
+
+        });
+
+        document.getElementById("place").addEventListener("keydown", function(e){
+            if(e.key === "Enter"){
+                e.preventDefault();
+                searchPlace();
+            }
+        });
+    }
+
+    function searchPlace() {
+
+        const query = document.getElementById("place").value;
+
+        fetch(`/api/map/search?query=` + query)
+            .then(res => res.json())
+            .then(data => {
+
+                if (!data.addresses || data.addresses.length === 0) {
+                    alert("검색 결과 없음");
+                    return;
+                }
+
+                const item = data.addresses[0];
+
+                const lat = item.y;
+                const lng = item.x;
+
+                const location = new naver.maps.LatLng(lat, lng);
+
+                map.setCenter(location);
+
+                if (marker) marker.setMap(null);
+
+                marker = new naver.maps.Marker({
+                    position: location,
+                    map: map
+                });
+
+                document.getElementById("lat").value = lat;
+                document.getElementById("lng").value = lng;
+            });
+    }
+</script>
+
+<!-- 네이버 지도 -->
+<script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ac7wy8wkw8&callback=naverMapReady"></script>
 
 </body>
 </html>
