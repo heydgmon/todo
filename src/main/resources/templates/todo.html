@@ -1,18 +1,85 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-
     <meta charset="UTF-8">
     <title>Todo</title>
 
     <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-          rel="stylesheet">
-
-    <!-- Drag 정렬 라이브러리 -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
+    <style>
+        :root {
+          --accent:#5b7fff;
+          --text:#111827;
+          --muted:#6b7280;
+          --red:#f87171;
+        }
+
+        body{
+          font-family:'DM Sans',sans-serif;
+        }
+
+        /* NAV */
+        nav{
+          display:flex;
+          justify-content:space-between;
+          padding:18px 10px;
+          margin-bottom:20px;
+        }
+
+        .logo{
+          font-family:'Instrument Serif';
+        }
+
+        /* grid */
+        .row{
+          display:grid;
+          grid-template-columns: 1fr 2fr;
+          gap:20px;
+        }
+
+        /* panel */
+        .panel{
+          background:#fff;
+          border:1px solid #e5e7eb;
+          border-radius:16px;
+          padding:24px;
+        }
+
+        /* list */
+        .list-item{
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          padding:12px 0;
+          border-bottom:1px solid #e5e7eb;
+        }
+
+        /* text */
+        .muted{color:#6b7280}
+
+        /* button */
+        .btn{
+          padding:6px 12px;
+          border-radius:8px;
+          font-size:0.8rem;
+          border:none;
+          cursor:pointer;
+        }
+
+        .btn-outline{
+          border:1px solid #e5e7eb;
+          background:white;
+        }
+
+        .btn-success{background:#34d399;color:white;}
+        .btn-danger{background:#f87171;color:white;}
+        .btn-warning{background:#fbbf24;color:white;}
+
+        .btn:hover{opacity:0.9}
+    </style>
 </head>
 
 <body>
@@ -20,217 +87,130 @@
 <div class="layout">
 
     <!-- 사이드바 -->
-    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
+    <!-- 본문 -->
     <div class="content">
 
-        <div class="container mt-4">
-            <div class="row g-4">
+        <div>
 
-                <!-- 좌측 패널 -->
-                <div class="col-lg-4 d-none d-lg-block">
+            <nav>
+                <div class="logo">do<span style="color:#5b7fff">·</span>it</div>
+            </nav>
 
-                    <div class="panel">
+            <h2>Todo</h2>
+            <p class="muted">할 일을 관리하세요</p>
 
-                        <h5>📋 Task Overview</h5>
+            <div class="row">
 
-                        <p class="mt-3">
-                            • 전체 :
-                            <strong th:text="${todos.size()}"></strong>
-                        </p>
+                <!-- 좌측 -->
+                <div class="panel">
 
-                        <p>
-                            • 완료 :
-                            <strong th:text="${#lists.size(todos.?[completed])}"></strong>
-                        </p>
+                    <h5>📋 Overview</h5>
 
-                        <p>
-                            • 미완료 :
-                            <strong th:text="${todos.size() - #lists.size(todos.?[completed])}"></strong>
-                        </p>
+                    <p>전체 : <strong th:text="${todos.size()}"></strong></p>
+                    <p>완료 : <strong th:text="${#lists.size(todos.?[completed])}"></strong></p>
+                    <p>미완료 : <strong th:text="${todos.size() - #lists.size(todos.?[completed])}"></strong></p>
 
-                        <hr>
+                    <hr>
 
-                        <!-- 검색 -->
-                        <form method="get" action="/todo">
+                    <form method="get" action="/todo">
+                        <input type="text" name="q" class="form-control" placeholder="검색">
+                    </form>
 
-                            <input type="text"
-                                   name="q"
-                                   class="form-control"
-                                   placeholder="검색 (제목 / 설명 / 프로젝트)">
+                    <hr>
 
-                        </form>
+                    <h6>📂 필터</h6>
 
-                        <hr>
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <a href="/todo" class="btn btn-outline">전체</a>
+                        <a href="/todo/today" class="btn btn-outline">오늘</a>
+                        <a href="/todo/week" class="btn btn-outline">이번주</a>
+                    </div>
 
-                        <!-- 필터 -->
-                        <h6>📂 필터</h6>
+                </div>
 
-                        <div class="d-grid gap-2">
+                <!-- 리스트 -->
+                <div class="panel">
 
-                            <a href="/todo" class="btn btn-outline-secondary btn-sm">
-                                전체
-                            </a>
+                    <h5>📝 Todo 목록</h5>
 
-                            <a href="/todo/today" class="btn btn-outline-primary btn-sm">
-                                오늘
-                            </a>
+                    <div id="todoList">
 
-                            <a href="/todo/week" class="btn btn-outline-success btn-sm">
-                                이번주
-                            </a>
+                        <div th:each="todo : ${todos}"
+                             th:attr="data-id=${todo.id}"
+                             class="list-item">
 
+                            <div>
+
+                                <span th:if="${todo.priority == 'HIGH'}">🔥</span>
+                                <span th:if="${todo.priority == 'MEDIUM'}">⚡</span>
+                                <span th:if="${todo.priority == 'LOW'}">🌿</span>
+
+                                <span th:text="${todo.title}"
+                                      th:classappend="${todo.completed} ? 'text-decoration-line-through muted'">
+                                </span>
+
+                                <small class="muted" th:if="${todo.deadline != null}">
+                                    (<span th:text="${todo.deadline}"></span>)
+                                </small>
+
+                            </div>
+
+                            <div style="display:flex; gap:6px;">
+
+                                <form th:action="@{/todo/toggle/{id}(id=${todo.id})}" method="post">
+                                    <button class="btn btn-success">완료</button>
+                                </form>
+
+                                <form th:action="@{/todo/delete/{id}(id=${todo.id})}" method="post">
+                                    <button class="btn btn-danger">삭제</button>
+                                </form>
+
+                                <form action="/todo/deleteRepeat" method="post">
+                                    <input type="hidden" name="title" th:value="${todo.title}">
+                                    <input type="hidden" name="repeatType" th:value="${todo.repeatType}">
+                                    <button class="btn btn-warning">반복삭제</button>
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                        <div class="muted" th:if="${#lists.isEmpty(todos)}">
+                            할 일이 없습니다
                         </div>
 
                     </div>
 
                 </div>
 
-                <!-- Todo 리스트 -->
-                <div class="col-lg-8 col-12">
-
-                    <div class="panel">
-
-                        <h5 class="mb-3">📝 Todo 목록</h5>
-
-                        <ul id="todoList" class="list-group list-group-flush">
-
-                            <li th:each="todo : ${todos}"
-                                th:attr="data-id=${todo.id}"
-                                class="list-group-item d-flex justify-content-between align-items-center">
-
-                                <div>
-
-                                    <!-- 우선순위 -->
-                                    <span th:if="${todo.priority == 'HIGH'}">🔥</span>
-                                    <span th:if="${todo.priority == 'MEDIUM'}">⚡</span>
-                                    <span th:if="${todo.priority == 'LOW'}">🌿</span>
-
-                                    <!-- 제목 -->
-                                    <span th:text="${todo.title}"
-                                          th:classappend="${todo.completed} ? 'text-decoration-line-through text-muted'">
-                                    </span>
-
-                                    <!-- 서브태스크 표시 -->
-                                    <small class="text-muted"
-                                           th:if="${todo.parent != null}">
-                                        (sub)
-                                    </small>
-
-                                    <!-- 프로젝트 -->
-                                    <small class="text-primary ms-2"
-                                           th:if="${todo.project != null}">
-                                        [<span th:text="${todo.project}"></span>]
-                                    </small>
-
-                                    <!-- 태그 -->
-                                    <small class="text-muted ms-1"
-                                           th:each="tag : ${todo.tags}">
-                                        #<span th:text="${tag}"></span>
-                                    </small>
-
-                                    <!-- 날짜 -->
-                                    <small class="text-muted ms-2"
-                                           th:if="${todo.deadline != null}">
-                                        (<span th:text="${todo.deadline}"></span>)
-                                    </small>
-
-                                </div>
-
-                                <div class="d-flex gap-2">
-
-                                    <!-- 완료 -->
-                                    <form th:action="@{/todo/toggle/{id}(id=${todo.id})}"
-                                          method="post">
-
-                                        <button class="btn btn-sm btn-outline-success">
-                                            완료
-                                        </button>
-
-                                    </form>
-
-
-
-                                    <!-- 삭제 -->
-                                    <form th:action="@{/todo/delete/{id}(id=${todo.id})}"
-                                          method="post">
-
-                                        <button class="btn btn-sm btn-outline-danger">
-                                            삭제
-                                        </button>
-
-                                    </form>
-                                    <!-- 반복 일정 삭제 -->
-                                    <form action="/todo/deleteRepeat" method="post">
-
-                                        <input type="hidden" name="title" th:value="${todo.title}">
-                                        <input type="hidden" name="repeatType" th:value="${todo.repeatType}">
-
-                                        <button class="btn btn-sm btn-warning">
-                                            반복 일정 삭제
-                                        </button>
-
-                                    </form>
-                                </div>
-
-                            </li>
-
-                            <li class="list-group-item text-muted text-center"
-                                th:if="${#lists.isEmpty(todos)}">
-
-                                등록된 할 일이 없습니다.
-
-                            </li>
-
-                        </ul>
-
-                    </div>
-
-                </div>
-
             </div>
+
         </div>
 
     </div>
 
 </div>
 
-
 <script>
-
     const el = document.getElementById("todoList");
 
-    Sortable.create(el, {
-
+    Sortable.create(el,{
         animation:150,
-
-        onEnd: function () {
-
-            const ids = [];
-
-            document.querySelectorAll("#todoList li")
-            .forEach(li => {
-
+        onEnd:function(){
+            const ids=[];
+            document.querySelectorAll("#todoList > div").forEach(li=>{
                 ids.push(li.dataset.id);
-
             });
 
             fetch("/todo/reorder",{
-
                 method:"POST",
-
-                headers:{
-                    "Content-Type":"application/json"
-                },
-
+                headers:{"Content-Type":"application/json"},
                 body:JSON.stringify(ids)
-
             });
-
         }
-
     });
-
 </script>
 
 </body>

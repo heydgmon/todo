@@ -1,24 +1,32 @@
 /* ===== 전체 레이아웃 ===== */
 .layout {
     display: flex;
-    height: 100vh;
-    background: #f4f6f9;
+    min-height: 100vh;
+    background: #0b0c10;
 }
 
 /* ===== 사이드바 ===== */
 .sidebar {
     width: 230px;
+    height: 100vh;
     background-color: #1e293b;
     color: white;
     padding: 25px 20px;
+
+    /* ⭐ 핵심: 고정 */
+    position: fixed;
+    left: 0;
+    top: 0;
 }
 
+/* 로고 */
 .sidebar .logo {
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 40px;
 }
 
+/* 메뉴 */
 .sidebar .menu {
     list-style: none;
     padding: 0;
@@ -30,42 +38,63 @@
 }
 
 .sidebar .menu a {
-    color: white;
+    color: #cbd5f5;
     text-decoration: none;
-    font-size: 15px;
+    font-size: 14px;
     display: block;
-    padding: 8px 10px;
-    border-radius: 6px;
-    transition: background 0.2s ease;
+    padding: 10px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
 
 .sidebar .menu a:hover {
     background-color: #334155;
+    color: white;
 }
 
 .sidebar .menu a.active {
     background-color: #334155;
+    color: white;
 }
 
 /* ===== 메인 컨텐츠 ===== */
 .content {
     flex: 1;
+
+    /* ⭐ 핵심: 사이드바 공간 확보 */
+    margin-left: 230px;
+
+    padding: 40px;
+
+    /* ⭐ 카드형 배경 */
+    display: flex;
+    justify-content: center;
+}
+
+/* 내부 컨텐츠 박스 */
+.content > div {
+    width: 100%;
+    max-width: 1100px;
+
+    background: #ffffff;
+    border-radius: 16px;
     padding: 30px;
-    overflow-y: auto;
 }
 
-/* ===== 기존 패널 스타일 ===== */
+/* ===== 패널 ===== */
 .panel {
-    background: #fff;
+    background: #ffffff;
     border-radius: 14px;
-    padding: 16px;
-    height: 100%;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
 }
 
+/* ===== 캘린더 ===== */
 #calendar {
     min-height: 650px;
 }
 
+/* ===== Todo ===== */
 .todo-item {
     cursor: pointer;
 }
@@ -74,7 +103,7 @@
     background: #e7f1ff;
 }
 
-/* ===== 캘린더 완료 이벤트 스타일 ===== */
+/* ===== FullCalendar 완료 이벤트 ===== */
 .fc-event.completed-event {
     background-color: #999 !important;
     border-color: #999 !important;
