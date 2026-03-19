@@ -109,14 +109,7 @@
             <nav>
                 <div class="logo">do<span style="color:#5b7fff">·</span>it</div>
 
-                <div>
-                    <a th:if="${#authentication == null}"
-                       href="/oauth2/authorization/cognito"
-                       class="btn">로그인</a>
 
-                    <span th:if="${#authentication != null}"
-                          th:text="${#authentication.name.split('@')[0]} + '님'"></span>
-                </div>
             </nav>
 
             <h2>Dashboard</h2>
