@@ -260,37 +260,38 @@
 
     function searchPlace() {
 
-        const query = document.getElementById("place").value;
+    const query = document.getElementById("place").value;
 
-        fetch(`/api/map/search?query=` + query)
-            .then(res => res.json())
-            .then(data => {
+    fetch(`/api/map/search?query=` + query)
+        .then(res => res.json())
+        .then(data => {
 
-                if (!data.addresses || data.addresses.length === 0) {
-                    alert("검색 결과 없음");
-                    return;
-                }
+            if (!data.items || data.items.length === 0) {
+                alert("검색 결과 없음");
+                return;
+            }
 
-                const item = data.addresses[0];
+            const item = data.items[0];
 
-                const lat = item.y;
-                const lng = item.x;
+            // ⚠️ 중요: 좌표 변환
+            const lat = item.mapy / 10000000;
+            const lng = item.mapx / 10000000;
 
-                const location = new naver.maps.LatLng(lat, lng);
+            const location = new naver.maps.LatLng(lat, lng);
 
-                map.setCenter(location);
+            map.setCenter(location);
 
-                if (marker) marker.setMap(null);
+            if (marker) marker.setMap(null);
 
-                marker = new naver.maps.Marker({
-                    position: location,
-                    map: map
-                });
-
-                document.getElementById("lat").value = lat;
-                document.getElementById("lng").value = lng;
+            marker = new naver.maps.Marker({
+                position: location,
+                map: map
             });
-    }
+
+            document.getElementById("lat").value = lat;
+            document.getElementById("lng").value = lng;
+        });
+}
 </script>
 
 <!-- 네이버 지도 -->

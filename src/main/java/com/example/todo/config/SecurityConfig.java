@@ -2,9 +2,9 @@ package com.example.todo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 public class SecurityConfig {
@@ -16,21 +16,17 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/", "/dashboard", "/calendar", "/todo",
-                                "/css/**", "/js/**", "/api/calendar/**","/h2-console/**","/api/map/**",
+                        // ✅ 전부 허용 — 로그인 없이도 모든 기능 사용 가능
+                        .anyRequest().permitAll()
+                )
 
-                                // 🔥 추가 (중요)
-                                "/todoNew",
-                                "/todo/add",
-                                "/todo/delete/**",
-                                "/todo/update/**",
-                                "/todo/toggle/**",
-                                "/todo/reorder",
-                                "/todo/deleteRepeat"
-                        ).permitAll()
-
-                        .anyRequest().authenticated()
+                .exceptionHandling(e -> e
+                        .defaultAuthenticationEntryPointFor(
+                                (request, response, authException) -> {
+                                    response.sendError(401);
+                                },
+                                new AntPathRequestMatcher("/api/**")
+                        )
                 )
 
                 .oauth2Login(oauth -> oauth
@@ -38,10 +34,13 @@ public class SecurityConfig {
                 )
 
                 .logout(logout -> logout
+                        .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
                 );
 
-        http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
+        http.headers(headers ->
+                headers.frameOptions(frame -> frame.disable())
+        );
 
         return http.build();
     }
