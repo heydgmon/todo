@@ -59,12 +59,13 @@ public class WorkspaceController {
     /** 워크스페이스 멤버 관리 페이지 */
     @GetMapping("/{id}/members")
     public String members(@PathVariable Long id, Authentication auth, Model model) {
+        // ✅ 수정: null 체크를 checkPermission보다 먼저 수행
         AppUser user = userHelper.getCurrentUser(auth);
-        workspaceService.checkPermission(id, user.getId(), "VIEWER");
-        // 비로그인이면 로그인 페이지로
         if (user == null) {
             return "redirect:/oauth2/authorization/cognito";
         }
+
+        workspaceService.checkPermission(id, user.getId(), "VIEWER");
 
         List<WorkspaceMember> members = workspaceService.getMembers(id);
         model.addAttribute("members", members);

@@ -3,11 +3,18 @@ package com.example.todo.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 public class SecurityConfig {
+
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+
+    public SecurityConfig(OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler) {
+        this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
+    }
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -16,7 +23,6 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        // ✅ 전부 허용 — 로그인 없이도 모든 기능 사용 가능
                         .anyRequest().permitAll()
                 )
 
@@ -30,7 +36,14 @@ public class SecurityConfig {
                 )
 
                 .oauth2Login(oauth -> oauth
-                        .defaultSuccessUrl("/dashboard", true)
+                        .loginPage("/login")
+                        .successHandler(oAuth2LoginSuccessHandler)
+                        // ✅ 명시적으로 세션 기반 authorization request 저장소 설정
+                        .authorizationEndpoint(authorization -> authorization
+                                .authorizationRequestRepository(
+                                        new HttpSessionOAuth2AuthorizationRequestRepository()
+                                )
+                        )
                 )
 
                 .logout(logout -> logout

@@ -40,7 +40,10 @@ public class Todo {
     private LocalDateTime reminderTime;
     private boolean notified;
 
-    // ===== SaaS 추가 필드 =====
+    private String location;
+    private Double lat;
+    private Double lng;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workspace_id", nullable = false)
     private Workspace workspace;
@@ -52,7 +55,6 @@ public class Todo {
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    // 기존 Getters & Setters (유지)
     public Long getId() { return id; }
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
@@ -83,7 +85,13 @@ public class Todo {
     public void setNotified(boolean notified) { this.notified = notified; }
     public boolean isNotified() { return notified; }
 
-    // SaaS 추가 Getters & Setters
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
+    public Double getLat() { return lat; }
+    public void setLat(Double lat) { this.lat = lat; }
+    public Double getLng() { return lng; }
+    public void setLng(Double lng) { this.lng = lng; }
+
     public Workspace getWorkspace() { return workspace; }
     public void setWorkspace(Workspace workspace) { this.workspace = workspace; }
     public AppUser getCreatedBy() { return createdBy; }
