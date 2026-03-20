@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>멤버 관리</title>
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="content">
+        <div class="container mt-4">
+
+            <h3 class="mb-4">👥 멤버 관리</h3>
+
+            <!-- 멤버 초대 -->
+            <div class="panel mb-4">
+                <h5>멤버 초대</h5>
+                <form th:action="@{/workspace/{id}/invite(id=${workspaceId})}"
+                      method="post" class="d-flex gap-2 mt-3">
+                    <input type="email" name="email" class="form-control"
+                           placeholder="이메일 주소" required>
+                    <select name="role" class="form-select" style="max-width:150px;">
+                        <option value="VIEWER">VIEWER (읽기만)</option>
+                        <option value="EDITOR">EDITOR (수정 가능)</option>
+                    </select>
+                    <button class="btn btn-primary" style="white-space:nowrap;">초대</button>
+                </form>
+                <small class="text-muted mt-2 d-block">
+                    초대 이메일이 발송됩니다. (7일간 유효)
+                </small>
+            </div>
+
+            <!-- 현재 멤버 목록 -->
+            <div class="panel">
+                <h5>현재 멤버</h5>
+                <table class="table mt-3">
+                    <thead>
+                    <tr>
+                        <th>이름</th>
+                        <th>이메일</th>
+                        <th>권한</th>
+                        <th>상태</th>
+                        <th>관리</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="member : ${members}">
+                        <td th:text="${member.user.name}">이름</td>
+                        <td th:text="${member.user.email}">이메일</td>
+                        <td>
+                                <span th:if="${member.role == 'OWNER'}"
+                                      class="badge bg-dark">OWNER</span>
+                            <span th:if="${member.role == 'EDITOR'}"
+                                  class="badge bg-primary">EDITOR</span>
+                            <span th:if="${member.role == 'VIEWER'}"
+                                  class="badge bg-secondary">VIEWER</span>
+                        </td>
+                        <td>
+                                <span th:if="${member.accepted}"
+                                      class="text-success">✅ 수락</span>
+                            <span th:unless="${member.accepted}"
+                                  class="text-warning">⏳ 대기중</span>
+                        </td>
+                        <td>
+                            <!-- OWNER는 변경/제거 불가 -->
+                            <div th:if="${member.role != 'OWNER'}" class="d-flex gap-1">
+                                <!-- 권한 변경 -->
+                                <form th:action="@{/workspace/{wsId}/members/{mId}/role(wsId=${workspaceId}, mId=${member.id})}"
+                                      method="post" class="d-flex gap-1">
+                                    <select name="role" class="form-select form-select-sm"
+                                            style="width:110px;">
+                                        <option value="VIEWER"
+                                                th:selected="${member.role == 'VIEWER'}">VIEWER</option>
+                                        <option value="EDITOR"
+                                                th:selected="${member.role == 'EDITOR'}">EDITOR</option>
+                                    </select>
+                                    <button class="btn btn-sm btn-outline-primary">변경</button>
+                                </form>
+
+                                <!-- 멤버 제거 -->
+                                <form th:action="@{/workspace/{wsId}/members/{mId}/remove(wsId=${workspaceId}, mId=${member.id})}"
+                                      method="post"
+                                      onsubmit="return confirm('정말 제거하시겠습니까?');">
+                                    <button class="btn btn-sm btn-outline-danger">제거</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <a th:href="@{/workspace}" class="btn btn-outline-secondary mt-3">← 목록으로</a>
+
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

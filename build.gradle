@@ -31,9 +31,10 @@ dependencies {
     // PostgreSQL
     runtimeOnly 'org.postgresql:postgresql'
 
-    // AWS SES SDK v2
-    implementation 'software.amazon.awssdk:ses:2.25.0'
-    implementation 'software.amazon.awssdk:sts:2.25.0'
+    // AWS SDK v2 BOM (버전 통합 관리)
+    implementation platform('software.amazon.awssdk:bom:2.25.60')
+    implementation 'software.amazon.awssdk:ses'
+    implementation 'software.amazon.awssdk:sts'
     /*runtimeOnly 'com.h2database:h2'*/
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
