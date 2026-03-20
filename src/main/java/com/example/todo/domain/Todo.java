@@ -46,7 +46,7 @@ public class Todo {
     private String email;                 // 사용자 이메일
     private LocalDateTime reminderTime;
     private boolean notified;
-
+    private String location;
     public void setReminderTime(LocalDateTime reminderTime) {
         this.reminderTime = reminderTime;
     }
@@ -56,6 +56,8 @@ public class Todo {
     }
 
     // getters/setters
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
     public Long getId() { return id; }
 
     public String getTitle() { return title; }

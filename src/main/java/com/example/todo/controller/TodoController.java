@@ -76,7 +76,8 @@ public class TodoController {
             @RequestParam(required = false) String repeatType,
             @RequestParam(required = false) String project,
             @RequestParam(required = false) Long parentId,
-            @RequestParam(required = false) String tags
+            @RequestParam(required = false) String tags,
+            @RequestParam(required = false) String location   // 추가
     ) {
 
         if (deadline == null) deadline = LocalDate.now();
@@ -90,7 +91,8 @@ public class TodoController {
                 repeatType,
                 project,
                 parentId,
-                tags
+                tags,
+                location
         );
 
         return "redirect:/todo";
@@ -151,7 +153,8 @@ public class TodoController {
             @RequestParam(required = false) String repeatType,
             @RequestParam(required = false) String project,
             @RequestParam(required = false) Long parentId,
-            @RequestParam(required = false) String tags
+            @RequestParam(required = false) String tags,
+            @RequestParam(required = false) String location   // 추가
     ) {
 
         if (repeatType == null || repeatType.equals("NONE")) {
@@ -165,7 +168,8 @@ public class TodoController {
                     "NONE",
                     project,
                     parentId,
-                    tags
+                    tags,
+                    location
             );
 
         }
@@ -187,7 +191,8 @@ public class TodoController {
                         "NONE",
                         project,
                         parentId,
-                        tags
+                        tags,
+                        location
                 );
 
                 current = current.plusDays(1);
@@ -212,7 +217,8 @@ public class TodoController {
                         "NONE",
                         project,
                         parentId,
-                        tags
+                        tags,
+                        location
                 );
 
                 current = current.plusWeeks(1);
@@ -237,7 +243,8 @@ public class TodoController {
                         "NONE",
                         project,
                         parentId,
-                        tags
+                        tags,
+                        location
                 );
 
                 current = current.plusMonths(1);
