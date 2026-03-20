@@ -88,7 +88,8 @@ public class Todoservice {
             String repeatType,
             String project,
             Long parentId,
-            String tagsCsv
+            String tagsCsv,
+            String location      // 추가
     ) {
 
         Todo todo = new Todo();
@@ -109,7 +110,7 @@ public class Todoservice {
         todo.setRepeatType(repeatType);
         todo.setProject(project);
         todo.setCompleted(false);
-
+        todo.setLocation(location);  // 추가
         if (parentId != null) {
             todo.setParent(findById(parentId));
         }

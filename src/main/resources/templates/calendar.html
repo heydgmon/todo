@@ -21,49 +21,27 @@
           --text: #111827;
           --muted: #6b7280;
         }
-
-        body {
-          font-family: 'DM Sans', sans-serif;
-        }
-
+        body { font-family: 'DM Sans', sans-serif; }
         nav {
           display:flex;
           justify-content:space-between;
           padding:18px 10px;
           margin-bottom:20px;
         }
-
-        .logo {
-          font-family: 'Instrument Serif';
-        }
-
-        #calendar {
-          margin-top:20px;
-        }
-
+        .logo { font-family: 'Instrument Serif'; }
+        #calendar { margin-top:20px; }
         .fc-day-today {
           background-color: #eef2ff !important;
           border: 2px solid #5b7fff !important;
         }
-
-        .fc-daygrid-day:hover {
-          background-color: #f9fafb;
-        }
-
+        .fc-daygrid-day:hover { background-color: #f9fafb; }
         .fc-button {
           background:#5b7fff !important;
           border:none !important;
           border-radius:8px !important;
         }
-
-        .fc-toolbar-title {
-          font-weight:600;
-        }
-
-        .muted {
-          color:#6b7280;
-        }
-
+        .fc-toolbar-title { font-weight:600; }
+        .muted { color:#6b7280; }
         #map-wrap {
             width: 100%;
             height: 250px;
@@ -73,11 +51,7 @@
             margin-bottom: 10px;
             background: #f3f4f6;
         }
-
-        #map {
-            width: 100%;
-            height: 100%;
-        }
+        #map { width: 100%; height: 100%; }
     </style>
 </head>
 
@@ -88,20 +62,14 @@
     <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
     <div class="content">
-
         <div>
-
             <nav>
                 <div class="logo">do<span style="color:#5b7fff">·</span>it</div>
             </nav>
-
             <h2>Calendar</h2>
             <p class="muted">일정을 한눈에 확인하세요</p>
-
             <div id="calendar"></div>
-
         </div>
-
     </div>
 
 </div>
@@ -113,8 +81,7 @@
 
                 <div class="modal-header">
                     <h5 class="modal-title">일정 등록</h5>
-                    <button type="button" class="btn-close"
-                            data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
                 <div class="modal-body">
@@ -122,24 +89,19 @@
                     <input type="hidden" name="dueDate" id="selectedDate">
 
                     <div class="mb-3">
-                        <input type="text"
-                               name="title"
-                               class="form-control"
-                               placeholder="제목"
-                               required>
+                        <input type="text" name="title" class="form-control"
+                               placeholder="제목" required>
                     </div>
 
                     <div class="mb-3">
-                        <textarea name="description"
-                                  class="form-control"
+                        <textarea name="description" class="form-control"
                                   placeholder="설명"></textarea>
                     </div>
 
                     <div class="mb-3">
-                        <input type="text"
-                               id="place"
+                        <input type="text" id="place" name="location"
                                class="form-control"
-                               placeholder="장소 검색 (예: 강남역)">
+                               placeholder="장소 검색 후 지도 클릭 (예: 여의도)">
                     </div>
 
                     <div id="map-wrap">
@@ -181,39 +143,28 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-
         const calendarEl = document.getElementById('calendar');
-
         const calendar = new FullCalendar.Calendar(calendarEl, {
-
             initialView: 'dayGridMonth',
             height: 650,
             showNonCurrentDates: false,
             events: '/api/calendar/todo',
             editable: true,
-
             eventDrop: function(info) {
                 fetch('/api/calendar/updateDate', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        id: info.event.id,
-                        date: info.event.startStr
-                    })
+                    body: JSON.stringify({ id: info.event.id, date: info.event.startStr })
                 });
             },
-
             eventClick: function(info) {
                 alert(info.event.title + "\n\n" + info.event.extendedProps.description);
             },
-
             dateClick: function(info) {
                 document.getElementById("selectedDate").value = info.dateStr;
                 new bootstrap.Modal(document.getElementById('todoModal')).show();
             }
-
         });
-
         calendar.render();
     });
 </script>
@@ -224,72 +175,69 @@
 
     function naverMapReady() {
 
-        const modal = document.getElementById('todoModal');
-
-        modal.addEventListener('shown.bs.modal', function () {
-            setTimeout(() => {
-                if (!map) {
-                    map = new naver.maps.Map('map', {
-                        center: new naver.maps.LatLng(37.5665, 126.9780),
-                        zoom: 15
-                    });
-                } else {
-                    naver.maps.Event.trigger(map, 'resize');
-                }
-            }, 300);
-        });
-
         document.getElementById("place").addEventListener("keydown", function(e) {
             if (e.key === "Enter") {
                 e.preventDefault();
                 searchPlace();
             }
         });
+
+        document.getElementById('todoModal').addEventListener('shown.bs.modal', function () {
+            setTimeout(() => {
+                if (!map) {
+                    map = new naver.maps.Map('map', {
+                        center: new naver.maps.LatLng(37.5665, 126.9780),
+                        zoom: 15
+                    });
+
+                    naver.maps.Event.addListener(map, 'click', function(e) {
+                        const latlng = e.coord;
+                        naver.maps.Service.reverseGeocode({
+                            coords: latlng,
+                            orders: naver.maps.Service.OrderType.ROAD_ADDR
+                                + ',' + naver.maps.Service.OrderType.ADDR
+                        }, function(status, response) {
+                            if (status !== naver.maps.Service.Status.OK) return;
+                            const address = response.v2.address.roadAddress
+                                         || response.v2.address.jibunAddress;
+                            document.getElementById("place").value = address;
+                            document.getElementById("lat").value = latlng.lat();
+                            document.getElementById("lng").value = latlng.lng();
+                            if (marker) marker.setMap(null);
+                            marker = new naver.maps.Marker({ position: latlng, map: map });
+                        });
+                    });
+
+                } else {
+                    naver.maps.Event.trigger(map, 'resize');
+                }
+            }, 300);
+        });
     }
 
-function searchPlace() {
+    function searchPlace() {
+        const query = document.getElementById("place").value;
+        if (!query) return;
 
-    const query = document.getElementById("place").value;
-
-    naver.maps.Service.geocode({ query: query }, function(status, response) {
-
-        console.log("status:", status);
-        console.log("response:", JSON.stringify(response));
-
-        if (status !== naver.maps.Service.Status.OK) {
-            alert("검색 결과 없음");
-            return;
-        }
-
-        const addresses = response.v2?.addresses;
-        console.log("addresses:", addresses);
-
-        if (!addresses || addresses.length === 0) {
-            alert("검색 결과 없음");
-            return;
-        }
-
-        const item = addresses[0];
-        const lat = parseFloat(item.y);
-        const lng = parseFloat(item.x);
-        const location = new naver.maps.LatLng(lat, lng);
-
-        map.setCenter(location);
-
-        if (marker) marker.setMap(null);
-
-        marker = new naver.maps.Marker({
-            position: location,
-            map: map
+        naver.maps.Service.geocode({ query: query }, function(status, response) {
+            if (status !== naver.maps.Service.Status.OK || !response.v2?.addresses[0]) {
+                alert("검색 결과 없음");
+                return;
+            }
+            const item = response.v2.addresses[0];
+            const lat = parseFloat(item.y);
+            const lng = parseFloat(item.x);
+            const location = new naver.maps.LatLng(lat, lng);
+            map.setCenter(location);
+            if (marker) marker.setMap(null);
+            marker = new naver.maps.Marker({ position: location, map: map });
+            document.getElementById("lat").value = lat;
+            document.getElementById("lng").value = lng;
         });
-
-        document.getElementById("lat").value = lat;
-        document.getElementById("lng").value = lng;
-    });
-}
+    }
 </script>
 
-<script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=ac7wy8wkw8&submodules=geocoder&callback=naverMapReady"></script>
+<script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=ac7wy8wkw8&submodules=geocoder,reversegeocode&callback=naverMapReady"></script>
 
 </body>
 </html>

@@ -155,6 +155,11 @@
                                     (<span th:text="${todo.deadline}"></span>)
                                 </small>
 
+                                <!-- 장소 추가 -->
+                                <small class="text-info ms-2" th:if="${todo.location != null}">
+                                    📍 <span th:text="${todo.location}"></span>
+                                </small>
+
                             </div>
 
                             <div style="display:flex; gap:6px;">
