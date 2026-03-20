@@ -29,13 +29,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'// cognito 로그인 인증 추가
 
     // PostgreSQL
-    runtimeOnly 'org.postgresql:postgresql'
+    /*runtimeOnly 'org.postgresql:postgresql'*/
+    runtimeOnly 'com.h2database:h2'
 
     // AWS SDK v2 BOM (버전 통합 관리)
     implementation platform('software.amazon.awssdk:bom:2.25.60')
     implementation 'software.amazon.awssdk:ses'
     implementation 'software.amazon.awssdk:sts'
-    /*runtimeOnly 'com.h2database:h2'*/
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'org.springframework.boot:spring-boot-starter-actuator' // alb 헬스체크 관련 추가
