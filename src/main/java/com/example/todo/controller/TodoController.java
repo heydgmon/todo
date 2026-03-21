@@ -62,6 +62,8 @@ public class TodoController {
                 ? TodoService.findAll(wsId, user.getId())
                 : TodoService.search(wsId, user.getId(), q);
         model.addAttribute("todos", todos);
+        model.addAttribute("loggedIn", true);
+        model.addAttribute("wsId", wsId);
         return "todo";
     }
 
@@ -191,6 +193,7 @@ public class TodoController {
         if (wsId != null) TodoService.deleteRepeat(wsId, user.getId(), title, repeatType);
         return "redirect:/todo";
     }
+
     @GetMapping("/ws/{wsId}/todo")
     public String listByWorkspace(@PathVariable Long wsId,
                                   @RequestParam(required = false) String q,
@@ -209,9 +212,8 @@ public class TodoController {
         model.addAttribute("wsId", wsId);
         return "todo";
     }
-// ===== [수정] /todoNew 엔드포인트에 location, lat, lng 파라미터 추가 =====
-    // 기존 addFromCalendar 메서드를 아래로 교체하세요
 
+    // ===== [수정] /todoNew — location, lat, lng 파라미터 추가 =====
     @PostMapping("/todoNew")
     public String addFromCalendar(@RequestParam String title,
                                   @RequestParam(required = false) String description,
@@ -222,9 +224,9 @@ public class TodoController {
                                   @RequestParam(required = false) String project,
                                   @RequestParam(required = false) Long parentId,
                                   @RequestParam(required = false) String tags,
-                                  @RequestParam(required = false) String location,   // [추가]
-                                  @RequestParam(required = false) Double lat,         // [추가]
-                                  @RequestParam(required = false) Double lng,         // [추가]
+                                  @RequestParam(required = false) String location,
+                                  @RequestParam(required = false) Double lat,
+                                  @RequestParam(required = false) Double lng,
                                   Authentication auth) {
 
         if (!isLoggedIn(auth)) return "redirect:/calendar";

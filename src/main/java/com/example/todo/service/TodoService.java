@@ -82,46 +82,18 @@ public class TodoService {
         repo.save(todo);
     }
 
+    // ===== [수정] 기존 add() — /todo/add 에서 호출 (장소 없는 경우) =====
     public void add(Long workspaceId, AppUser user,
                     String title, String description, LocalDate deadline,
                     String priority, String color, String repeatType,
                     String project, Long parentId, String tagsCsv) {
 
-        workspaceService.checkPermission(workspaceId, user.getId(), "EDITOR");
-        Workspace ws = workspaceRepo.findById(workspaceId).orElseThrow();
-
-        Todo todo = new Todo();
-        todo.setTitle(title);
-        todo.setDescription(description);
-        todo.setDeadline(deadline);
-        todo.setPriority(priority);
-        todo.setColor(color);
-        todo.setRepeatType(repeatType);
-        todo.setProject(project);
-        todo.setCompleted(false);
-        todo.setWorkspace(ws);
-        todo.setCreatedBy(user);
-
-        if (deadline != null) {
-            todo.setReminderTime(deadline.atStartOfDay().minusMinutes(10));
-        }
-        todo.setNotified(false);
-
-        if (parentId != null) {
-            todo.setParent(findById(parentId));
-        }
-
-        if (tagsCsv != null && !tagsCsv.isBlank()) {
-            Set<String> tags = new HashSet<>(Arrays.asList(tagsCsv.split(",")));
-            todo.setTags(tags);
-        }
-
-        repo.save(todo);
+        addWithLocation(workspaceId, user, title, description, deadline,
+                priority, color, repeatType, project, parentId, tagsCsv,
+                null, null, null);
     }
 
-    // ===== [추가] TodoService.java에 아래 메서드를 추가하세요 =====
-    // 기존 add() 메서드 바로 아래에 넣으면 됩니다.
-
+    // ===== [추가] addWithLocation() — /todoNew 에서 호출 (장소 포함) =====
     public void addWithLocation(Long workspaceId, AppUser user,
                                 String title, String description, LocalDate deadline,
                                 String priority, String color, String repeatType,
@@ -143,7 +115,7 @@ public class TodoService {
         todo.setWorkspace(ws);
         todo.setCreatedBy(user);
 
-        // ===== [핵심] location, lat, lng 저장 =====
+        // ===== [핵심] 장소 정보 저장 =====
         if (location != null && !location.isBlank()) {
             todo.setLocation(location);
         }
