@@ -55,7 +55,16 @@ public class WorkspaceController {
         workspaceService.createWorkspace(name, user);
         return "redirect:/workspace";
     }
-
+    /** 워크스페이스 삭제 */
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable Long id, Authentication auth) {
+        AppUser user = userHelper.getCurrentUser(auth);
+        if (user == null) {
+            return "redirect:/oauth2/authorization/cognito";
+        }
+        workspaceService.deleteWorkspace(id, user);
+        return "redirect:/workspace";
+    }
     /** 워크스페이스 멤버 관리 페이지 */
     @GetMapping("/{id}/members")
     public String members(@PathVariable Long id, Authentication auth, Model model) {

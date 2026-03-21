@@ -164,4 +164,23 @@ public class WorkspaceService {
             default -> 0;
         };
     }
+    /** 워크스페이스 삭제 (OWNER만 가능) */
+    public void deleteWorkspace(Long workspaceId, AppUser requester) {
+        checkPermission(workspaceId, requester.getId(), "OWNER");
+
+        Workspace ws = workspaceRepo.findById(workspaceId)
+                .orElseThrow(() -> new RuntimeException("워크스페이스를 찾을 수 없습니다"));
+
+        // 본인이 소유자인지 한번 더 확인
+        if (!ws.getOwner().getId().equals(requester.getId())) {
+            throw new RuntimeException("소유자만 워크스페이스를 삭제할 수 있습니다");
+        }
+
+        // 연관 데이터 순서대로 삭제 (FK 제약 때문)
+        notifSettingRepo.deleteByWorkspaceId(workspaceId);
+        invitationRepo.deleteByWorkspaceId(workspaceId);
+        memberRepo.deleteByWorkspaceId(workspaceId);
+        // Todo는 cascade 또는 직접 삭제
+        workspaceRepo.delete(ws);
+    }
 }

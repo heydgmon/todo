@@ -24,7 +24,7 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
 
     // 반복 일정 삭제
     void deleteByWorkspaceIdAndTitleAndRepeatType(Long workspaceId, String title, String repeatType);
-
+    void deleteByWorkspaceId(Long workspaceId);
     // 알림용: 특정 날짜에 마감인 미완료 Todo
     @Query("SELECT t FROM Todo t WHERE t.completed = false AND t.deadline = :date")
     List<Todo> findUncompletedByDeadline(@Param("date") LocalDate date);

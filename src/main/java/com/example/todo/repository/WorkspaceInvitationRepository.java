@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface WorkspaceInvitationRepository extends JpaRepository<WorkspaceInvitation, Long> {
     Optional<WorkspaceInvitation> findByToken(String token);
+    void deleteByWorkspaceId(Long workspaceId);
 }

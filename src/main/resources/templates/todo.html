@@ -30,6 +30,49 @@
         .add-form input[type="date"] { width:150px; }
         .guest-banner { background:#fef3c7; border:1px solid #f59e0b; border-radius:10px; padding:10px 16px; margin-bottom:16px; font-size:0.85rem; color:#92400e; }
         .guest-banner a { color:#d97706; font-weight:600; }
+        /* ===== 커스텀 팝업 ===== */
+.modal-overlay {
+    display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,0.4); backdrop-filter:blur(4px);
+    z-index:9999; justify-content:center; align-items:center;
+}
+.modal-overlay.active { display:flex; animation: fadeIn 0.2s ease; }
+
+.modal-box {
+    background:#fff; border-radius:20px; padding:36px 32px 28px;
+    max-width:360px; width:90%; text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,0.15);
+    animation: slideUp 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+
+.modal-box .modal-icon {
+    width:56px; height:56px; border-radius:50%;
+    background:linear-gradient(135deg,#fef3c7,#fde68a);
+    display:flex; align-items:center; justify-content:center;
+    margin:0 auto 16px; font-size:1.5rem;
+}
+
+.modal-box h4 {
+    font-size:1.05rem; font-weight:600; color:#111827; margin-bottom:8px;
+}
+
+.modal-box p {
+    font-size:0.88rem; color:#6b7280; margin-bottom:24px; line-height:1.5;
+}
+
+.modal-box .modal-btn {
+    background:linear-gradient(135deg,#5b7fff,#7c9cff);
+    color:#fff; border:none; padding:10px 36px; border-radius:12px;
+    font-size:0.9rem; font-weight:500; cursor:pointer;
+    transition:transform 0.15s, box-shadow 0.15s;
+}
+.modal-box .modal-btn:hover {
+    transform:translateY(-1px);
+    box-shadow:0 4px 16px rgba(91,127,255,0.4);
+}
+
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
     </style>
 </head>
 
@@ -297,6 +340,51 @@
 }
     function _esc(text) { var d = document.createElement('div'); d.textContent = text; return d.innerHTML; }
 </script>
+<!-- 커스텀 팝업 -->
+<div class="modal-overlay" id="dateAlert">
+    <div class="modal-box">
+        <div class="modal-icon">📅</div>
+        <h4>날짜를 입력하세요</h4>
+        <p>할 일의 마감일(연도-월-일)을<br>반드시 선택해 주세요.</p>
+        <button class="modal-btn" onclick="closeDateAlert()">확인</button>
+    </div>
+</div>
 
+<script>
+    function closeDateAlert() {
+        document.getElementById('dateAlert').classList.remove('active');
+    }
+
+    // 로그인 폼 날짜 체크
+    document.addEventListener('DOMContentLoaded', function() {
+        // 서버 POST 폼
+        var serverForm = document.querySelector('form[action="/todo/add"]');
+        if (serverForm) {
+            serverForm.addEventListener('submit', function(e) {
+                var deadline = serverForm.querySelector('input[name="deadline"]');
+                if (!deadline || !deadline.value) {
+                    e.preventDefault();
+                    document.getElementById('dateAlert').classList.add('active');
+                }
+            });
+        }
+
+        // 게스트 추가 버튼 오버라이드
+        var origGuestAdd = window.guestAdd;
+        window.guestAdd = function() {
+            var dl = document.getElementById('g-deadline');
+            if (!dl || !dl.value) {
+                document.getElementById('dateAlert').classList.add('active');
+                return;
+            }
+            origGuestAdd();
+        };
+    });
+
+    // 오버레이 클릭으로도 닫기
+    document.getElementById('dateAlert').addEventListener('click', function(e) {
+        if (e.target === this) closeDateAlert();
+    });
+</script>
 </body>
 </html>

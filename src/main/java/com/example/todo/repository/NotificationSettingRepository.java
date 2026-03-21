@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface NotificationSettingRepository extends JpaRepository<NotificationSetting, Long> {
     Optional<NotificationSetting> findByUserIdAndWorkspaceId(Long userId, Long workspaceId);
+    void deleteByWorkspaceId(Long workspaceId);
 }
