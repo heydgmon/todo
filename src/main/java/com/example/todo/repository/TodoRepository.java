@@ -2,6 +2,7 @@ package com.example.todo.repository;
 
 import com.example.todo.domain.Todo;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
@@ -32,4 +33,13 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
     // 알림용: 날짜 범위
     @Query("SELECT t FROM Todo t WHERE t.completed = false AND t.deadline BETWEEN :start AND :end")
     List<Todo> findUncompletedByDeadlineBetween(@Param("start") LocalDate start, @Param("end") LocalDate end);
+
+    @Modifying
+    @Query(value = "INSERT INTO todo_archive SELECT * FROM todo " +
+            "WHERE completed = true AND deadline < :cutoff", nativeQuery = true)
+    void archiveCompleted(@Param("cutoff") LocalDate cutoff);
+
+    @Modifying
+    @Query("DELETE FROM Todo t WHERE t.completed = true AND t.deadline < :cutoff")
+    void deleteCompletedBefore(@Param("cutoff") LocalDate cutoff);
 }

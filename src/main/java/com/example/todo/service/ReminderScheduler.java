@@ -1,5 +1,5 @@
 package com.example.todo.service;
-
+import java.time.LocalDateTime;
 import com.example.todo.domain.*;
 import com.example.todo.repository.*;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -28,7 +28,20 @@ public class ReminderScheduler {
         this.notifLogRepo = notifLogRepo;
         this.emailService = emailService;
     }
+    /** 매일 새벽 3시 - 완료 후 3일 지난 Todo → 아카이브 후 삭제 */
+    @Scheduled(cron = "0 0 3 * * *")
+    public void archiveAndDeleteOldTodos() {
+        LocalDate cutoff = LocalDate.now().minusDays(3);
+        todoRepo.archiveCompleted(cutoff);
+        todoRepo.deleteCompletedBefore(cutoff);
+    }
 
+    /** 매일 새벽 3시 30분 - 7일 지난 알림 로그 삭제 */
+    @Scheduled(cron = "0 30 3 * * *")
+    public void cleanOldNotificationLogs() {
+        LocalDateTime cutoff = LocalDateTime.now().minusDays(7);
+        notifLogRepo.deleteBefore(cutoff);
+    }
     /** 매일 오전 9시 실행 */
     @Scheduled(cron = "0 0 9 * * *")
     public void sendDailyReminders() {
