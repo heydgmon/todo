@@ -77,6 +77,10 @@ public class CalendarController {
 
             event.put("id", todo.getId());
             event.put("title", prefix + todo.getTitle());
+
+            // ★★★ 핵심: startTime/endTime은 FullCalendar의 recurring event 예약어 ★★★
+            // 최상위에 두면 "매일 반복 이벤트"로 해석됨!
+            // → "sTime"/"eTime"으로 이름을 바꿔서 extendedProps에 들어가게 함
             event.put("description", todo.getDescription());
             event.put("location", todo.getLocation());
             event.put("completed", todo.isCompleted());
@@ -94,9 +98,10 @@ public class CalendarController {
                     event.put("end", dateStr + "T" + todo.getStartTime().plusHours(1).format(TIME_FMT));
                 }
 
-                event.put("startTime", startStr);
+                // ★ "sTime"/"eTime"으로 — FullCalendar 예약어 회피
+                event.put("sTime", startStr);
                 if (todo.getEndTime() != null) {
-                    event.put("endTime", todo.getEndTime().format(TIME_FMT));
+                    event.put("eTime", todo.getEndTime().format(TIME_FMT));
                 }
             } else {
                 event.put("start", todo.getDeadline().toString());

@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Calendar</title>
-
     <link rel="stylesheet" th:href="@{/css/layout.css}">
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css">
@@ -11,7 +10,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script th:src="@{/js/guest-todo.js}"></script>
-
     <style>
         :root { --accent:#5b7fff; --text:#111827; --muted:#6b7280; }
         body { font-family:'DM Sans',sans-serif; }
@@ -28,28 +26,25 @@
         .guest-banner { background:#fef3c7; border:1px solid #f59e0b; border-radius:10px; padding:10px 16px; margin-bottom:16px; font-size:0.85rem; color:#92400e; }
         .guest-banner a { color:#d97706; font-weight:600; }
         .view-switcher { display:flex; gap:6px; margin-bottom:16px; }
-        .view-btn {
-            padding:6px 14px; border-radius:8px; font-size:0.82rem; font-weight:500;
-            border:1px solid #e5e7eb; background:#fff; color:#374151; cursor:pointer; transition: all 0.15s;
-        }
+        .view-btn { padding:6px 14px; border-radius:8px; font-size:0.82rem; font-weight:500; border:1px solid #e5e7eb; background:#fff; color:#374151; cursor:pointer; transition:all 0.15s; }
         .view-btn:hover { background:#f3f4f6; }
         .view-btn.active { background:#5b7fff; color:white; border-color:#5b7fff; }
         .time-row { display:flex; gap:10px; align-items:center; }
         .time-row input[type="time"] { flex:1; padding:6px 10px; border:1px solid #e5e7eb; border-radius:8px; font-size:0.9rem; font-family:inherit; }
         .time-row span { color:#6b7280; font-size:0.85rem; }
-        .detail-field { margin-bottom: 16px; }
-        .detail-field label { display: block; font-size: 0.8rem; color: #6b7280; margin-bottom: 4px; font-weight: 500; }
-        .detail-field .detail-value { font-size: 0.95rem; color: #111827; padding: 8px 12px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; min-height: 38px; display: flex; align-items: center; }
-        .detail-field .detail-value.empty { color: #9ca3af; font-style: italic; }
-        .detail-actions { display: flex; gap: 8px; }
-        .detail-actions .btn { flex: 1; padding: 10px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: 500; border: none; cursor: pointer; transition: opacity 0.2s; }
-        .detail-actions .btn:hover { opacity: 0.85; }
-        .btn-toggle-complete { background: #34d399; color: white; }
-        .btn-toggle-complete.completed { background: #9ca3af; }
-        .btn-detail-delete { background: #f87171; color: white; }
-        .completed-badge { display: inline-block; background: #d1fae5; color: #065f46; font-size: 0.75rem; padding: 2px 8px; border-radius: 6px; margin-left: 8px; font-weight: 600; }
-        .fc-timegrid-slot { height: 40px !important; }
-        .fc-timegrid-event { border-radius: 6px !important; font-size: 0.82rem !important; }
+        .detail-field { margin-bottom:16px; }
+        .detail-field label { display:block; font-size:0.8rem; color:#6b7280; margin-bottom:4px; font-weight:500; }
+        .detail-field .detail-value { font-size:0.95rem; color:#111827; padding:8px 12px; background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; min-height:38px; display:flex; align-items:center; }
+        .detail-field .detail-value.empty { color:#9ca3af; font-style:italic; }
+        .detail-actions { display:flex; gap:8px; }
+        .detail-actions .btn { flex:1; padding:10px 16px; border-radius:10px; font-size:0.85rem; font-weight:500; border:none; cursor:pointer; transition:opacity 0.2s; }
+        .detail-actions .btn:hover { opacity:0.85; }
+        .btn-toggle-complete { background:#34d399; color:white; }
+        .btn-toggle-complete.completed { background:#9ca3af; }
+        .btn-detail-delete { background:#f87171; color:white; }
+        .completed-badge { display:inline-block; background:#d1fae5; color:#065f46; font-size:0.75rem; padding:2px 8px; border-radius:6px; margin-left:8px; font-weight:600; }
+        .fc-timegrid-slot { height:40px !important; }
+        .fc-timegrid-event { border-radius:6px !important; font-size:0.82rem !important; }
     </style>
 </head>
 <body>
@@ -58,102 +53,70 @@
     <div class="content">
         <div>
             <nav><div class="logo">do<span style="color:#5b7fff">·</span>it</div></nav>
-
             <div id="guest-banner" class="guest-banner guest-only" style="display:none;">
                 💡 게스트 모드입니다. <a href="/oauth2/authorization/cognito">로그인</a>하면 데이터가 클라우드에 저장됩니다.
             </div>
-
             <h2>Calendar</h2>
             <p class="muted">일정을 한눈에 확인하세요</p>
-
             <div class="view-switcher">
                 <button class="view-btn active" data-view="dayGridMonth">월간</button>
                 <button class="view-btn" data-view="timeGridWeek">주간</button>
                 <button class="view-btn" data-view="timeGridDay">일간</button>
                 <button class="view-btn" data-view="listWeek">목록</button>
             </div>
-
             <div id="calendar"></div>
         </div>
     </div>
 </div>
 
-<!-- ===== 일정 등록 모달 ===== -->
+<!-- 일정 등록 모달 -->
 <div class="modal fade" id="todoModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">일정 등록</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">일정 등록</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+            <input type="hidden" id="selectedDate">
+            <div class="mb-3"><input type="text" id="modal-title" class="form-control" placeholder="제목" required></div>
+            <div class="mb-3"><textarea id="modal-desc" class="form-control" placeholder="설명"></textarea></div>
+            <div class="mb-3">
+                <label class="form-label">시간 (선택)</label>
+                <div class="time-row"><input type="time" id="modal-start-time"><span>~</span><input type="time" id="modal-end-time"></div>
+                <small class="muted">비워두면 종일 일정으로 등록됩니다.</small>
             </div>
-            <div class="modal-body">
-                <input type="hidden" id="selectedDate">
-                <div class="mb-3"><input type="text" id="modal-title" class="form-control" placeholder="제목" required></div>
-                <div class="mb-3"><textarea id="modal-desc" class="form-control" placeholder="설명"></textarea></div>
-                <div class="mb-3">
-                    <label class="form-label">시간 (선택)</label>
-                    <div class="time-row">
-                        <input type="time" id="modal-start-time">
-                        <span>~</span>
-                        <input type="time" id="modal-end-time">
-                    </div>
-                    <small class="muted">비워두면 종일 일정으로 등록됩니다.</small>
-                </div>
-                <div class="mb-3"><input type="text" id="place" class="form-control" placeholder="장소 검색 후 지도 클릭 (예: 여의도)"></div>
-                <div id="map-wrap"><div id="map"></div></div>
-                <input type="hidden" id="lat"><input type="hidden" id="lng">
-                <div class="mb-3">
-                    <label class="form-label">우선순위</label>
-                    <select id="modal-priority" class="form-control">
-                        <option value="LOW">LOW</option><option value="MEDIUM">MEDIUM</option><option value="HIGH">HIGH</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">반복 일정</label>
-                    <select id="modal-repeat" class="form-control">
-                        <option value="NONE">없음</option><option value="DAILY">매일</option><option value="WEEKLY">매주</option><option value="MONTHLY">매월</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="modal-save-btn">저장</button>
-            </div>
+            <div class="mb-3"><input type="text" id="place" class="form-control" placeholder="장소 검색 후 지도 클릭 (예: 여의도)"></div>
+            <div id="map-wrap"><div id="map"></div></div>
+            <input type="hidden" id="lat"><input type="hidden" id="lng">
+            <div class="mb-3"><label class="form-label">우선순위</label><select id="modal-priority" class="form-control"><option value="LOW">LOW</option><option value="MEDIUM">MEDIUM</option><option value="HIGH">HIGH</option></select></div>
+            <div class="mb-3"><label class="form-label">반복 일정</label><select id="modal-repeat" class="form-control"><option value="NONE">없음</option><option value="DAILY">매일</option><option value="WEEKLY">매주</option><option value="MONTHLY">매월</option></select></div>
         </div>
-    </div>
+        <div class="modal-footer"><button type="button" class="btn btn-primary" id="modal-save-btn">저장</button></div>
+    </div></div>
 </div>
 
-<!-- ===== 일정 상세보기 모달 ===== -->
+<!-- 일정 상세 모달 -->
 <div class="modal fade" id="detailModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">일정 상세 <span id="detail-completed-badge" class="completed-badge" style="display:none;">완료됨</span></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="detail-id"><input type="hidden" id="detail-is-completed">
-                <div class="detail-field"><label>제목</label><div class="detail-value" id="detail-title"></div></div>
-                <div class="detail-field"><label>날짜</label><div class="detail-value" id="detail-date"></div></div>
-                <div class="detail-field" id="detail-time-field" style="display:none;"><label>시간</label><div class="detail-value" id="detail-time"></div></div>
-                <div class="detail-field"><label>설명</label><div class="detail-value" id="detail-desc"></div></div>
-                <div class="detail-field"><label>장소</label><div class="detail-value" id="detail-location"></div></div>
-            </div>
-            <div class="modal-footer detail-actions">
-                <button type="button" class="btn btn-toggle-complete" id="detail-toggle-btn">완료 처리</button>
-                <button type="button" class="btn btn-detail-delete" id="detail-delete-btn">삭제</button>
-            </div>
+    <div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">일정 상세 <span id="detail-completed-badge" class="completed-badge" style="display:none;">완료됨</span></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+            <input type="hidden" id="detail-id"><input type="hidden" id="detail-is-completed">
+            <div class="detail-field"><label>제목</label><div class="detail-value" id="detail-title"></div></div>
+            <div class="detail-field"><label>날짜</label><div class="detail-value" id="detail-date"></div></div>
+            <div class="detail-field" id="detail-time-field" style="display:none;"><label>시간</label><div class="detail-value" id="detail-time"></div></div>
+            <div class="detail-field"><label>설명</label><div class="detail-value" id="detail-desc"></div></div>
+            <div class="detail-field"><label>장소</label><div class="detail-value" id="detail-location"></div></div>
         </div>
-    </div>
+        <div class="modal-footer detail-actions">
+            <button type="button" class="btn btn-toggle-complete" id="detail-toggle-btn">완료 처리</button>
+            <button type="button" class="btn btn-detail-delete" id="detail-delete-btn">삭제</button>
+        </div>
+    </div></div>
 </div>
 
 <script th:inline="javascript">
     window.__loggedIn = /*[[${loggedIn}]]*/ false;
 </script>
-
 <script>
     var calendarInstance;
 
-    /* ===== 유틸: "09:00" → "10:00" (1시간 뒤) ===== */
     function addOneHour(t) {
         if (!t) return '23:00';
         var p = t.split(':');
@@ -162,21 +125,18 @@
         return h.toString().padStart(2, '0') + ':' + p[1];
     }
 
-    /* ===== 유틸: "HH:mm:ss" 또는 "HH:mm" → "HH:mm" 정규화 ===== */
     function normalizeTime(t) {
         if (!t) return '';
-        return t.substring(0, 5); // "09:00:00" → "09:00", "09:00" → "09:00"
+        return t.substring(0, 5);
     }
 
     document.addEventListener('DOMContentLoaded', function () {
         var isGuest = GuestTodo.isGuest();
-
         if (isGuest) {
             var guestEls = document.querySelectorAll('.guest-only');
             for (var i = 0; i < guestEls.length; i++) guestEls[i].style.display = 'block';
         }
 
-        /* ===== FullCalendar 초기화 ===== */
         var calendarEl = document.getElementById('calendar');
         calendarInstance = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
@@ -189,43 +149,28 @@
             slotDuration: '00:30:00',
             allDaySlot: true,
             locale: 'ko',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: ''
-            },
+            headerToolbar: { left: 'prev,next today', center: 'title', right: '' },
 
-            /* ===== 이벤트 소스 ===== */
             events: isGuest
                 ? function(fetchInfo, successCallback, failureCallback) {
-                    try {
-                        var evts = GuestTodo.toCalendarEvents();
-                        successCallback(evts);
-                    } catch(e) {
-                        console.error('Guest event error:', e);
-                        successCallback([]);
-                    }
+                    try { successCallback(GuestTodo.toCalendarEvents()); }
+                    catch(e) { console.error('Guest event error:', e); successCallback([]); }
                 }
                 : '/api/calendar/todo',
 
-            /* ===== 이벤트 드래그 (날짜 변경) ===== */
             eventDrop: function(info) {
                 var newDateStr = info.event.startStr;
-                if (newDateStr && newDateStr.indexOf('T') >= 0) {
-                    newDateStr = newDateStr.split('T')[0];
-                }
+                if (newDateStr && newDateStr.indexOf('T') >= 0) newDateStr = newDateStr.split('T')[0];
                 if (isGuest) {
                     GuestTodo.updateDate(info.event.id, newDateStr);
                 } else {
                     fetch('/api/calendar/updateDate', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
+                        method: 'POST', headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({ id: info.event.id, date: info.event.startStr })
                     });
                 }
             },
 
-            /* ===== 이벤트 클릭 → 상세 모달 ===== */
             eventClick: function(info) {
                 var event = info.event;
                 var props = event.extendedProps;
@@ -234,16 +179,15 @@
                 document.getElementById('detail-id').value = event.id;
                 document.getElementById('detail-title').textContent = cleanTitle;
 
-                // 날짜
                 var dateStr = event.startStr;
                 if (dateStr && dateStr.indexOf('T') >= 0) dateStr = dateStr.split('T')[0];
                 document.getElementById('detail-date').textContent = dateStr;
 
-                // 시간
+                // ★ sTime/eTime으로 읽기 (FullCalendar 예약어 회피)
                 var timeField = document.getElementById('detail-time-field');
                 var timeEl = document.getElementById('detail-time');
-                var sTime = props.startTime ? normalizeTime(props.startTime) : '';
-                var eTime = props.endTime ? normalizeTime(props.endTime) : '';
+                var sTime = props.sTime ? normalizeTime(props.sTime) : '';
+                var eTime = props.eTime ? normalizeTime(props.eTime) : '';
 
                 if (!sTime && event.start && !event.allDay) {
                     sTime = event.start.getHours().toString().padStart(2,'0') + ':' + event.start.getMinutes().toString().padStart(2,'0');
@@ -260,31 +204,24 @@
                     timeField.style.display = 'none';
                 }
 
-                // 설명
                 var descEl = document.getElementById('detail-desc');
                 if (props.description) { descEl.textContent = props.description; descEl.classList.remove('empty'); }
                 else { descEl.textContent = '설명 없음'; descEl.classList.add('empty'); }
 
-                // 장소
                 var locEl = document.getElementById('detail-location');
                 if (props.location) { locEl.textContent = '📍 ' + props.location; locEl.classList.remove('empty'); }
                 else { locEl.textContent = '장소 없음'; locEl.classList.add('empty'); }
 
-                // 완료 상태
                 var isCompleted = props.completed || false;
                 document.getElementById('detail-is-completed').value = isCompleted ? 'true' : 'false';
                 var badge = document.getElementById('detail-completed-badge');
                 var toggleBtn = document.getElementById('detail-toggle-btn');
-                if (isCompleted) {
-                    badge.style.display = 'inline-block'; toggleBtn.textContent = '미완료로 변경'; toggleBtn.classList.add('completed');
-                } else {
-                    badge.style.display = 'none'; toggleBtn.textContent = '완료 처리'; toggleBtn.classList.remove('completed');
-                }
+                if (isCompleted) { badge.style.display = 'inline-block'; toggleBtn.textContent = '미완료로 변경'; toggleBtn.classList.add('completed'); }
+                else { badge.style.display = 'none'; toggleBtn.textContent = '완료 처리'; toggleBtn.classList.remove('completed'); }
 
                 new bootstrap.Modal(document.getElementById('detailModal')).show();
             },
 
-            /* ===== 빈 날짜 클릭 → 등록 모달 ===== */
             dateClick: function(info) {
                 document.getElementById('selectedDate').value = info.dateStr.split('T')[0];
                 document.getElementById('modal-title').value = '';
@@ -294,7 +231,6 @@
                 document.getElementById('place').value = '';
                 document.getElementById('lat').value = '';
                 document.getElementById('lng').value = '';
-
                 var startTimeEl = document.getElementById('modal-start-time');
                 var endTimeEl = document.getElementById('modal-end-time');
                 if (info.dateStr.indexOf('T') >= 0) {
@@ -305,56 +241,35 @@
                     startTimeEl.value = '';
                     endTimeEl.value = '';
                 }
-
                 new bootstrap.Modal(document.getElementById('todoModal')).show();
             }
         });
         calendarInstance.render();
 
-        /* ===== 뷰 전환 버튼 ===== */
-        var viewBtns = document.querySelectorAll('.view-btn');
-        viewBtns.forEach(function(btn) {
+        document.querySelectorAll('.view-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
-                viewBtns.forEach(function(b) { b.classList.remove('active'); });
+                document.querySelectorAll('.view-btn').forEach(function(b) { b.classList.remove('active'); });
                 btn.classList.add('active');
                 calendarInstance.changeView(btn.dataset.view);
             });
         });
 
-        /* ===== 상세 모달 — 완료 토글 ===== */
         document.getElementById('detail-toggle-btn').addEventListener('click', function() {
             var todoId = document.getElementById('detail-id').value;
-            if (isGuest) {
-                GuestTodo.toggle(parseInt(todoId));
-                calendarInstance.refetchEvents();
-                bootstrap.Modal.getInstance(document.getElementById('detailModal')).hide();
-            } else {
-                var form = document.createElement('form');
-                form.method = 'POST'; form.action = '/todo/toggle/' + todoId;
-                document.body.appendChild(form); form.submit();
-            }
+            if (isGuest) { GuestTodo.toggle(parseInt(todoId)); calendarInstance.refetchEvents(); bootstrap.Modal.getInstance(document.getElementById('detailModal')).hide(); }
+            else { var f = document.createElement('form'); f.method = 'POST'; f.action = '/todo/toggle/' + todoId; document.body.appendChild(f); f.submit(); }
         });
 
-        /* ===== 상세 모달 — 삭제 ===== */
         document.getElementById('detail-delete-btn').addEventListener('click', function() {
             if (!confirm('이 일정을 삭제하시겠습니까?')) return;
             var todoId = document.getElementById('detail-id').value;
-            if (isGuest) {
-                GuestTodo.remove(parseInt(todoId));
-                calendarInstance.refetchEvents();
-                bootstrap.Modal.getInstance(document.getElementById('detailModal')).hide();
-            } else {
-                var form = document.createElement('form');
-                form.method = 'POST'; form.action = '/todo/delete/' + todoId;
-                document.body.appendChild(form); form.submit();
-            }
+            if (isGuest) { GuestTodo.remove(parseInt(todoId)); calendarInstance.refetchEvents(); bootstrap.Modal.getInstance(document.getElementById('detailModal')).hide(); }
+            else { var f = document.createElement('form'); f.method = 'POST'; f.action = '/todo/delete/' + todoId; document.body.appendChild(f); f.submit(); }
         });
 
-        /* ===== 저장 버튼 ===== */
         document.getElementById('modal-save-btn').addEventListener('click', function() {
             var title = document.getElementById('modal-title').value.trim();
             if (!title) { alert('제목을 입력하세요'); return; }
-
             var dueDate = document.getElementById('selectedDate').value;
             var desc = document.getElementById('modal-desc').value;
             var priority = document.getElementById('modal-priority').value;
@@ -362,30 +277,15 @@
             var location = document.getElementById('place').value;
             var startTime = normalizeTime(document.getElementById('modal-start-time').value);
             var endTime = normalizeTime(document.getElementById('modal-end-time').value);
-
-            // ★ startTime만 있고 endTime 없으면 자동으로 +1시간
-            if (startTime && !endTime) {
-                endTime = addOneHour(startTime);
-            }
+            if (startTime && !endTime) endTime = addOneHour(startTime);
 
             if (isGuest) {
                 if (!repeatType || repeatType === 'NONE') {
-                    GuestTodo.add({
-                        title: title, description: desc, deadline: dueDate,
-                        priority: priority, repeatType: 'NONE', location: location,
-                        startTime: startTime, endTime: endTime
-                    });
+                    GuestTodo.add({ title:title, description:desc, deadline:dueDate, priority:priority, repeatType:'NONE', location:location, startTime:startTime, endTime:endTime });
                 } else {
-                    var current = new Date(dueDate);
-                    var end = new Date(dueDate);
-                    end.setFullYear(end.getFullYear() + 1);
+                    var current = new Date(dueDate); var end = new Date(dueDate); end.setFullYear(end.getFullYear() + 1);
                     while (current <= end) {
-                        GuestTodo.add({
-                            title: title, description: desc,
-                            deadline: current.toISOString().split('T')[0],
-                            priority: priority, repeatType: repeatType, location: location,
-                            startTime: startTime, endTime: endTime
-                        });
+                        GuestTodo.add({ title:title, description:desc, deadline:current.toISOString().split('T')[0], priority:priority, repeatType:repeatType, location:location, startTime:startTime, endTime:endTime });
                         if (repeatType === 'DAILY') current.setDate(current.getDate() + 1);
                         else if (repeatType === 'WEEKLY') current.setDate(current.getDate() + 7);
                         else if (repeatType === 'MONTHLY') current.setMonth(current.getMonth() + 1);
@@ -393,51 +293,27 @@
                 }
                 calendarInstance.refetchEvents();
                 bootstrap.Modal.getInstance(document.getElementById('todoModal')).hide();
-
             } else {
-                var form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '/todoNew';
-                var fields = {
-                    title: title, description: desc, dueDate: dueDate,
-                    priority: priority, repeatType: repeatType,
-                    location: location,
-                    lat: document.getElementById('lat').value,
-                    lng: document.getElementById('lng').value,
-                    startTime: startTime,
-                    endTime: endTime
-                };
-                for (var key in fields) {
-                    var input = document.createElement('input');
-                    input.type = 'hidden'; input.name = key; input.value = fields[key] || '';
-                    form.appendChild(input);
-                }
-                document.body.appendChild(form);
-                form.submit();
+                var form = document.createElement('form'); form.method = 'POST'; form.action = '/todoNew';
+                var fields = { title:title, description:desc, dueDate:dueDate, priority:priority, repeatType:repeatType, location:location, lat:document.getElementById('lat').value, lng:document.getElementById('lng').value, startTime:startTime, endTime:endTime };
+                for (var key in fields) { var input = document.createElement('input'); input.type = 'hidden'; input.name = key; input.value = fields[key] || ''; form.appendChild(input); }
+                document.body.appendChild(form); form.submit();
             }
         });
     });
 </script>
-
-<!-- 네이버 지도 -->
 <script>
     var map, marker;
     function naverMapReady() {
         var placeEl = document.getElementById("place");
-        if (placeEl) {
-            placeEl.addEventListener("keydown", function(e) {
-                if (e.key === "Enter") { e.preventDefault(); searchPlace(); }
-            });
-        }
+        if (placeEl) placeEl.addEventListener("keydown", function(e) { if (e.key === "Enter") { e.preventDefault(); searchPlace(); } });
         document.getElementById('todoModal').addEventListener('shown.bs.modal', function () {
             setTimeout(function() {
                 if (!map) {
                     map = new naver.maps.Map('map', { center: new naver.maps.LatLng(37.5665, 126.9780), zoom: 15 });
                     naver.maps.Event.addListener(map, 'click', function(e) {
                         var latlng = e.coord;
-                        naver.maps.Service.reverseGeocode({
-                            coords: latlng, orders: naver.maps.Service.OrderType.ROAD_ADDR + ',' + naver.maps.Service.OrderType.ADDR
-                        }, function(status, response) {
+                        naver.maps.Service.reverseGeocode({ coords: latlng, orders: naver.maps.Service.OrderType.ROAD_ADDR + ',' + naver.maps.Service.OrderType.ADDR }, function(status, response) {
                             if (status !== naver.maps.Service.Status.OK) return;
                             var address = response.v2.address.roadAddress || response.v2.address.jibunAddress;
                             document.getElementById("place").value = address;
@@ -452,18 +328,13 @@
         });
     }
     function searchPlace() {
-        var query = document.getElementById("place").value;
-        if (!query) return;
+        var query = document.getElementById("place").value; if (!query) return;
         naver.maps.Service.geocode({ query: query }, function(status, response) {
             if (status !== naver.maps.Service.Status.OK || !response.v2 || !response.v2.addresses[0]) { alert("검색 결과 없음"); return; }
-            var item = response.v2.addresses[0];
-            var lat = parseFloat(item.y), lng = parseFloat(item.x);
-            var location = new naver.maps.LatLng(lat, lng);
-            map.setCenter(location);
-            if (marker) marker.setMap(null);
-            marker = new naver.maps.Marker({ position: location, map: map });
-            document.getElementById("lat").value = lat;
-            document.getElementById("lng").value = lng;
+            var item = response.v2.addresses[0]; var lat = parseFloat(item.y), lng = parseFloat(item.x);
+            var loc = new naver.maps.LatLng(lat, lng); map.setCenter(loc);
+            if (marker) marker.setMap(null); marker = new naver.maps.Marker({ position: loc, map: map });
+            document.getElementById("lat").value = lat; document.getElementById("lng").value = lng;
         });
     }
 </script>

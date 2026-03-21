@@ -50,7 +50,6 @@ var GuestTodo = (function () {
         return sun.toISOString().split('T')[0];
     }
 
-    /** "09:00" → 1시간 더한 "10:00" 반환 */
     function _addOneHour(timeStr) {
         var parts = timeStr.split(':');
         var h = parseInt(parts[0], 10) + 1;
@@ -120,7 +119,6 @@ var GuestTodo = (function () {
             var todos = _load();
             var todo = todos.find(function(t){ return t.id === parseInt(id); });
             if (todo) {
-                // newDate가 "2025-03-21T10:00:00" 형태일 수 있음
                 if (newDate && newDate.indexOf('T') >= 0) {
                     todo.deadline = newDate.split('T')[0];
                 } else {
@@ -172,27 +170,24 @@ var GuestTodo = (function () {
                     var ev = {
                         id: String(t.id),
                         title: prefix + t.title,
-                        description: t.description || '',
-                        location: t.location || '',
-                        completed: t.completed || false,
-                        startTime: t.startTime || '',
-                        endTime: t.endTime || ''
+                        // ★★★ 핵심: extendedProps 안에 넣어야 함 ★★★
+                        // startTime/endTime은 FullCalendar의 recurring event 예약어이므로
+                        // 최상위에 두면 "매일 반복 이벤트"로 해석됨!
+                        extendedProps: {
+                            description: t.description || '',
+                            location: t.location || '',
+                            completed: t.completed || false,
+                            sTime: t.startTime || '',
+                            eTime: t.endTime || ''
+                        }
                     };
 
-                    // ★★★ 핵심 수정: 시간/종일 분기 ★★★
                     if (t.startTime && t.startTime.length >= 4) {
-                        // 시간 이벤트 — "2025-03-21T09:00" 형태
+                        var endT = (t.endTime && t.endTime.length >= 4) ? t.endTime : _addOneHour(t.startTime);
                         ev.start = t.deadline + 'T' + t.startTime;
-                        ev.allDay = false;  // ★ 반드시 false
-
-                        // ★ end를 반드시 설정 — 없으면 FullCalendar가 월말까지 이어지는 버그
-                        if (t.endTime && t.endTime.length >= 4) {
-                            ev.end = t.deadline + 'T' + t.endTime;
-                        } else {
-                            ev.end = t.deadline + 'T' + _addOneHour(t.startTime);
-                        }
+                        ev.end = t.deadline + 'T' + endT;
+                        ev.allDay = false;
                     } else {
-                        // 종일 이벤트 — 날짜만
                         ev.start = t.deadline;
                         ev.allDay = true;
                     }
