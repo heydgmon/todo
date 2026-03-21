@@ -678,12 +678,7 @@
                     <span class="mini-label"><span class="mini-dot dot-red"></span>지연</span>
                     <span class="mini-val">0</span>
                 </div>
-                <div class="mini-bar-row">
-                    <div class="mini-bar-label"><span>완료율</span><span id="bar-pct">0%</span></div>
-                    <div class="mini-bar-track">
-                        <div class="mini-bar-fill fill-blue" id="bar-fill" style="width:0%"></div>
-                    </div>
-                </div>
+
             </div>
 
             <a href="/dashboard" class="card-link">열기 <span>→</span></a>
@@ -764,20 +759,6 @@
       });
     });
 
-    /* ── Progress bar animate ── */
-    const barFill = document.getElementById('bar-fill');
-    const barPct  = document.getElementById('bar-pct');
-    const barObs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) {
-        setTimeout(() => {
-          barFill.style.width = '72%';
-          let n = 0;
-          const t = setInterval(() => { barPct.textContent = (n+=2) + '%'; if (n >= 72) clearInterval(t); }, 18);
-        }, 400);
-        barObs.unobserve(e.target);
-      }
-    }, { threshold: 0.3 });
-    barObs.observe(barFill);
 
     /* ── Mini Calendar ── */
     (function buildCal() {

@@ -1,4 +1,11 @@
 /* ===== 전체 레이아웃 ===== */
+
+/* ★ [수정] body 기본 margin 제거 — 흰 줄 방지 */
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
 .layout {
     display: flex;
     min-height: 100vh;
