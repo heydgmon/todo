@@ -50,6 +50,14 @@ var GuestTodo = (function () {
         return sun.toISOString().split('T')[0];
     }
 
+    /** "09:00" → 1시간 더한 "10:00" 반환 */
+    function _addOneHour(timeStr) {
+        var parts = timeStr.split(':');
+        var h = parseInt(parts[0], 10) + 1;
+        if (h > 23) h = 23;
+        return h.toString().padStart(2, '0') + ':' + parts[1];
+    }
+
     return {
         isGuest: isGuest,
 
@@ -69,8 +77,8 @@ var GuestTodo = (function () {
                 repeatType: todo.repeatType || 'NONE',
                 project: todo.project || '',
                 location: todo.location || '',
-                startTime: todo.startTime || '',    // [추가]
-                endTime: todo.endTime || '',          // [추가]
+                startTime: todo.startTime || '',
+                endTime: todo.endTime || '',
                 completed: false,
                 sortOrder: todos.length,
                 createdAt: new Date().toISOString()
@@ -112,7 +120,12 @@ var GuestTodo = (function () {
             var todos = _load();
             var todo = todos.find(function(t){ return t.id === parseInt(id); });
             if (todo) {
-                todo.deadline = newDate;
+                // newDate가 "2025-03-21T10:00:00" 형태일 수 있음
+                if (newDate && newDate.indexOf('T') >= 0) {
+                    todo.deadline = newDate.split('T')[0];
+                } else {
+                    todo.deadline = newDate;
+                }
                 _save(todos);
             }
         },
@@ -150,12 +163,12 @@ var GuestTodo = (function () {
             });
         },
 
-        // ===== [수정] 시간 정보 포함한 캘린더 이벤트 변환 =====
         toCalendarEvents: function () {
             return this.getAll()
                 .filter(function(t){ return t.deadline; })
                 .map(function(t) {
                     var prefix = t.priority === 'HIGH' ? '🔥 ' : t.priority === 'MEDIUM' ? '⚡ ' : '🌿 ';
+
                     var ev = {
                         id: String(t.id),
                         title: prefix + t.title,
@@ -166,13 +179,20 @@ var GuestTodo = (function () {
                         endTime: t.endTime || ''
                     };
 
-                    // 시간 정보가 있으면 datetime, 없으면 종일 이벤트
-                    if (t.startTime) {
-                        ev.start = t.deadline + 'T' + t.startTime + ':00';
-                        if (t.endTime) {
-                            ev.end = t.deadline + 'T' + t.endTime + ':00';
+                    // ★★★ 핵심 수정: 시간/종일 분기 ★★★
+                    if (t.startTime && t.startTime.length >= 4) {
+                        // 시간 이벤트 — "2025-03-21T09:00" 형태
+                        ev.start = t.deadline + 'T' + t.startTime;
+                        ev.allDay = false;  // ★ 반드시 false
+
+                        // ★ end를 반드시 설정 — 없으면 FullCalendar가 월말까지 이어지는 버그
+                        if (t.endTime && t.endTime.length >= 4) {
+                            ev.end = t.deadline + 'T' + t.endTime;
+                        } else {
+                            ev.end = t.deadline + 'T' + _addOneHour(t.startTime);
                         }
                     } else {
+                        // 종일 이벤트 — 날짜만
                         ev.start = t.deadline;
                         ev.allDay = true;
                     }

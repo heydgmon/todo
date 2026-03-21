@@ -23,7 +23,6 @@ public class CalendarController {
     private final WorkspaceService workspaceService;
     private final CurrentUserHelper userHelper;
 
-    // HH:mm 고정 포맷 (나노초/초 방지)
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
 
     public CalendarController(TodoService TodoService,
@@ -82,30 +81,24 @@ public class CalendarController {
             event.put("location", todo.getLocation());
             event.put("completed", todo.isCompleted());
 
-            // ===== 핵심: 시간 유무에 따라 종일/시간 이벤트 분기 =====
             if (todo.getStartTime() != null) {
-                // 시간 이벤트: "2025-03-21T09:00" (초 없이 깔끔하게)
                 String dateStr = todo.getDeadline().toString();
                 String startStr = todo.getStartTime().format(TIME_FMT);
 
                 event.put("start", dateStr + "T" + startStr);
-                event.put("allDay", false);  // ★ 반드시 false 명시
+                event.put("allDay", false);
 
-                // ★ end를 반드시 설정 — 없으면 FullCalendar가 이상하게 렌더링
                 if (todo.getEndTime() != null) {
                     event.put("end", dateStr + "T" + todo.getEndTime().format(TIME_FMT));
                 } else {
-                    // end 없으면 start + 1시간으로 기본값
                     event.put("end", dateStr + "T" + todo.getStartTime().plusHours(1).format(TIME_FMT));
                 }
 
-                // 상세 모달용
                 event.put("startTime", startStr);
                 if (todo.getEndTime() != null) {
                     event.put("endTime", todo.getEndTime().format(TIME_FMT));
                 }
             } else {
-                // 종일 이벤트
                 event.put("start", todo.getDeadline().toString());
                 event.put("allDay", true);
             }
