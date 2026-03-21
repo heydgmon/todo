@@ -75,6 +75,11 @@ public class CalendarController {
             event.put("title", prefix + todo.getTitle());
             event.put("start", todo.getDeadline().toString());
             event.put("description", todo.getDescription());
+
+            // ===== [추가] location, completed 필드 =====
+            event.put("location", todo.getLocation());
+            event.put("completed", todo.isCompleted());
+
             events.add(event);
         }
 

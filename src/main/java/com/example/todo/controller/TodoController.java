@@ -209,6 +209,9 @@ public class TodoController {
         model.addAttribute("wsId", wsId);
         return "todo";
     }
+// ===== [수정] /todoNew 엔드포인트에 location, lat, lng 파라미터 추가 =====
+    // 기존 addFromCalendar 메서드를 아래로 교체하세요
+
     @PostMapping("/todoNew")
     public String addFromCalendar(@RequestParam String title,
                                   @RequestParam(required = false) String description,
@@ -219,6 +222,9 @@ public class TodoController {
                                   @RequestParam(required = false) String project,
                                   @RequestParam(required = false) Long parentId,
                                   @RequestParam(required = false) String tags,
+                                  @RequestParam(required = false) String location,   // [추가]
+                                  @RequestParam(required = false) Double lat,         // [추가]
+                                  @RequestParam(required = false) Double lng,         // [추가]
                                   Authentication auth) {
 
         if (!isLoggedIn(auth)) return "redirect:/calendar";
@@ -228,30 +234,34 @@ public class TodoController {
         if (wsId == null) return "redirect:/calendar";
 
         if (repeatType == null || repeatType.equals("NONE")) {
-            TodoService.add(wsId, user, title, description, dueDate,
-                    priority, color, "NONE", project, parentId, tags);
+            TodoService.addWithLocation(wsId, user, title, description, dueDate,
+                    priority, color, "NONE", project, parentId, tags,
+                    location, lat, lng);
         } else if (repeatType.equals("DAILY")) {
             LocalDate end = dueDate.plusYears(1);
             LocalDate current = dueDate;
             while (!current.isAfter(end)) {
-                TodoService.add(wsId, user, title, description, current,
-                        priority, color, "DAILY", project, parentId, tags);
+                TodoService.addWithLocation(wsId, user, title, description, current,
+                        priority, color, "DAILY", project, parentId, tags,
+                        location, lat, lng);
                 current = current.plusDays(1);
             }
         } else if (repeatType.equals("WEEKLY")) {
             LocalDate end = dueDate.plusYears(1);
             LocalDate current = dueDate;
             while (!current.isAfter(end)) {
-                TodoService.add(wsId, user, title, description, current,
-                        priority, color, "WEEKLY", project, parentId, tags);
+                TodoService.addWithLocation(wsId, user, title, description, current,
+                        priority, color, "WEEKLY", project, parentId, tags,
+                        location, lat, lng);
                 current = current.plusWeeks(1);
             }
         } else if (repeatType.equals("MONTHLY")) {
             LocalDate end = dueDate.plusYears(1);
             LocalDate current = dueDate;
             while (!current.isAfter(end)) {
-                TodoService.add(wsId, user, title, description, current,
-                        priority, color, "MONTHLY", project, parentId, tags);
+                TodoService.addWithLocation(wsId, user, title, description, current,
+                        priority, color, "MONTHLY", project, parentId, tags,
+                        location, lat, lng);
                 current = current.plusMonths(1);
             }
         }

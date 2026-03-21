@@ -158,7 +158,9 @@ var GuestTodo = (function () {
                         id: String(t.id),
                         title: prefix + t.title,
                         start: t.deadline,
-                        description: t.description || ''
+                        description: t.description || '',
+                        location: t.location || '',       // [추가] 장소 정보
+                        completed: t.completed || false    // [추가] 완료 상태
                     };
                     if (t.completed) ev.classNames = ['completed-event'];
                     if (t.priority === 'HIGH') ev.color = '#dc3545';
