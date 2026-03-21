@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
@@ -21,6 +22,9 @@ public class CalendarController {
     private final TodoService TodoService;
     private final WorkspaceService workspaceService;
     private final CurrentUserHelper userHelper;
+
+    // HH:mm 고정 포맷 (나노초/초 방지)
+    private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
 
     public CalendarController(TodoService TodoService,
                               WorkspaceService workspaceService,
@@ -74,30 +78,36 @@ public class CalendarController {
 
             event.put("id", todo.getId());
             event.put("title", prefix + todo.getTitle());
-
-            // ===== [수정] 시간 정보가 있으면 ISO datetime, 없으면 date만 =====
-            if (todo.getStartTime() != null) {
-                // "2025-03-21T09:00:00" 형태 → FullCalendar가 시간 블록으로 표시
-                event.put("start", todo.getDeadline().atTime(todo.getStartTime()).toString());
-                if (todo.getEndTime() != null) {
-                    event.put("end", todo.getDeadline().atTime(todo.getEndTime()).toString());
-                }
-            } else {
-                // 기존: 종일 이벤트
-                event.put("start", todo.getDeadline().toString());
-                event.put("allDay", true);
-            }
-
             event.put("description", todo.getDescription());
             event.put("location", todo.getLocation());
             event.put("completed", todo.isCompleted());
 
-            // ===== [추가] 프론트에서 시간 정보 접근용 =====
+            // ===== 핵심: 시간 유무에 따라 종일/시간 이벤트 분기 =====
             if (todo.getStartTime() != null) {
-                event.put("startTime", todo.getStartTime().toString());
-            }
-            if (todo.getEndTime() != null) {
-                event.put("endTime", todo.getEndTime().toString());
+                // 시간 이벤트: "2025-03-21T09:00" (초 없이 깔끔하게)
+                String dateStr = todo.getDeadline().toString();
+                String startStr = todo.getStartTime().format(TIME_FMT);
+
+                event.put("start", dateStr + "T" + startStr);
+                event.put("allDay", false);  // ★ 반드시 false 명시
+
+                // ★ end를 반드시 설정 — 없으면 FullCalendar가 이상하게 렌더링
+                if (todo.getEndTime() != null) {
+                    event.put("end", dateStr + "T" + todo.getEndTime().format(TIME_FMT));
+                } else {
+                    // end 없으면 start + 1시간으로 기본값
+                    event.put("end", dateStr + "T" + todo.getStartTime().plusHours(1).format(TIME_FMT));
+                }
+
+                // 상세 모달용
+                event.put("startTime", startStr);
+                if (todo.getEndTime() != null) {
+                    event.put("endTime", todo.getEndTime().format(TIME_FMT));
+                }
+            } else {
+                // 종일 이벤트
+                event.put("start", todo.getDeadline().toString());
+                event.put("allDay", true);
             }
 
             events.add(event);
@@ -119,10 +129,8 @@ public class CalendarController {
         workspaceService.checkPermission(
                 todo.getWorkspace().getId(), user.getId(), "EDITOR");
 
-        // 드래그 시 날짜+시간 모두 처리
         String dateStr = data.get("date");
         if (dateStr != null && dateStr.contains("T")) {
-            // "2025-03-21T10:00:00" 형태
             var ldt = java.time.LocalDateTime.parse(dateStr);
             todo.setDeadline(ldt.toLocalDate());
             todo.setStartTime(ldt.toLocalTime());
