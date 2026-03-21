@@ -6,94 +6,40 @@
 
     <link rel="stylesheet" th:href="@{/css/layout.css}">
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script th:src="@{/js/guest-todo.js}"></script>
 
     <style>
-        :root {
-          --accent:#5b7fff;
-          --text:#111827;
-          --muted:#6b7280;
-          --red:#f87171;
-        }
-
-        body{
-          font-family:'DM Sans',sans-serif;
-        }
-
-        /* NAV */
-        nav{
-          display:flex;
-          justify-content:space-between;
-          padding:18px 10px;
-          margin-bottom:20px;
-        }
-
-        .logo{
-          font-family:'Instrument Serif';
-        }
-
-        /* grid */
-        .row{
-          display:grid;
-          grid-template-columns: 1fr 2fr;
-          gap:20px;
-        }
-
-        /* panel */
-        .panel{
-          background:#fff;
-          border:1px solid #e5e7eb;
-          border-radius:16px;
-          padding:24px;
-        }
-
-        /* list */
-        .list-item{
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-          padding:12px 0;
-          border-bottom:1px solid #e5e7eb;
-        }
-
-        /* text */
-        .muted{color:#6b7280}
-
-        /* button */
-        .btn{
-          padding:6px 12px;
-          border-radius:8px;
-          font-size:0.8rem;
-          border:none;
-          cursor:pointer;
-        }
-
-        .btn-outline{
-          border:1px solid #e5e7eb;
-          background:white;
-        }
-
-        .btn-success{background:#34d399;color:white;}
-        .btn-danger{background:#f87171;color:white;}
-        .btn-warning{background:#fbbf24;color:white;}
-
-        .btn:hover{opacity:0.9}
+        :root { --accent:#5b7fff; --text:#111827; --muted:#6b7280; --red:#f87171; }
+        body { font-family:'DM Sans',sans-serif; }
+        nav { display:flex; justify-content:space-between; padding:18px 10px; margin-bottom:20px; }
+        .logo { font-family:'Instrument Serif'; }
+        .row { display:grid; grid-template-columns: 1fr 2fr; gap:20px; }
+        .panel { background:#fff; border:1px solid #e5e7eb; border-radius:16px; padding:24px; }
+        .list-item { display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid #e5e7eb; }
+        .muted { color:#6b7280 }
+        .btn { padding:6px 12px; border-radius:8px; font-size:0.8rem; border:none; cursor:pointer; }
+        .btn-outline { border:1px solid #e5e7eb; background:white; }
+        .btn-success { background:#34d399; color:white; }
+        .btn-danger { background:#f87171; color:white; }
+        .btn-warning { background:#fbbf24; color:white; }
+        .btn:hover { opacity:0.9 }
+        .add-form { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+        .add-form input, .add-form select { padding:8px 12px; border:1px solid #e5e7eb; border-radius:8px; font-size:0.85rem; }
+        .add-form input[type="text"] { flex:1; min-width:150px; }
+        .add-form input[type="date"] { width:150px; }
+        .guest-banner { background:#fef3c7; border:1px solid #f59e0b; border-radius:10px; padding:10px 16px; margin-bottom:16px; font-size:0.85rem; color:#92400e; }
+        .guest-banner a { color:#d97706; font-weight:600; }
     </style>
 </head>
 
 <body>
 
 <div class="layout">
-
-    <!-- 사이드바 -->
     <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
-    <!-- 본문 -->
     <div class="content">
-
         <div>
-
             <nav>
                 <div class="logo">do<span style="color:#5b7fff">·</span>it</div>
             </nav>
@@ -103,119 +49,253 @@
 
             <div class="row">
 
-                <!-- 좌측 -->
+                <!-- ===== 좌측 패널 ===== -->
                 <div class="panel">
-
                     <h5>📋 Overview</h5>
 
-                    <p>전체 : <strong th:text="${todos.size()}"></strong></p>
-                    <p>완료 : <strong th:text="${#lists.size(todos.?[completed])}"></strong></p>
-                    <p>미완료 : <strong th:text="${todos.size() - #lists.size(todos.?[completed])}"></strong></p>
+                    <!-- 서버 모드 -->
+                    <div class="server-only" th:if="${loggedIn}">
+                        <p>전체 : <strong th:text="${todos.size()}"></strong></p>
+                        <p>완료 : <strong th:text="${#lists.size(todos.?[completed])}"></strong></p>
+                        <p>미완료 : <strong th:text="${todos.size() - #lists.size(todos.?[completed])}"></strong></p>
+                    </div>
+
+                    <!-- 게스트 모드 -->
+                    <div id="guest-overview" class="guest-only" style="display:none;">
+                        <p>전체 : <strong id="g-total">0</strong></p>
+                        <p>완료 : <strong id="g-done">0</strong></p>
+                        <p>미완료 : <strong id="g-undone">0</strong></p>
+                    </div>
 
                     <hr>
 
-                    <form method="get" action="/todo">
-                        <input type="text" name="q" class="form-control" placeholder="검색">
-                    </form>
+                    <!-- 검색 -->
+                    <div class="server-only" th:if="${loggedIn}">
+                        <form method="get" action="/todo">
+                            <input type="text" name="q" class="form-control" placeholder="검색">
+                        </form>
+                    </div>
+                    <div id="guest-search" class="guest-only" style="display:none;">
+                        <input type="text" id="g-search-input" placeholder="검색"
+                               style="width:100%;padding:8px 12px;border:1px solid #e5e7eb;border-radius:8px;">
+                    </div>
 
                     <hr>
-
                     <h6>📂 필터</h6>
 
-                    <div style="display:flex; flex-direction:column; gap:8px;">
+                    <!-- 서버 모드 필터 -->
+                    <div class="server-only" th:if="${loggedIn}" style="display:flex; flex-direction:column; gap:8px;">
                         <a href="/todo" class="btn btn-outline">전체</a>
                         <a href="/todo/today" class="btn btn-outline">오늘</a>
                         <a href="/todo/week" class="btn btn-outline">이번주</a>
                     </div>
 
+                    <!-- 게스트 모드 필터 -->
+                    <div id="guest-filters" class="guest-only" style="display:none; flex-direction:column; gap:8px;">
+                        <button class="btn btn-outline" onclick="guestRender('all')">전체</button>
+                        <button class="btn btn-outline" onclick="guestRender('today')">오늘</button>
+                        <button class="btn btn-outline" onclick="guestRender('week')">이번주</button>
+                    </div>
                 </div>
 
-                <!-- 리스트 -->
+                <!-- ===== 우측 리스트 패널 ===== -->
                 <div class="panel">
-
                     <h5>📝 Todo 목록</h5>
 
-                    <div id="todoList">
+                    <!-- 게스트 배너 -->
+                    <div id="guest-banner" class="guest-banner guest-only" style="display:none;">
+                        💡 게스트 모드입니다. 데이터는 이 브라우저에만 저장됩니다.
+                        <a href="/oauth2/authorization/cognito">로그인</a>하면 클라우드에 저장됩니다.
+                    </div>
 
+                    <!-- ===== 추가 폼: 게스트용 (JS) ===== -->
+                    <div id="guest-add" class="guest-only" style="display:none;">
+                        <div class="add-form">
+                            <input type="text" id="g-title" placeholder="할 일 제목">
+                            <input type="date" id="g-deadline">
+                            <select id="g-priority">
+                                <option value="LOW">🌿 LOW</option>
+                                <option value="MEDIUM">⚡ MEDIUM</option>
+                                <option value="HIGH">🔥 HIGH</option>
+                            </select>
+                            <button class="btn btn-success" onclick="guestAdd()">추가</button>
+                        </div>
+                    </div>
+
+                    <!-- ===== 추가 폼: 로그인용 (서버 POST) ===== -->
+                    <div th:if="${loggedIn}">
+                        <form method="post" action="/todo/add" class="add-form">
+                            <input type="text" name="title" placeholder="할 일 제목" required>
+                            <input type="date" name="deadline">
+                            <select name="priority">
+                                <option value="LOW">🌿 LOW</option>
+                                <option value="MEDIUM">⚡ MEDIUM</option>
+                                <option value="HIGH">🔥 HIGH</option>
+                            </select>
+                            <button type="submit" class="btn btn-success">추가</button>
+                        </form>
+                    </div>
+
+                    <!-- 서버 모드 리스트 -->
+                    <div id="todoList" class="server-only" th:if="${loggedIn}">
                         <div th:each="todo : ${todos}"
                              th:attr="data-id=${todo.id}"
                              class="list-item">
-
                             <div>
-
                                 <span th:if="${todo.priority == 'HIGH'}">🔥</span>
                                 <span th:if="${todo.priority == 'MEDIUM'}">⚡</span>
                                 <span th:if="${todo.priority == 'LOW'}">🌿</span>
-
                                 <span th:text="${todo.title}"
-                                      th:classappend="${todo.completed} ? 'text-decoration-line-through muted'">
-                                </span>
-
+                                      th:classappend="${todo.completed} ? 'text-decoration-line-through muted'"></span>
                                 <small class="muted" th:if="${todo.deadline != null}">
                                     (<span th:text="${todo.deadline}"></span>)
                                 </small>
-
-                                <!-- 장소 추가 -->
                                 <small class="text-info ms-2" th:if="${todo.location != null}">
                                     📍 <span th:text="${todo.location}"></span>
                                 </small>
-
                             </div>
-
                             <div style="display:flex; gap:6px;">
-
                                 <form th:action="@{/todo/toggle/{id}(id=${todo.id})}" method="post">
                                     <button class="btn btn-success">완료</button>
                                 </form>
-
                                 <form th:action="@{/todo/delete/{id}(id=${todo.id})}" method="post">
                                     <button class="btn btn-danger">삭제</button>
                                 </form>
-
                                 <form action="/todo/deleteRepeat" method="post">
                                     <input type="hidden" name="title" th:value="${todo.title}">
                                     <input type="hidden" name="repeatType" th:value="${todo.repeatType}">
                                     <button class="btn btn-warning">반복삭제</button>
                                 </form>
-
                             </div>
-
                         </div>
-
-                        <div class="muted" th:if="${#lists.isEmpty(todos)}">
-                            할 일이 없습니다
-                        </div>
-
+                        <div class="muted" th:if="${#lists.isEmpty(todos)}">할 일이 없습니다</div>
                     </div>
 
+                    <!-- 게스트 모드 리스트 -->
+                    <div id="guestTodoList" class="guest-only" style="display:none;"></div>
                 </div>
 
             </div>
-
         </div>
-
     </div>
-
 </div>
 
+<script th:inline="javascript">
+    window.__loggedIn = /*[[${loggedIn}]]*/ false;
+</script>
+
 <script>
-    const el = document.getElementById("todoList");
+    document.addEventListener('DOMContentLoaded', function () {
 
-    Sortable.create(el,{
-        animation:150,
-        onEnd:function(){
-            const ids=[];
-            document.querySelectorAll("#todoList > div").forEach(li=>{
-                ids.push(li.dataset.id);
+        var isGuest = GuestTodo.isGuest();
+
+        if (isGuest) {
+            var guestEls = document.querySelectorAll('.guest-only');
+            for (var i = 0; i < guestEls.length; i++) {
+                if (guestEls[i].id === 'guest-filters') {
+                    guestEls[i].style.display = 'flex';
+                } else {
+                    guestEls[i].style.display = 'block';
+                }
+            }
+
+            guestRender('all');
+
+            document.getElementById('g-search-input').addEventListener('input', function () {
+                guestRender('search', this.value);
             });
 
-            fetch("/todo/reorder",{
-                method:"POST",
-                headers:{"Content-Type":"application/json"},
-                body:JSON.stringify(ids)
+            document.getElementById('g-title').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') { e.preventDefault(); guestAdd(); }
             });
+
+            Sortable.create(document.getElementById('guestTodoList'), {
+                animation: 150,
+                onEnd: function () {
+                    var ids = [];
+                    var items = document.querySelectorAll('#guestTodoList > div');
+                    for (var j = 0; j < items.length; j++) ids.push(items[j].dataset.id);
+                    GuestTodo.reorder(ids);
+                }
+            });
+
+        } else {
+            var el = document.getElementById("todoList");
+            if (el) {
+                Sortable.create(el, {
+                    animation: 150,
+                    onEnd: function () {
+                        var ids = [];
+                        var items = document.querySelectorAll("#todoList > div");
+                        for (var j = 0; j < items.length; j++) ids.push(items[j].dataset.id);
+                        fetch("/todo/reorder", {
+                            method: "POST",
+                            headers: {"Content-Type": "application/json"},
+                            body: JSON.stringify(ids)
+                        });
+                    }
+                });
+            }
         }
     });
+
+    function guestAdd() {
+        var title = document.getElementById('g-title').value.trim();
+        if (!title) return;
+        GuestTodo.add({
+            title: title,
+            deadline: document.getElementById('g-deadline').value || null,
+            priority: document.getElementById('g-priority').value
+        });
+        document.getElementById('g-title').value = '';
+        document.getElementById('g-deadline').value = '';
+        document.getElementById('g-priority').value = 'LOW';
+        guestRender('all');
+    }
+
+    function guestRender(filter, query) {
+        var todos;
+        if (filter === 'today') todos = GuestTodo.today();
+        else if (filter === 'week') todos = GuestTodo.week();
+        else if (filter === 'search') todos = GuestTodo.search(query);
+        else todos = GuestTodo.getAll();
+
+        var stats = GuestTodo.stats();
+        document.getElementById('g-total').textContent = stats.total;
+        document.getElementById('g-done').textContent = stats.completed;
+        document.getElementById('g-undone').textContent = stats.incomplete;
+
+        var container = document.getElementById('guestTodoList');
+        if (todos.length === 0) {
+            container.innerHTML = '<div class="muted" style="padding:12px 0;">할 일이 없습니다</div>';
+            return;
+        }
+
+        var html = '';
+        for (var i = 0; i < todos.length; i++) {
+            var t = todos[i];
+            var icon = t.priority === 'HIGH' ? '🔥' : t.priority === 'MEDIUM' ? '⚡' : '🌿';
+            var titleClass = t.completed ? 'text-decoration-line-through muted' : '';
+            var deadline = t.deadline ? ' <small class="muted">(' + t.deadline + ')</small>' : '';
+            var btnLabel = t.completed ? '취소' : '완료';
+            html += '<div class="list-item" data-id="' + t.id + '">' +
+                '<div><span>' + icon + '</span> <span class="' + titleClass + '">' + _esc(t.title) + '</span>' + deadline + '</div>' +
+                '<div style="display:flex;gap:6px;">' +
+'<button class="btn btn-success" onclick="guestToggle(' + t.id + ')">' + btnLabel + '</button>' +
+'<button class="btn btn-danger" onclick="guestRemove(' + t.id + ')">삭제</button>' +
+'<button class="btn btn-warning" onclick="guestRemoveRepeat(\'' + _esc(t.title).replace(/'/g, "\\'") + '\',\'' + (t.repeatType || 'NONE') + '\')">반복삭제</button>' +
+                '</div></div>';
+        }
+        container.innerHTML = html;
+    }
+
+    function guestToggle(id) { GuestTodo.toggle(id); guestRender('all'); }
+    function guestRemove(id) { GuestTodo.remove(id); guestRender('all'); }
+    function guestRemoveRepeat(title, repeatType) {
+    GuestTodo.removeRepeat(title, repeatType);
+    guestRender('all');
+}
+    function _esc(text) { var d = document.createElement('div'); d.textContent = text; return d.innerHTML; }
 </script>
 
 </body>
