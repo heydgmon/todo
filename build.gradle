@@ -29,8 +29,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'// cognito 로그인 인증 추가
 
     // PostgreSQL
-    /*runtimeOnly 'org.postgresql:postgresql'*/
-    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.postgresql:postgresql'
+    /*runtimeOnly 'com.h2database:h2'*/
 
     // AWS SDK v2 BOM (버전 통합 관리)
     implementation platform('software.amazon.awssdk:bom:2.25.60')
