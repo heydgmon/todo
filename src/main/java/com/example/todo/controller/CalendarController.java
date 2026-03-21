@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 @RestController
@@ -73,12 +74,31 @@ public class CalendarController {
 
             event.put("id", todo.getId());
             event.put("title", prefix + todo.getTitle());
-            event.put("start", todo.getDeadline().toString());
-            event.put("description", todo.getDescription());
 
-            // ===== [추가] location, completed 필드 =====
+            // ===== [수정] 시간 정보가 있으면 ISO datetime, 없으면 date만 =====
+            if (todo.getStartTime() != null) {
+                // "2025-03-21T09:00:00" 형태 → FullCalendar가 시간 블록으로 표시
+                event.put("start", todo.getDeadline().atTime(todo.getStartTime()).toString());
+                if (todo.getEndTime() != null) {
+                    event.put("end", todo.getDeadline().atTime(todo.getEndTime()).toString());
+                }
+            } else {
+                // 기존: 종일 이벤트
+                event.put("start", todo.getDeadline().toString());
+                event.put("allDay", true);
+            }
+
+            event.put("description", todo.getDescription());
             event.put("location", todo.getLocation());
             event.put("completed", todo.isCompleted());
+
+            // ===== [추가] 프론트에서 시간 정보 접근용 =====
+            if (todo.getStartTime() != null) {
+                event.put("startTime", todo.getStartTime().toString());
+            }
+            if (todo.getEndTime() != null) {
+                event.put("endTime", todo.getEndTime().toString());
+            }
 
             events.add(event);
         }
@@ -99,7 +119,17 @@ public class CalendarController {
         workspaceService.checkPermission(
                 todo.getWorkspace().getId(), user.getId(), "EDITOR");
 
-        todo.setDeadline(LocalDate.parse(data.get("date")));
+        // 드래그 시 날짜+시간 모두 처리
+        String dateStr = data.get("date");
+        if (dateStr != null && dateStr.contains("T")) {
+            // "2025-03-21T10:00:00" 형태
+            var ldt = java.time.LocalDateTime.parse(dateStr);
+            todo.setDeadline(ldt.toLocalDate());
+            todo.setStartTime(ldt.toLocalTime());
+        } else if (dateStr != null) {
+            todo.setDeadline(LocalDate.parse(dateStr));
+        }
+
         TodoService.save(todo);
     }
 }

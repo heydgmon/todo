@@ -28,55 +28,54 @@
         .guest-banner { background:#fef3c7; border:1px solid #f59e0b; border-radius:10px; padding:10px 16px; margin-bottom:16px; font-size:0.85rem; color:#92400e; }
         .guest-banner a { color:#d97706; font-weight:600; }
 
-        /* ===== 상세보기 모달 스타일 ===== */
+        /* ===== 뷰 전환 버튼 ===== */
+        .view-switcher { display:flex; gap:6px; margin-bottom:16px; }
+        .view-btn {
+            padding:6px 14px; border-radius:8px; font-size:0.82rem; font-weight:500;
+            border:1px solid #e5e7eb; background:#fff; color:#374151; cursor:pointer;
+            transition: all 0.15s;
+        }
+        .view-btn:hover { background:#f3f4f6; }
+        .view-btn.active { background:#5b7fff; color:white; border-color:#5b7fff; }
+
+        /* ===== 시간 입력 행 ===== */
+        .time-row { display:flex; gap:10px; align-items:center; }
+        .time-row input[type="time"] {
+            flex:1; padding:6px 10px; border:1px solid #e5e7eb; border-radius:8px;
+            font-size:0.9rem; font-family:inherit;
+        }
+        .time-row span { color:#6b7280; font-size:0.85rem; }
+
+        /* ===== 상세보기 모달 ===== */
         .detail-field { margin-bottom: 16px; }
         .detail-field label {
-            display: block;
-            font-size: 0.8rem;
-            color: #6b7280;
-            margin-bottom: 4px;
-            font-weight: 500;
+            display: block; font-size: 0.8rem; color: #6b7280;
+            margin-bottom: 4px; font-weight: 500;
         }
         .detail-field .detail-value {
-            font-size: 0.95rem;
-            color: #111827;
-            padding: 8px 12px;
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            min-height: 38px;
-            display: flex;
-            align-items: center;
+            font-size: 0.95rem; color: #111827;
+            padding: 8px 12px; background: #f9fafb; border: 1px solid #e5e7eb;
+            border-radius: 8px; min-height: 38px; display: flex; align-items: center;
         }
-        .detail-field .detail-value.empty {
-            color: #9ca3af;
-            font-style: italic;
-        }
+        .detail-field .detail-value.empty { color: #9ca3af; font-style: italic; }
         .detail-actions { display: flex; gap: 8px; }
         .detail-actions .btn {
-            flex: 1;
-            padding: 10px 16px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            border: none;
-            cursor: pointer;
-            transition: opacity 0.2s;
+            flex: 1; padding: 10px 16px; border-radius: 10px; font-size: 0.85rem;
+            font-weight: 500; border: none; cursor: pointer; transition: opacity 0.2s;
         }
         .detail-actions .btn:hover { opacity: 0.85; }
         .btn-toggle-complete { background: #34d399; color: white; }
         .btn-toggle-complete.completed { background: #9ca3af; }
         .btn-detail-delete { background: #f87171; color: white; }
         .completed-badge {
-            display: inline-block;
-            background: #d1fae5;
-            color: #065f46;
-            font-size: 0.75rem;
-            padding: 2px 8px;
-            border-radius: 6px;
-            margin-left: 8px;
-            font-weight: 600;
+            display: inline-block; background: #d1fae5; color: #065f46;
+            font-size: 0.75rem; padding: 2px 8px; border-radius: 6px;
+            margin-left: 8px; font-weight: 600;
         }
+
+        /* ===== 타임라인 뷰 시간 슬롯 스타일 ===== */
+        .fc-timegrid-slot { height: 40px !important; }
+        .fc-timegrid-event { border-radius: 6px !important; font-size: 0.82rem !important; }
     </style>
 </head>
 
@@ -97,12 +96,21 @@
 
             <h2>Calendar</h2>
             <p class="muted">일정을 한눈에 확인하세요</p>
+
+            <!-- ===== [추가] 뷰 전환 버튼 ===== -->
+            <div class="view-switcher">
+                <button class="view-btn active" data-view="dayGridMonth">월간</button>
+                <button class="view-btn" data-view="timeGridWeek">주간</button>
+                <button class="view-btn" data-view="timeGridDay">일간</button>
+                <button class="view-btn" data-view="listWeek">목록</button>
+            </div>
+
             <div id="calendar"></div>
         </div>
     </div>
 </div>
 
-<!-- ===== 일정 등록 모달 (기존) ===== -->
+<!-- ===== 일정 등록 모달 ===== -->
 <div class="modal fade" id="todoModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -122,6 +130,17 @@
 
                 <div class="mb-3">
                     <textarea id="modal-desc" class="form-control" placeholder="설명"></textarea>
+                </div>
+
+                <!-- ===== [추가] 시간 입력 ===== -->
+                <div class="mb-3">
+                    <label class="form-label">시간 (선택)</label>
+                    <div class="time-row">
+                        <input type="time" id="modal-start-time" placeholder="시작">
+                        <span>~</span>
+                        <input type="time" id="modal-end-time" placeholder="종료">
+                    </div>
+                    <small class="muted">비워두면 종일 일정으로 등록됩니다.</small>
                 </div>
 
                 <div class="mb-3">
@@ -165,7 +184,7 @@
     </div>
 </div>
 
-<!-- ===== [신규] 일정 상세보기 모달 ===== -->
+<!-- ===== 일정 상세보기 모달 ===== -->
 <div class="modal fade" id="detailModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -190,6 +209,12 @@
                 <div class="detail-field">
                     <label>날짜</label>
                     <div class="detail-value" id="detail-date"></div>
+                </div>
+
+                <!-- ===== [추가] 시간 표시 ===== -->
+                <div class="detail-field" id="detail-time-field" style="display:none;">
+                    <label>시간</label>
+                    <div class="detail-value" id="detail-time"></div>
                 </div>
 
                 <div class="detail-field">
@@ -230,9 +255,22 @@
         var calendarEl = document.getElementById('calendar');
         calendarInstance = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
-            height: 650,
+            height: 'auto',
             showNonCurrentDates: false,
             editable: true,
+            nowIndicator: true,             // 현재 시간선 표시
+            slotMinTime: '06:00:00',        // 타임라인 시작 시간
+            slotMaxTime: '23:00:00',        // 타임라인 종료 시간
+            slotDuration: '00:30:00',       // 30분 단위
+            allDaySlot: true,               // 종일 슬롯 표시
+            locale: 'ko',
+
+            // ===== [추가] 헤더 툴바에 뷰 전환 제거 (커스텀 버튼 사용) =====
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: ''
+            },
 
             events: isGuest
                 ? function(info, successCallback) { successCallback(GuestTodo.toCalendarEvents()); }
@@ -250,17 +288,48 @@
                 }
             },
 
-            /* ===== [수정] eventClick: alert → 상세보기 모달 ===== */
+            // ===== [수정] eventClick: 상세보기 모달 (시간 포함) =====
             eventClick: function(info) {
                 var event = info.event;
                 var props = event.extendedProps;
 
-                // 제목에서 우선순위 이모지 제거 (🔥, ⚡, 🌿)
                 var cleanTitle = event.title.replace(/^(🔥|⚡|🌿)\s*/, '');
 
                 document.getElementById('detail-id').value = event.id;
                 document.getElementById('detail-title').textContent = cleanTitle;
-                document.getElementById('detail-date').textContent = event.startStr;
+
+                // 날짜 표시
+                var dateStr = event.startStr;
+                if (dateStr && dateStr.indexOf('T') >= 0) {
+                    dateStr = dateStr.split('T')[0];
+                }
+                document.getElementById('detail-date').textContent = dateStr;
+
+                // ===== [추가] 시간 표시 =====
+                var timeField = document.getElementById('detail-time-field');
+                var timeEl = document.getElementById('detail-time');
+                var sTime = props.startTime || null;
+                var eTime = props.endTime || null;
+
+                // 게스트 모드에서는 extendedProps에서, 시간이 start에 포함될 수도 있음
+                if (!sTime && event.start && !event.allDay) {
+                    var h = event.start.getHours().toString().padStart(2, '0');
+                    var m = event.start.getMinutes().toString().padStart(2, '0');
+                    sTime = h + ':' + m;
+                }
+                if (!eTime && event.end && !event.allDay) {
+                    var h2 = event.end.getHours().toString().padStart(2, '0');
+                    var m2 = event.end.getMinutes().toString().padStart(2, '0');
+                    eTime = h2 + ':' + m2;
+                }
+
+                if (sTime) {
+                    timeField.style.display = 'block';
+                    timeEl.textContent = sTime + (eTime ? ' ~ ' + eTime : '');
+                    timeEl.classList.remove('empty');
+                } else {
+                    timeField.style.display = 'none';
+                }
 
                 // 설명
                 var descEl = document.getElementById('detail-desc');
@@ -302,8 +371,7 @@
             },
 
             dateClick: function(info) {
-                // 모달 초기화
-                document.getElementById('selectedDate').value = info.dateStr;
+                document.getElementById('selectedDate').value = info.dateStr.split('T')[0];
                 document.getElementById('modal-title').value = '';
                 document.getElementById('modal-desc').value = '';
                 document.getElementById('modal-priority').value = 'LOW';
@@ -311,21 +379,47 @@
                 document.getElementById('place').value = '';
                 document.getElementById('lat').value = '';
                 document.getElementById('lng').value = '';
+
+                // ===== [추가] 시간 초기화 — 타임라인 뷰에서 클릭 시 시간 자동 채움 =====
+                var startTimeEl = document.getElementById('modal-start-time');
+                var endTimeEl = document.getElementById('modal-end-time');
+
+                if (info.dateStr.indexOf('T') >= 0) {
+                    // timeGridWeek/Day에서 시간 슬롯 클릭 시
+                    var clickedTime = info.dateStr.split('T')[1].substring(0, 5); // "09:00"
+                    startTimeEl.value = clickedTime;
+                    // 기본 1시간 뒤를 종료 시간으로
+                    var parts = clickedTime.split(':');
+                    var endH = (parseInt(parts[0]) + 1).toString().padStart(2, '0');
+                    endTimeEl.value = endH + ':' + parts[1];
+                } else {
+                    startTimeEl.value = '';
+                    endTimeEl.value = '';
+                }
+
                 new bootstrap.Modal(document.getElementById('todoModal')).show();
             }
         });
         calendarInstance.render();
 
-        /* ===== [신규] 상세 모달 — 완료 토글 버튼 ===== */
+        // ===== [추가] 뷰 전환 버튼 이벤트 =====
+        var viewBtns = document.querySelectorAll('.view-btn');
+        viewBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                viewBtns.forEach(function(b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                calendarInstance.changeView(btn.dataset.view);
+            });
+        });
+
+        // 상세 모달 — 완료 토글 버튼
         document.getElementById('detail-toggle-btn').addEventListener('click', function() {
             var todoId = document.getElementById('detail-id').value;
-
             if (isGuest) {
                 GuestTodo.toggle(parseInt(todoId));
                 calendarInstance.refetchEvents();
                 bootstrap.Modal.getInstance(document.getElementById('detailModal')).hide();
             } else {
-                // 서버: form POST로 토글
                 var form = document.createElement('form');
                 form.method = 'POST';
                 form.action = '/todo/toggle/' + todoId;
@@ -334,18 +428,15 @@
             }
         });
 
-        /* ===== [신규] 상세 모달 — 삭제 버튼 ===== */
+        // 상세 모달 — 삭제 버튼
         document.getElementById('detail-delete-btn').addEventListener('click', function() {
             if (!confirm('이 일정을 삭제하시겠습니까?')) return;
-
             var todoId = document.getElementById('detail-id').value;
-
             if (isGuest) {
                 GuestTodo.remove(parseInt(todoId));
                 calendarInstance.refetchEvents();
                 bootstrap.Modal.getInstance(document.getElementById('detailModal')).hide();
             } else {
-                // 서버: form POST로 삭제
                 var form = document.createElement('form');
                 form.method = 'POST';
                 form.action = '/todo/delete/' + todoId;
@@ -354,7 +445,7 @@
             }
         });
 
-        // 저장 버튼 — 게스트면 LocalStorage, 로그인이면 서버 POST
+        // 저장 버튼
         document.getElementById('modal-save-btn').addEventListener('click', function() {
             var title = document.getElementById('modal-title').value.trim();
             if (!title) { alert('제목을 입력하세요'); return; }
@@ -364,11 +455,14 @@
             var priority = document.getElementById('modal-priority').value;
             var repeatType = document.getElementById('modal-repeat').value;
             var location = document.getElementById('place').value;
+            var startTime = document.getElementById('modal-start-time').value;  // "09:00" or ""
+            var endTime = document.getElementById('modal-end-time').value;
 
             if (isGuest) {
-                // === 게스트: LocalStorage 저장 ===
                 if (!repeatType || repeatType === 'NONE') {
-                    GuestTodo.add({ title: title, description: desc, deadline: dueDate, priority: priority, repeatType: 'NONE', location: location });
+                    GuestTodo.add({ title: title, description: desc, deadline: dueDate,
+                        priority: priority, repeatType: 'NONE', location: location,
+                        startTime: startTime || '', endTime: endTime || '' });
                 } else {
                     var current = new Date(dueDate);
                     var end = new Date(dueDate);
@@ -377,7 +471,8 @@
                         GuestTodo.add({
                             title: title, description: desc,
                             deadline: current.toISOString().split('T')[0],
-                            priority: priority, repeatType: repeatType, location: location
+                            priority: priority, repeatType: repeatType, location: location,
+                            startTime: startTime || '', endTime: endTime || ''
                         });
                         if (repeatType === 'DAILY') current.setDate(current.getDate() + 1);
                         else if (repeatType === 'WEEKLY') current.setDate(current.getDate() + 7);
@@ -388,7 +483,6 @@
                 bootstrap.Modal.getInstance(document.getElementById('todoModal')).hide();
 
             } else {
-                // === 로그인: 서버 form POST ===
                 var form = document.createElement('form');
                 form.method = 'POST';
                 form.action = '/todoNew';
@@ -398,7 +492,9 @@
                     priority: priority, repeatType: repeatType,
                     location: location,
                     lat: document.getElementById('lat').value,
-                    lng: document.getElementById('lng').value
+                    lng: document.getElementById('lng').value,
+                    startTime: startTime,   // [추가]
+                    endTime: endTime         // [추가]
                 };
 
                 for (var key in fields) {
@@ -416,7 +512,7 @@
     });
 </script>
 
-<!-- 네이버 지도 (게스트/로그인 공용) -->
+<!-- 네이버 지도 -->
 <script>
     var map, marker;
 

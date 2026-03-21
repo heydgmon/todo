@@ -3,6 +3,7 @@ package com.example.todo.domain;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,6 +26,10 @@ public class Todo {
     private String priority;
     private String color;
     private String repeatType;
+
+    // ===== [추가] 시간 단위 일정 =====
+    private LocalTime startTime;
+    private LocalTime endTime;
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
@@ -84,6 +89,12 @@ public class Todo {
     public LocalDateTime getReminderTime() { return reminderTime; }
     public void setNotified(boolean notified) { this.notified = notified; }
     public boolean isNotified() { return notified; }
+
+    // ===== [추가] 시간 getter/setter =====
+    public LocalTime getStartTime() { return startTime; }
+    public void setStartTime(LocalTime startTime) { this.startTime = startTime; }
+    public LocalTime getEndTime() { return endTime; }
+    public void setEndTime(LocalTime endTime) { this.endTime = endTime; }
 
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }

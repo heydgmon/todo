@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 @Service
@@ -82,7 +83,7 @@ public class TodoService {
         repo.save(todo);
     }
 
-    // ===== [수정] 기존 add() — /todo/add 에서 호출 (장소 없는 경우) =====
+    // 기존 add() — /todo/add 에서 호출 (시간/장소 없는 경우)
     public void add(Long workspaceId, AppUser user,
                     String title, String description, LocalDate deadline,
                     String priority, String color, String repeatType,
@@ -90,15 +91,16 @@ public class TodoService {
 
         addWithLocation(workspaceId, user, title, description, deadline,
                 priority, color, repeatType, project, parentId, tagsCsv,
-                null, null, null);
+                null, null, null, null, null);
     }
 
-    // ===== [추가] addWithLocation() — /todoNew 에서 호출 (장소 포함) =====
+    // addWithLocation() — /todoNew 에서 호출 (시간+장소 포함)
     public void addWithLocation(Long workspaceId, AppUser user,
                                 String title, String description, LocalDate deadline,
                                 String priority, String color, String repeatType,
                                 String project, Long parentId, String tagsCsv,
-                                String location, Double lat, Double lng) {
+                                String location, Double lat, Double lng,
+                                LocalTime startTime, LocalTime endTime) {
 
         workspaceService.checkPermission(workspaceId, user.getId(), "EDITOR");
         Workspace ws = workspaceRepo.findById(workspaceId).orElseThrow();
@@ -115,16 +117,16 @@ public class TodoService {
         todo.setWorkspace(ws);
         todo.setCreatedBy(user);
 
-        // ===== [핵심] 장소 정보 저장 =====
+        // 장소 정보
         if (location != null && !location.isBlank()) {
             todo.setLocation(location);
         }
-        if (lat != null) {
-            todo.setLat(lat);
-        }
-        if (lng != null) {
-            todo.setLng(lng);
-        }
+        if (lat != null) todo.setLat(lat);
+        if (lng != null) todo.setLng(lng);
+
+        // ===== [추가] 시간 정보 =====
+        if (startTime != null) todo.setStartTime(startTime);
+        if (endTime != null) todo.setEndTime(endTime);
 
         if (deadline != null) {
             todo.setReminderTime(deadline.atStartOfDay().minusMinutes(10));

@@ -6,7 +6,6 @@ var GuestTodo = (function () {
     var STORAGE_KEY = 'guest_todos';
 
     function isGuest() {
-        // window.__loggedIn이 정확히 true인 경우만 로그인 상태
         return window.__loggedIn !== true;
     }
 
@@ -70,6 +69,8 @@ var GuestTodo = (function () {
                 repeatType: todo.repeatType || 'NONE',
                 project: todo.project || '',
                 location: todo.location || '',
+                startTime: todo.startTime || '',    // [추가]
+                endTime: todo.endTime || '',          // [추가]
                 completed: false,
                 sortOrder: todos.length,
                 createdAt: new Date().toISOString()
@@ -149,6 +150,7 @@ var GuestTodo = (function () {
             });
         },
 
+        // ===== [수정] 시간 정보 포함한 캘린더 이벤트 변환 =====
         toCalendarEvents: function () {
             return this.getAll()
                 .filter(function(t){ return t.deadline; })
@@ -157,11 +159,24 @@ var GuestTodo = (function () {
                     var ev = {
                         id: String(t.id),
                         title: prefix + t.title,
-                        start: t.deadline,
                         description: t.description || '',
-                        location: t.location || '',       // [추가] 장소 정보
-                        completed: t.completed || false    // [추가] 완료 상태
+                        location: t.location || '',
+                        completed: t.completed || false,
+                        startTime: t.startTime || '',
+                        endTime: t.endTime || ''
                     };
+
+                    // 시간 정보가 있으면 datetime, 없으면 종일 이벤트
+                    if (t.startTime) {
+                        ev.start = t.deadline + 'T' + t.startTime + ':00';
+                        if (t.endTime) {
+                            ev.end = t.deadline + 'T' + t.endTime + ':00';
+                        }
+                    } else {
+                        ev.start = t.deadline;
+                        ev.allDay = true;
+                    }
+
                     if (t.completed) ev.classNames = ['completed-event'];
                     if (t.priority === 'HIGH') ev.color = '#dc3545';
                     else if (t.priority === 'MEDIUM') ev.color = '#ffc107';
