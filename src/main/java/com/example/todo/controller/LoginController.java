@@ -8,6 +8,6 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login() {
-        return "login";
+        return "redirect:/oauth2/authorization/cognito";
     }
 }
