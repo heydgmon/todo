@@ -4,6 +4,7 @@ import com.example.todo.config.CurrentUserHelper;
 import com.example.todo.domain.*;
 import com.example.todo.service.SesEmailService;
 import com.example.todo.service.WorkspaceService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -109,9 +110,12 @@ public class WorkspaceController {
     /** 초대 수락 */
     @GetMapping("/invite/accept")
     public String acceptInvitation(@RequestParam String token, Authentication auth,
+                                   HttpServletRequest request,
                                    RedirectAttributes redirectAttributes) {
         AppUser user = userHelper.getCurrentUser(auth);
         if (user == null) {
+            request.getSession().setAttribute("redirectUrl",
+                    "/workspace/invite/accept?token=" + token);
             return "redirect:/oauth2/authorization/cognito";
         }
         try {
