@@ -77,19 +77,26 @@ public class WorkspaceService {
         WorkspaceInvitation inv = invitationRepo.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("유효하지 않은 초대입니다"));
 
-        if (inv.isAccepted()) {
-            throw new RuntimeException("이미 수락된 초대입니다");
-        }
         if (inv.getExpiresAt().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("만료된 초대입니다");
         }
 
-        // 이미 멤버인지 확인
+        // 이미 수락된 초대인 경우 → 실제 멤버 존재 여부까지 확인
+        if (inv.isAccepted()) {
+            if (memberRepo.existsByWorkspaceIdAndUserId(inv.getWorkspace().getId(), user.getId())) {
+                return; // 진짜 중복 → 조용히 넘어감
+            }
+            // accepted=true인데 멤버가 없으면 이전 롤백 상태 → 아래로 계속 진행
+        }
+
+        // 이미 멤버인지 확인 (다른 경로로 추가된 경우)
         if (memberRepo.existsByWorkspaceIdAndUserId(inv.getWorkspace().getId(), user.getId())) {
             inv.setAccepted(true);
+            invitationRepo.save(inv);
             return;
         }
 
+        // 멤버 생성
         WorkspaceMember member = new WorkspaceMember();
         member.setWorkspace(inv.getWorkspace());
         member.setUser(user);
@@ -97,13 +104,19 @@ public class WorkspaceService {
         member.setAccepted(true);
         memberRepo.save(member);
 
-        // 기본 알림 설정 생성
-        NotificationSetting ns = new NotificationSetting();
-        ns.setUser(user);
-        ns.setWorkspace(inv.getWorkspace());
-        notifSettingRepo.save(ns);
+        // 기본 알림 설정 생성 (실패해도 멤버 추가는 유지)
+        try {
+            NotificationSetting ns = new NotificationSetting();
+            ns.setUser(user);
+            ns.setWorkspace(inv.getWorkspace());
+            notifSettingRepo.save(ns);
+        } catch (Exception e) {
+            System.err.println("알림 설정 생성 실패 (무시): " + e.getMessage());
+        }
 
+        // accepted를 맨 마지막에 설정
         inv.setAccepted(true);
+        invitationRepo.save(inv);
     }
 
     /** 멤버 권한 변경 */
@@ -164,6 +177,7 @@ public class WorkspaceService {
             default -> 0;
         };
     }
+
     /** 워크스페이스 삭제 (OWNER만 가능) */
     public void deleteWorkspace(Long workspaceId, AppUser requester) {
         checkPermission(workspaceId, requester.getId(), "OWNER");
@@ -171,16 +185,13 @@ public class WorkspaceService {
         Workspace ws = workspaceRepo.findById(workspaceId)
                 .orElseThrow(() -> new RuntimeException("워크스페이스를 찾을 수 없습니다"));
 
-        // 본인이 소유자인지 한번 더 확인
         if (!ws.getOwner().getId().equals(requester.getId())) {
             throw new RuntimeException("소유자만 워크스페이스를 삭제할 수 있습니다");
         }
 
-        // 연관 데이터 순서대로 삭제 (FK 제약 때문)
         notifSettingRepo.deleteByWorkspaceId(workspaceId);
         invitationRepo.deleteByWorkspaceId(workspaceId);
         memberRepo.deleteByWorkspaceId(workspaceId);
-        // Todo는 cascade 또는 직접 삭제
         workspaceRepo.delete(ws);
     }
 }

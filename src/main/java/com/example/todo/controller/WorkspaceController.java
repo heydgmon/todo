@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -35,13 +36,11 @@ public class WorkspaceController {
     @GetMapping
     public String list(Authentication auth, Model model) {
         AppUser user = userHelper.getCurrentUser(auth);
-        // 비로그인이면 로그인 페이지로
         if (user == null) {
             return "redirect:/oauth2/authorization/cognito";
         }
         List<Workspace> workspaces = workspaceService.getMyWorkspaces(user.getId());
         model.addAttribute("workspaces", workspaces);
-        model.addAttribute("loggedIn", true);  // ★ 핵심 수정: 로그인 상태 전달
         return "workspace/list";
     }
 
@@ -49,7 +48,6 @@ public class WorkspaceController {
     @PostMapping("/create")
     public String create(@RequestParam String name, Authentication auth) {
         AppUser user = userHelper.getCurrentUser(auth);
-        // 비로그인이면 로그인 페이지로
         if (user == null) {
             return "redirect:/oauth2/authorization/cognito";
         }
@@ -71,7 +69,6 @@ public class WorkspaceController {
     /** 워크스페이스 멤버 관리 페이지 */
     @GetMapping("/{id}/members")
     public String members(@PathVariable Long id, Authentication auth, Model model) {
-        // ✅ 수정: null 체크를 checkPermission보다 먼저 수행
         AppUser user = userHelper.getCurrentUser(auth);
         if (user == null) {
             return "redirect:/oauth2/authorization/cognito";
@@ -82,7 +79,6 @@ public class WorkspaceController {
         List<WorkspaceMember> members = workspaceService.getMembers(id);
         model.addAttribute("members", members);
         model.addAttribute("workspaceId", id);
-        model.addAttribute("loggedIn", true);  // ★ 핵심 수정: 로그인 상태 전달
         return "workspace/members";
     }
 
@@ -94,13 +90,11 @@ public class WorkspaceController {
                          Authentication auth) {
 
         AppUser user = userHelper.getCurrentUser(auth);
-        // 비로그인이면 로그인 페이지로
         if (user == null) {
             return "redirect:/oauth2/authorization/cognito";
         }
         WorkspaceInvitation inv = workspaceService.inviteMember(id, email, role, user);
 
-        // SES로 초대 이메일 발송
         emailService.sendInvitationEmail(
                 email,
                 inv.getWorkspace().getName(),
@@ -114,13 +108,17 @@ public class WorkspaceController {
 
     /** 초대 수락 */
     @GetMapping("/invite/accept")
-    public String acceptInvitation(@RequestParam String token, Authentication auth) {
+    public String acceptInvitation(@RequestParam String token, Authentication auth,
+                                   RedirectAttributes redirectAttributes) {
         AppUser user = userHelper.getCurrentUser(auth);
-        // 비로그인이면 로그인 페이지로
         if (user == null) {
             return "redirect:/oauth2/authorization/cognito";
         }
-        workspaceService.acceptInvitation(token, user);
+        try {
+            workspaceService.acceptInvitation(token, user);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
         return "redirect:/workspace";
     }
 
@@ -131,7 +129,6 @@ public class WorkspaceController {
                              @RequestParam String role,
                              Authentication auth) {
         AppUser user = userHelper.getCurrentUser(auth);
-        // 비로그인이면 로그인 페이지로
         if (user == null) {
             return "redirect:/oauth2/authorization/cognito";
         }
@@ -145,7 +142,6 @@ public class WorkspaceController {
                                @PathVariable Long memberId,
                                Authentication auth) {
         AppUser user = userHelper.getCurrentUser(auth);
-        // 비로그인이면 로그인 페이지로
         if (user == null) {
             return "redirect:/oauth2/authorization/cognito";
         }
