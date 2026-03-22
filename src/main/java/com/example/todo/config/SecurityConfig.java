@@ -22,7 +22,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
 
+// 변경 후
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/workspace/**").authenticated()
                         .anyRequest().permitAll()
                 )
 
