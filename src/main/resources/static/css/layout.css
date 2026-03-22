@@ -1,24 +1,18 @@
 /* ===== 전체 레이아웃 ===== */
-
-/* ★ [수정] body 기본 margin 제거 — 흰 줄 방지 */
-html, body {
-    margin: 0;
-    padding: 0;
-}
-
 .layout {
     display: flex;
     min-height: 100vh;
-    background: #0b0c10;
+    background: #FAFAF8;
 }
 
 /* ===== 사이드바 ===== */
 .sidebar {
     width: 230px;
     height: 100vh;
-    background-color: #1e293b;
-    color: white;
+    background-color: #F0EFEB;
+    color: #1a1a1a;
     padding: 25px 20px;
+    border-right: 1px solid #E0DED8;
 
     /* ⭐ 핵심: 고정 */
     position: fixed;
@@ -45,7 +39,7 @@ html, body {
 }
 
 .sidebar .menu a {
-    color: #cbd5f5;
+    color: #555550;
     text-decoration: none;
     font-size: 14px;
     display: block;
@@ -55,12 +49,12 @@ html, body {
 }
 
 .sidebar .menu a:hover {
-    background-color: #334155;
-    color: white;
+    background-color: #E6E5E0;
+    color: #1a1a1a;
 }
 
 .sidebar .menu a.active {
-    background-color: #334155;
+    background-color: #5b7fff;
     color: white;
 }
 
@@ -86,6 +80,7 @@ html, body {
     background: #ffffff;
     border-radius: 16px;
     padding: 30px;
+    border: 1px solid #E0DED8;
 }
 
 /* ===== 패널 ===== */
@@ -93,7 +88,7 @@ html, body {
     background: #ffffff;
     border-radius: 14px;
     padding: 20px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid #E0DED8;
 }
 
 /* ===== 캘린더 ===== */
