@@ -794,6 +794,34 @@
       }
     })();
 </script>
+<!-- 로그인 필요 팝업 -->
+<div id="loginAlert" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);z-index:9999;justify-content:center;align-items:center;">
+    <div style="background:#fff;border-radius:20px;padding:36px 32px 28px;max-width:360px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.15);animation:slideUp 0.3s cubic-bezier(0.16,1,0.3,1);">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#dbeafe,#bfdbfe);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.5rem;">🔒</div>
+        <h4 style="font-size:1.05rem;font-weight:600;color:#111827;margin-bottom:8px;">로그인이 필요합니다</h4>
+        <p style="font-size:0.88rem;color:#6b7280;margin-bottom:24px;line-height:1.5;">워크스페이스는 로그인 후<br>사용할 수 있는 기능입니다.</p>
+        <a href="/oauth2/authorization/cognito" style="display:inline-block;background:linear-gradient(135deg,#5b7fff,#7c9cff);color:#fff;border:none;padding:10px 36px;border-radius:12px;font-size:0.9rem;font-weight:500;cursor:pointer;text-decoration:none;transition:transform 0.15s,box-shadow 0.15s;">로그인하기</a>
+        <div style="margin-top:12px;">
+            <button onclick="document.getElementById('loginAlert').style.display='none'" style="background:none;border:none;color:#6b7280;font-size:0.82rem;cursor:pointer;">닫기</button>
+        </div>
+    </div>
+</div>
 
+<script>
+    // 워크스페이스 카드 열기 클릭 인터셉트
+    document.querySelectorAll('a.card-link').forEach(function(link) {
+        if (link.getAttribute('href') === '/workspace') {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                var el = document.getElementById('loginAlert');
+                el.style.display = 'flex';
+            });
+        }
+    });
+    // 오버레이 클릭으로 닫기
+    document.getElementById('loginAlert').addEventListener('click', function(e) {
+        if (e.target === this) this.style.display = 'none';
+    });
+</script>
 </body>
 </html>
