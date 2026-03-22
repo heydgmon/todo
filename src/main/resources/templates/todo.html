@@ -320,9 +320,10 @@
             var icon = t.priority === 'HIGH' ? '🔥' : t.priority === 'MEDIUM' ? '⚡' : '🌿';
             var titleClass = t.completed ? 'text-decoration-line-through muted' : '';
             var deadline = t.deadline ? ' <small class="muted">(' + t.deadline + ')</small>' : '';
+            var locationHtml = t.location ? ' <small style="color:#0ea5e9;">📍 ' + _esc(t.location) + '</small>' : '';
             var btnLabel = t.completed ? '취소' : '완료';
             html += '<div class="list-item" data-id="' + t.id + '">' +
-                '<div><span>' + icon + '</span> <span class="' + titleClass + '">' + _esc(t.title) + '</span>' + deadline + '</div>' +
+                '<div><span>' + icon + '</span> <span class="' + titleClass + '">' + _esc(t.title) + '</span>' + deadline + locationHtml + '</div>' +
                 '<div style="display:flex;gap:6px;">' +
 '<button class="btn btn-success" onclick="guestToggle(' + t.id + ')">' + btnLabel + '</button>' +
 '<button class="btn btn-danger" onclick="guestRemove(' + t.id + ')">삭제</button>' +
