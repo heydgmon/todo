@@ -32,7 +32,9 @@
           min-height: 100vh;
           overflow-x: hidden;
         }
-
+.footer-links { display:flex; gap:20px; }
+.footer-links a { color:var(--muted); text-decoration:none; font-size:0.8rem; }
+.footer-links a:hover { color:var(--accent); }
         /* ── NOISE OVERLAY ── */
         body::before {
           content: '';
@@ -730,7 +732,12 @@
 <!-- FOOTER -->
 <footer>
     <div class="footer-logo">do<span>·</span>it</div>
-    <div>Built with ❤️ &nbsp;·&nbsp; Todo Service</div>
+    <div class="footer-links">
+        <a href="/about">소개</a>
+        <a href="/privacy">개인정보 처리방침</a>
+        <a href="/contact">문의</a>
+    </div>
+    <div>© 2025 TaskAll Team</div>
 </footer>
 
 <script>

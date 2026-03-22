@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="do·it(TaskAll)은 할 일 관리, 캘린더, 대시보드를 하나로 통합한 생산성 웹 서비스입니다.">
+    <title>소개 - do·it</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0b0c10; --surface: #141519; --border: #23252b;
+            --text: #e4e4e7; --muted: #71717a; --accent: #5b7fff;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); line-height:1.8; }
+
+        nav {
+            display:flex; justify-content:space-between; align-items:center;
+            padding:18px 48px; border-bottom:1px solid var(--border);
+            position:sticky; top:0; background:rgba(11,12,16,0.9); backdrop-filter:blur(12px); z-index:100;
+        }
+        .nav-logo { font-family:'Instrument Serif',serif; font-size:1.2rem; color:var(--text); text-decoration:none; }
+        .nav-logo span { color:var(--accent); }
+        .nav-back { color:var(--muted); text-decoration:none; font-size:0.85rem; transition:color 0.2s; }
+        .nav-back:hover { color:var(--accent); }
+
+        .page-wrap { max-width:800px; margin:0 auto; padding:60px 24px 100px; }
+
+        h1 {
+            font-family:'Instrument Serif',serif; font-size:2.2rem;
+            margin-bottom:8px; letter-spacing:-0.02em;
+        }
+        .subtitle { color:var(--muted); font-size:0.92rem; margin-bottom:48px; }
+
+        h2 {
+            font-size:1.15rem; font-weight:600; margin-top:40px; margin-bottom:12px;
+            color:var(--accent); letter-spacing:-0.01em;
+        }
+        p { font-size:0.92rem; color:var(--text); margin-bottom:16px; }
+
+        .feature-grid {
+            display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+            gap:16px; margin:24px 0 32px;
+        }
+        .feature-card {
+            background:var(--surface); border:1px solid var(--border);
+            border-radius:12px; padding:20px;
+        }
+        .feature-icon { font-size:1.6rem; margin-bottom:8px; }
+        .feature-name { font-weight:600; font-size:0.95rem; margin-bottom:4px; }
+        .feature-desc { font-size:0.82rem; color:var(--muted); line-height:1.6; }
+
+        a { color:var(--accent); text-decoration:none; }
+        a:hover { text-decoration:underline; }
+
+        .divider { border:none; border-top:1px solid var(--border); margin:48px 0; }
+
+        footer {
+            border-top:1px solid var(--border); padding:32px 48px;
+            display:flex; align-items:center; justify-content:space-between;
+            flex-wrap:wrap; gap:12px; color:var(--muted); font-size:0.8rem;
+        }
+        .footer-logo { font-family:'Instrument Serif',serif; font-size:1rem; color:var(--text); }
+        .footer-logo span { color:var(--accent); }
+        .footer-links { display:flex; gap:20px; }
+        .footer-links a { color:var(--muted); text-decoration:none; font-size:0.8rem; }
+        .footer-links a:hover { color:var(--accent); }
+
+        @media (max-width:640px) {
+            nav { padding:14px 20px; }
+            .page-wrap { padding:40px 16px 80px; }
+            h1 { font-size:1.6rem; }
+            .feature-grid { grid-template-columns:1fr; }
+            footer { padding:24px 20px; justify-content:center; text-align:center; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="/" class="nav-logo">do<span>·</span>it</a>
+    <a href="/" class="nav-back">← 홈으로</a>
+</nav>
+
+<main class="page-wrap">
+    <h1>do·it 소개</h1>
+    <p class="subtitle">Todo · Calendar · Dashboard — 복잡한 일정도 단순하게.</p>
+
+    <h2>서비스 소개</h2>
+    <p>do·it은 할 일 관리(Todo), 캘린더(Calendar), 대시보드(Dashboard)를 하나의 서비스에서 제공하는 통합 생산성 도구입니다. 매일 해야 할 일을 정리하고, 일정을 시각적으로 관리하며, 진행 상황을 한눈에 파악할 수 있도록 설계되었습니다.</p>
+    <p>별도의 설치 없이 웹 브라우저에서 바로 사용할 수 있으며, 로그인 없이도 게스트 모드로 핵심 기능을 체험할 수 있습니다.</p>
+
+    <h2>주요 기능</h2>
+    <div class="feature-grid">
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <div class="feature-name">대시보드</div>
+            <div class="feature-desc">오늘 할 일, 지연된 작업, 주간 진행률을 한눈에 확인하세요.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📅</div>
+            <div class="feature-name">캘린더</div>
+            <div class="feature-desc">날짜별 일정을 등록하고, 드래그 앤 드롭으로 손쉽게 관리할 수 있습니다.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📝</div>
+            <div class="feature-name">할 일 관리</div>
+            <div class="feature-desc">우선순위, 반복 일정, 프로젝트별 분류 등 강력한 할 일 관리 기능을 제공합니다.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">👥</div>
+            <div class="feature-name">워크스페이스</div>
+            <div class="feature-desc">팀원을 초대하고 함께 할 일을 관리하는 협업 공간입니다.</div>
+        </div>
+    </div>
+
+    <h2>운영 정보</h2>
+    <p>do·it 서비스는 <strong>TaskAll Team</strong>이 운영합니다.</p>
+    <ul style="padding-left:20px; margin-bottom:16px;">
+        <li style="font-size:0.92rem; margin-bottom:6px;"><strong>서비스명:</strong> do·it (TaskAll)</li>
+        <li style="font-size:0.92rem; margin-bottom:6px;"><strong>도메인:</strong> <a href="https://taskall.click">taskall.click</a></li>
+        <li style="font-size:0.92rem; margin-bottom:6px;"><strong>연락처:</strong> <a href="mailto:rhr2308@gmail.com">rhr2308@gmail.com</a></li>
+    </ul>
+
+    <h2>기술 스택</h2>
+    <p>do·it은 다음 기술을 기반으로 구축되었습니다.</p>
+    <ul style="padding-left:20px;">
+        <li style="font-size:0.92rem; margin-bottom:6px;">Backend: Spring Boot, Spring Security, JPA</li>
+        <li style="font-size:0.92rem; margin-bottom:6px;">Frontend: Thymeleaf, FullCalendar, Bootstrap</li>
+        <li style="font-size:0.92rem; margin-bottom:6px;">인증: Amazon Cognito (OAuth2)</li>
+        <li style="font-size:0.92rem; margin-bottom:6px;">인프라: AWS (ECS, RDS, ALB, SES)</li>
+    </ul>
+
+    <hr class="divider">
+    <p style="color:var(--muted); font-size:0.85rem;">서비스에 대한 문의는 <a href="/contact">문의 페이지</a>를 이용해 주세요.</p>
+</main>
+
+<footer>
+    <div class="footer-logo">do<span>·</span>it</div>
+    <div class="footer-links">
+        <a href="/about">소개</a>
+        <a href="/privacy">개인정보 처리방침</a>
+        <a href="/contact">문의</a>
+    </div>
+    <div>© 2025 TaskAll Team</div>
+</footer>
+
+</body>
+</html>
