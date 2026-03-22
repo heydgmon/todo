@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="do·it 캘린더 기능 사용법. 날짜 클릭으로 일정 등록, 장소 지도 연동, 드래그 앤 드롭 날짜 변경, 우선순위별 색상 코딩을 안내합니다.">
+    <title>캘린더로 일정 시각화 - do·it 사용 가이드</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/guide.css}">
+</head>
+<body>
+<nav><a href="/" class="nav-logo">do<span>·</span>it</a><div class="nav-links"><a href="/guide" class="nav-back">← 가이드 목록</a></div></nav>
+<main class="page-wrap">
+    <p style="font-size:0.78rem;color:var(--accent);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">04 CALENDAR</p>
+    <h1>캘린더로 일정 시각화</h1>
+    <p class="page-subtitle">등록한 할 일이 날짜별로 캘린더에 자동 표시됩니다. 한 달의 일정을 한눈에 파악할 수 있습니다.</p>
+
+    <div class="feature-box">
+        <h3>📅 날짜 클릭으로 일정 등록</h3>
+        <p>캘린더에서 원하는 날짜를 클릭하면 일정 등록 모달이 열립니다. 제목, 설명, 우선순위, 반복 여부를 설정할 수 있으며, 저장하면 즉시 캘린더에 반영됩니다. 캘린더에서 등록한 일정은 할 일 목록에도 자동으로 추가되므로, 어디서 등록하든 데이터가 항상 동기화됩니다.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>🗺️ 장소 연동 (로그인 모드)</h3>
+        <p>로그인 모드에서는 일정에 장소 정보를 추가할 수 있습니다. 일정 등록 모달에서 "장소 검색" 입력란에 키워드(예: "여의도", "강남역")를 입력하면 지도가 표시됩니다. 지도에서 원하는 위치를 클릭하면 좌표(위도/경도)가 자동으로 저장됩니다. 회의 장소, 약속 위치, 출장지 등을 기록해두면 나중에 확인하기 편합니다.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>📌 드래그 앤 드롭 일정 변경</h3>
+        <p>마감일이 바뀌었나요? 캘린더에서 일정을 다른 날짜로 드래그하면 마감일이 자동으로 업데이트됩니다. 별도의 수정 화면을 열 필요 없이, 마치 포스트잇을 옮기듯 직관적으로 일정을 조정할 수 있습니다. 변경된 날짜는 할 일 목록에도 즉시 반영됩니다.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>🎨 우선순위별 색상 코딩</h3>
+        <p>캘린더에 표시되는 일정은 우선순위에 따라 색상이 다릅니다. 한눈에 어떤 일정이 급한지 파악할 수 있습니다.</p>
+        <ul>
+            <li><span class="pri-high">빨간색</span> — HIGH 우선순위 일정</li>
+            <li><span class="pri-med">노란색</span> — MEDIUM 우선순위 일정</li>
+            <li><span class="pri-low">초록색</span> — LOW 우선순위 일정</li>
+            <li><span style="color:var(--muted)">회색 + 취소선</span> — 완료된 일정</li>
+        </ul>
+        <p>완료 처리한 일정은 회색으로 변하고 제목에 취소선이 그어져, 아직 해야 할 일과 시각적으로 구분됩니다.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>📆 오늘 날짜 강조</h3>
+        <p>캘린더에서 오늘 날짜는 파란색 테두리와 연한 파란 배경으로 강조됩니다. 한 달 캘린더를 스캔할 때 오늘이 어디인지 바로 찾을 수 있어, 가까운 마감일을 빠르게 확인하는 데 도움이 됩니다.</p>
+    </div>
+
+    <div class="tip-box">
+        <strong>💡 Tip</strong>
+        <p>캘린더에서 일정을 클릭하면 해당 일정의 제목과 설명이 팝업으로 표시됩니다. 간단한 메모를 확인하기에 편리합니다.</p>
+    </div>
+
+    <div class="guide-nav">
+        <a href="/guide/todo" class="prev">← 할 일 관리</a>
+        <a href="/guide/dashboard" class="next">대시보드 →</a>
+    </div>
+</main>
+<footer th:replace="~{fragments/guide-footer :: guide-footer}"></footer>
+</body>
+</html>

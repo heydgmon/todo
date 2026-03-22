@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="do·it을 200% 활용하는 실전 팁. 일일 루틴 자동화, 프로젝트별 분류, 아침 대시보드 루틴, 팀 워크스페이스 활용법을 안내합니다.">
+    <title>do·it 200% 활용하기 - do·it 사용 가이드</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/guide.css}">
+</head>
+<body>
+<nav><a href="/" class="nav-logo">do<span>·</span>it</a><div class="nav-links"><a href="/guide" class="nav-back">← 가이드 목록</a></div></nav>
+<main class="page-wrap">
+    <p style="font-size:0.78rem;color:var(--accent);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">08 PRO TIPS</p>
+    <h1>do·it 200% 활용하기</h1>
+    <p class="page-subtitle">기본 기능을 익혔다면, 이제 do·it을 더 효율적으로 쓰는 실전 팁을 확인해보세요.</p>
+
+    <div class="feature-box">
+        <h3>🎯 일일 루틴 자동화</h3>
+        <p>매일 해야 하는 일(운동, 독서, 일기, 약 복용 등)은 캘린더에서 "매일 반복"으로 등록하세요. 한 번 설정하면 최대 1년치 일정이 자동으로 생성됩니다. 완료할 때마다 체크하면 캘린더에서 완료된 일정이 회색으로 변하므로, 연속 달성 기록을 시각적으로 확인할 수 있습니다. 습관 트래커처럼 활용하기에 좋습니다.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>📋 프로젝트별 분류</h3>
+        <p>할 일을 프로젝트별로 분류하면 관련 작업을 모아서 볼 수 있습니다. 예를 들어 "졸업논문", "이사 준비", "여행 계획" 같은 프로젝트를 만들고, 각 프로젝트에 속하는 세부 작업을 등록하세요. 사이드바에서 프로젝트별로 필터링하면 특정 프로젝트의 진행 상황만 집중해서 볼 수 있습니다. 여러 가지 일을 동시에 진행하는 멀티태스커에게 특히 유용합니다.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>🚀 아침에 대시보드부터 확인</h3>
+        <p>하루를 시작할 때 가장 먼저 대시보드를 열어보는 습관을 만들어 보세요. 확인해야 할 것은 딱 두 가지입니다.</p>
+        <ul>
+            <li><strong>"오늘" 카드의 숫자</strong> — 이것이 오늘 처리해야 할 작업량입니다. 이 숫자를 0으로 만드는 것을 목표로 하면 하루가 훨씬 체계적이 됩니다.</li>
+            <li><strong>"지연" 카드의 색상</strong> — 빨간색 숫자가 있다면 밀린 작업이 있다는 뜻입니다. 밀린 작업부터 처리하면 누적되는 스트레스를 줄일 수 있습니다.</li>
+        </ul>
+        <p>매일 아침 1분만 투자하면 하루의 우선순위가 명확해집니다.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>👥 팀 프로젝트에 워크스페이스 활용</h3>
+        <p>스터디 그룹, 사이드 프로젝트, 동아리 등 여러 사람이 함께하는 활동에 워크스페이스를 만들어 보세요. 효율적인 운영 패턴은 다음과 같습니다.</p>
+        <ul>
+            <li>OWNER가 프로젝트의 전체 할 일을 등록하고 마감일을 설정합니다.</li>
+            <li>각 팀원을 EDITOR로 초대합니다.</li>
+            <li>팀원들은 자기가 맡은 할 일의 완료 상태를 직접 업데이트합니다.</li>
+            <li>D-7, D-1, D-Day 이메일 알림으로 팀 전체가 마감일을 인지합니다.</li>
+            <li>대시보드에서 전체 진행률을 한눈에 확인합니다.</li>
+        </ul>
+        <p>별도의 프로젝트 관리 도구 없이도, 소규모 팀의 작업 관리가 충분히 가능합니다.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>⌨️ 효율적인 할 일 등록 습관</h3>
+        <p>할 일을 등록할 때 다음 규칙을 지키면 관리가 훨씬 수월해집니다.</p>
+        <ul>
+            <li><strong>제목은 구체적으로</strong> — "보고서" 대신 "3월 매출 보고서 초안 작성"처럼 쓰면 나중에 무엇을 해야 하는지 바로 알 수 있습니다.</li>
+            <li><strong>마감일은 반드시 설정</strong> — 마감일이 없는 할 일은 무한히 미뤄지기 쉽습니다. 급하지 않더라도 현실적인 마감일을 설정하세요.</li>
+            <li><strong>우선순위는 솔직하게</strong> — 모든 일을 HIGH로 설정하면 아무것도 우선이 아닙니다. 정말 긴급한 일에만 HIGH를 부여하세요.</li>
+        </ul>
+    </div>
+
+    <div class="tip-box">
+        <strong>💡 마지막 Tip</strong>
+        <p>완벽한 시스템보다 꾸준한 사용이 더 중요합니다. 하루에 5분만 투자해서 할 일을 정리하면, 일주일 뒤에는 훨씬 체계적인 자신을 발견하게 됩니다.</p>
+    </div>
+
+    <div class="guide-nav">
+        <a href="/guide/notifications" class="prev">← 이메일 알림</a>
+        <a href="/guide" class="next">가이드 목록 →</a>
+    </div>
+</main>
+<footer th:replace="~{fragments/guide-footer :: guide-footer}"></footer>
+</body>
+</html>

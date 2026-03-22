@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="do·it 할 일 관리 기능의 모든 것. 우선순위 시스템, 반복 일정, 검색과 필터, 드래그 앤 드롭 정렬까지 상세히 안내합니다.">
+    <title>할 일 관리 완전 정복 - do·it 사용 가이드</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/guide.css}">
+</head>
+<body>
+<nav><a href="/" class="nav-logo">do<span>·</span>it</a><div class="nav-links"><a href="/guide" class="nav-back">← 가이드 목록</a></div></nav>
+<main class="page-wrap">
+    <p style="font-size:0.78rem;color:var(--accent);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">03 TODO MANAGEMENT</p>
+    <h1>할 일 관리 완전 정복</h1>
+    <p class="page-subtitle">do·it의 핵심 기능입니다. 단순한 체크리스트를 넘어, 우선순위·마감일·반복·프로젝트 분류까지 지원합니다.</p>
+
+    <div class="feature-box">
+        <h3>📝 할 일 등록하기</h3>
+        <p>할 일 페이지 상단의 입력 폼에서 제목을 입력하고 "추가" 버튼을 누르면 됩니다. 등록할 때 설정할 수 있는 항목은 다음과 같습니다.</p>
+        <ul>
+            <li><strong>제목</strong> — 할 일의 이름 (필수 입력)</li>
+            <li><strong>마감일</strong> — 날짜를 지정하면 캘린더에 자동 반영됩니다. 마감일을 기준으로 알림 이메일이 발송됩니다.</li>
+            <li><strong>우선순위</strong> — <span class="pri-high">🔥 HIGH</span>, <span class="pri-med">⚡ MEDIUM</span>, <span class="pri-low">🌿 LOW</span> 중 선택. 기본값은 LOW입니다.</li>
+        </ul>
+    </div>
+
+    <div class="feature-box">
+        <h3>🔥 우선순위 시스템</h3>
+        <p>세 단계의 우선순위로 중요한 일을 한눈에 구분할 수 있습니다. 우선순위는 할 일 목록과 캘린더에서 모두 시각적으로 반영됩니다.</p>
+        <ul>
+            <li><span class="pri-high">HIGH (🔥)</span> — 긴급하고 중요한 작업입니다. 캘린더에서 빨간색으로 강조 표시됩니다. 대시보드의 "요약" 카드에 우선 노출됩니다.</li>
+            <li><span class="pri-med">MEDIUM (⚡)</span> — 중요하지만 급하지 않은 작업입니다. 캘린더에서 노란색으로 표시됩니다.</li>
+            <li><span class="pri-low">LOW (🌿)</span> — 여유 있게 처리할 작업입니다. 캘린더에서 초록색으로 표시되며, 마감 압박이 적은 일에 적합합니다.</li>
+        </ul>
+    </div>
+
+    <div class="feature-box">
+        <h3>🔄 반복 일정</h3>
+        <p>매일, 매주, 매월 반복되는 루틴을 자동으로 생성할 수 있습니다. 캘린더에서 일정을 등록할 때 "반복" 옵션을 선택하면 최대 1년간의 반복 일정이 자동으로 만들어집니다.</p>
+        <ul>
+            <li><strong>매일(DAILY)</strong> — 매일 운동, 일일 리포트, 약 복용 알림 등 매일 해야 하는 루틴에 적합합니다.</li>
+            <li><strong>매주(WEEKLY)</strong> — 주간 회의, 정기 미팅, 주말 정리 등 주 단위 일정에 사용합니다.</li>
+            <li><strong>매월(MONTHLY)</strong> — 월간 보고, 정산, 구독 갱신 등 월 단위 일정에 사용합니다.</li>
+        </ul>
+        <p>반복 일정을 삭제할 때는 할 일 목록에서 "반복삭제" 버튼을 누르면 동일 제목의 모든 반복 일정이 한 번에 제거됩니다. 개별 항목만 삭제하려면 일반 "삭제" 버튼을 사용하세요.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>🔍 검색과 필터</h3>
+        <p>할 일이 많아져도 빠르게 원하는 항목을 찾을 수 있습니다.</p>
+        <ul>
+            <li><strong>검색</strong> — 제목, 설명, 프로젝트명에서 키워드를 검색합니다. 왼쪽 패널의 검색창에 입력하면 실시간으로 결과가 필터링됩니다.</li>
+            <li><strong>전체</strong> — 모든 할 일을 표시합니다.</li>
+            <li><strong>오늘</strong> — 오늘 마감인 할 일만 필터링합니다.</li>
+            <li><strong>이번 주</strong> — 이번 주(월~일) 마감인 할 일만 필터링합니다.</li>
+        </ul>
+    </div>
+
+    <div class="feature-box">
+        <h3>↕️ 드래그 앤 드롭 정렬</h3>
+        <p>로그인 모드에서는 할 일 목록을 드래그 앤 드롭으로 원하는 순서대로 정렬할 수 있습니다. 가장 먼저 처리할 일을 위로 올려두면 효율적입니다. 변경된 순서는 서버에 자동으로 저장되어, 다른 기기에서 접속해도 동일한 순서를 유지합니다.</p>
+    </div>
+
+    <div class="tip-box">
+        <strong>💡 Tip</strong>
+        <p>할 일을 등록할 때 마감일을 함께 설정하면, 캘린더와 대시보드에 자동으로 연동되어 일정 관리가 한결 편해집니다. 마감일 없이 등록하면 "오늘" 날짜가 기본값으로 설정됩니다.</p>
+    </div>
+
+    <div class="guide-nav">
+        <a href="/guide/guest-vs-login" class="prev">← 게스트 vs 로그인</a>
+        <a href="/guide/calendar" class="next">캘린더 →</a>
+    </div>
+</main>
+<footer th:replace="~{fragments/guide-footer :: guide-footer}"></footer>
+</body>
+</html>

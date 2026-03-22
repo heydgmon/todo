@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="do·it 대시보드 사용법. 오늘 할 일, 이번 주 일정, 지연된 작업, 긴급 요약을 한눈에 확인하는 방법을 안내합니다.">
+    <title>대시보드로 오늘을 한눈에 - do·it 사용 가이드</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/guide.css}">
+</head>
+<body>
+<nav><a href="/" class="nav-logo">do<span>·</span>it</a><div class="nav-links"><a href="/guide" class="nav-back">← 가이드 목록</a></div></nav>
+<main class="page-wrap">
+    <p style="font-size:0.78rem;color:var(--accent);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">05 DASHBOARD</p>
+    <h1>대시보드로 오늘을 한눈에</h1>
+    <p class="page-subtitle">대시보드는 서비스에 접속하면 가장 먼저 보게 되는 화면입니다. 오늘의 할 일 현황을 요약해서 보여줍니다.</p>
+
+    <div class="feature-box">
+        <h3>📊 한눈에 보는 4가지 요약 카드</h3>
+        <p>대시보드 상단에는 핵심 지표 4가지가 카드 형태로 배치되어 있습니다.</p>
+        <ul>
+            <li><strong>📌 오늘</strong> — 오늘 마감인 미완료 할 일 수입니다. 오늘 집중해야 할 작업량을 나타냅니다.</li>
+            <li><strong>이번 주</strong> — 이번 주(월~일) 마감인 미완료 할 일 수입니다. 주간 작업 부하를 파악할 수 있습니다.</li>
+            <li><strong>지연</strong> — 마감일이 지났는데 아직 완료하지 않은 할 일 수입니다. 빨간색으로 강조되어 주의를 끕니다. 이 숫자를 0으로 만드는 것이 매일의 목표입니다.</li>
+            <li><strong>요약</strong> — 긴급도가 높은 상위 5개 할 일 목록입니다. 가장 먼저 처리해야 할 작업을 바로 확인할 수 있습니다.</li>
+        </ul>
+    </div>
+
+    <div class="feature-box">
+        <h3>⏳ 지연 일정 자동 감지</h3>
+        <p>마감일이 지난 미완료 할 일은 자동으로 "지연" 카드에 집계됩니다. 지연된 일정이 누적될수록 빨간색 숫자가 커지므로, 밀린 작업을 빠르게 처리하도록 시각적 동기부여를 받을 수 있습니다. 지연 섹션에서는 어떤 할 일이 밀렸는지 구체적인 목록도 확인할 수 있습니다.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>📌 오늘 할 일 목록</h3>
+        <p>대시보드 하단에는 오늘 마감인 할 일의 전체 목록이 표시됩니다. 목록에서 바로 할 일의 제목을 확인할 수 있고, 상세 관리가 필요하면 사이드바에서 "할 일 관리" 페이지로 이동하면 됩니다.</p>
+    </div>
+
+    <div class="warn-box">
+        <strong>⚠️ 참고</strong>
+        <p>대시보드의 데이터는 페이지 로드 시점에 계산됩니다. 할 일을 추가하거나 완료 처리한 뒤에는 대시보드를 새로고침(F5)하면 최신 상태가 반영됩니다.</p>
+    </div>
+
+    <div class="tip-box">
+        <strong>💡 Tip</strong>
+        <p>하루를 시작할 때 대시보드를 가장 먼저 열어보세요. "오늘" 카드가 오늘 처리할 작업량이고, "지연" 카드가 빨간색이면 밀린 작업부터 처리하면 됩니다.</p>
+    </div>
+
+    <div class="guide-nav">
+        <a href="/guide/calendar" class="prev">← 캘린더</a>
+        <a href="/guide/workspace" class="next">워크스페이스 →</a>
+    </div>
+</main>
+<footer th:replace="~{fragments/guide-footer :: guide-footer}"></footer>
+</body>
+</html>

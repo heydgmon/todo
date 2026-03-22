@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="do·it 서비스를 처음 사용하는 분을 위한 빠른 시작 가이드입니다. 회원가입 없이 바로 시작하세요.">
+    <title>30초 만에 시작하기 - do·it 사용 가이드</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/guide.css}">
+</head>
+<body>
+
+<nav>
+    <a href="/" class="nav-logo">do<span>·</span>it</a>
+    <div class="nav-links">
+        <a href="/guide" class="nav-back">← 가이드 목록</a>
+    </div>
+</nav>
+
+<main class="page-wrap">
+    <p style="font-size:0.78rem; color:var(--accent); font-weight:600; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:8px;">01 GETTING STARTED</p>
+    <h1>30초 만에 시작하기</h1>
+    <p class="page-subtitle">do·it 서비스를 처음 사용하는 분을 위한 빠른 시작 가이드입니다. 회원가입 없이 바로 시작하세요.</p>
+
+    <h2>설치 없이 바로 시작</h2>
+    <p>do·it은 별도의 앱 설치나 회원가입 없이 웹 브라우저만으로 바로 사용할 수 있는 생산성 도구입니다. PC, 태블릿, 스마트폰 어디서든 접속하면 됩니다.</p>
+
+    <div class="step-list">
+        <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+                <h4>사이트 접속</h4>
+                <p><a href="https://taskall.click">taskall.click</a>에 접속하면 메인 페이지가 나타납니다. 깔끔한 랜딩 페이지에서 서비스의 핵심 기능을 미리 확인할 수 있습니다.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+                <h4>바로 시작하기 클릭</h4>
+                <p>"시작하기" 또는 "대시보드 열기" 버튼을 누르면 곧바로 게스트 모드로 진입합니다. 회원가입이나 로그인 없이도 할 일 등록, 캘린더 관리, 대시보드 확인이 모두 가능합니다. 게스트 모드의 데이터는 브라우저의 LocalStorage에 저장되므로, 같은 브라우저에서는 브라우저를 닫았다 열어도 데이터가 유지됩니다.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+                <h4>필요할 때 로그인</h4>
+                <p>데이터를 클라우드에 저장하거나, 다른 기기에서도 이어서 쓰고 싶다면 상단의 "로그인" 버튼으로 가입하세요. Amazon Cognito를 통한 안전한 OAuth2 인증 방식으로, 이메일 주소만으로 간편하게 가입할 수 있습니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="feature-box">
+        <h3>🖥️ 사이드바 네비게이션</h3>
+        <p>로그인하거나 게스트 모드로 진입하면, 화면 왼쪽에 사이드바가 나타납니다. 사이드바에서 대시보드, 캘린더, 할 일 관리, 워크스페이스, 설정 페이지로 바로 이동할 수 있습니다. 화면 오른쪽 하단의 <strong>?</strong> 버튼을 누르면 언제든 이 사용 가이드로 돌아올 수 있습니다.</p>
+    </div>
+
+    <div class="tip-box">
+        <strong>💡 Tip</strong>
+        <p>처음 사용한다면 먼저 게스트 모드로 기능을 충분히 체험해보고, 마음에 들면 로그인해서 데이터를 클라우드에 영구 보관하는 것을 추천합니다.</p>
+    </div>
+
+    <div class="guide-nav">
+        <span></span>
+        <a href="/guide/guest-vs-login" class="next">게스트 vs 로그인 →</a>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/guide-footer :: guide-footer}"></footer>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="do·it의 두 가지 사용 모드를 상세히 비교합니다. 게스트 모드와 로그인 모드 각각의 특징과 추천 사용 상황.">
+    <title>게스트 모드와 로그인 모드의 차이 - do·it 사용 가이드</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/guide.css}">
+</head>
+<body>
+
+<nav>
+    <a href="/" class="nav-logo">do<span>·</span>it</a>
+    <div class="nav-links">
+        <a href="/guide" class="nav-back">← 가이드 목록</a>
+    </div>
+</nav>
+
+<main class="page-wrap">
+    <p style="font-size:0.78rem; color:var(--accent); font-weight:600; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:8px;">02 GUEST VS LOGIN</p>
+    <h1>게스트 모드와 로그인 모드의 차이</h1>
+    <p class="page-subtitle">do·it의 두 가지 사용 모드를 상세히 비교합니다. 게스트 모드와 로그인 모드 각각의 특징과 추천 사용 상황.</p>
+
+    <h2>두 가지 모드, 하나의 서비스</h2>
+    <p>do·it은 게스트 모드와 로그인 모드를 모두 지원합니다. 핵심 기능(할 일 등록, 캘린더, 대시보드)은 두 모드에서 동일하게 작동하지만, 데이터 저장 방식과 고급 기능에서 차이가 있습니다.</p>
+
+    <div class="compare-wrap">
+        <table class="compare">
+            <thead>
+            <tr><th>기능</th><th>게스트 모드</th><th>로그인 모드</th></tr>
+            </thead>
+            <tbody>
+            <tr><td>할 일 등록/삭제/완료</td><td class="badge-yes">✓</td><td class="badge-yes">✓</td></tr>
+            <tr><td>캘린더 일정 관리</td><td class="badge-yes">✓</td><td class="badge-yes">✓</td></tr>
+            <tr><td>대시보드 확인</td><td class="badge-yes">✓</td><td class="badge-yes">✓</td></tr>
+            <tr><td>데이터 저장 위치</td><td>브라우저 (LocalStorage)</td><td>클라우드 (서버 DB)</td></tr>
+            <tr><td>다른 기기에서 접속</td><td class="badge-no">✗</td><td class="badge-yes">✓</td></tr>
+            <tr><td>워크스페이스 (팀 협업)</td><td class="badge-no">✗</td><td class="badge-yes">✓</td></tr>
+            <tr><td>이메일 마감 알림</td><td class="badge-no">✗</td><td class="badge-yes">✓</td></tr>
+            <tr><td>장소 연동 (지도)</td><td class="badge-no">✗</td><td class="badge-yes">✓</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="feature-box">
+        <h3>💾 게스트 모드의 데이터 저장 방식</h3>
+        <p>게스트 모드에서는 모든 할 일 데이터가 브라우저의 LocalStorage에 저장됩니다. 이는 서버로 어떤 데이터도 전송되지 않는다는 뜻이며, 개인정보 걱정 없이 자유롭게 사용할 수 있습니다. 단, 브라우저의 데이터를 삭제하거나, 시크릿 모드를 사용하면 데이터가 사라지니 주의하세요.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>☁️ 로그인 모드의 클라우드 동기화</h3>
+        <p>로그인하면 모든 데이터가 서버 데이터베이스(PostgreSQL)에 저장됩니다. 어떤 기기에서든 로그인만 하면 동일한 데이터를 볼 수 있습니다. 또한 워크스페이스 기능으로 팀원과 함께 할 일을 공유하거나, 마감 알림 이메일을 받을 수 있습니다.</p>
+    </div>
+
+    <h2>어떤 모드를 선택해야 할까?</h2>
+    <div class="feature-box">
+        <h3>🙋 이런 분은 게스트 모드 추천</h3>
+        <ul>
+            <li>가볍게 한 번 써보고 싶은 분</li>
+            <li>개인 정보를 남기고 싶지 않은 분</li>
+            <li>하나의 기기에서만 사용하는 분</li>
+            <li>단기적인 할 일 관리만 필요한 분</li>
+        </ul>
+    </div>
+    <div class="feature-box">
+        <h3>🚀 이런 분은 로그인 모드 추천</h3>
+        <ul>
+            <li>여러 기기(PC + 스마트폰)에서 사용하는 분</li>
+            <li>장기적으로 할 일 히스토리를 관리하고 싶은 분</li>
+            <li>팀원과 함께 프로젝트를 진행하는 분</li>
+            <li>마감 알림 이메일이 필요한 분</li>
+        </ul>
+    </div>
+
+    <div class="tip-box">
+        <strong>💡 Tip</strong>
+        <p>게스트 모드는 "일단 써보고 결정"하기에 좋습니다. 브라우저를 닫아도 데이터가 유지되지만, 브라우저 데이터를 삭제하면 함께 사라지니 주의하세요.</p>
+    </div>
+
+    <div class="guide-nav">
+        <a href="/guide/getting-started" class="prev">← 시작하기</a>
+        <a href="/guide/todo" class="next">할 일 관리 →</a>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/guide-footer :: guide-footer}"></footer>
+
+</body>
+</html>
