@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="일정 관리, 할 일 관리, 생산성 팁에 대한 블로그. 무료 일정관리 도구 do·it 팀이 운영합니다.">
+    <title>블로그 - do·it</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/guide.css}">
+    <link rel="canonical" href="https://taskall.click/blog">
+    <style>
+        .blog-hero {
+            padding:80px 24px 60px; text-align:center;
+            background:linear-gradient(180deg, rgba(91,127,255,0.06) 0%, transparent 100%);
+        }
+        .blog-hero h1 {
+            font-family:'Instrument Serif',serif; font-size:clamp(2rem,4vw,3rem);
+            letter-spacing:-0.03em; margin-bottom:12px;
+        }
+        .blog-hero h1 em { color:var(--accent); font-style:normal; }
+        .blog-hero p { color:var(--muted); font-size:0.95rem; max-width:560px; margin:0 auto; }
+        .blog-grid {
+            max-width:800px; margin:0 auto; padding:0 24px 100px;
+            display:grid; gap:16px;
+        }
+        .blog-card {
+            background:#ffffff; border:1px solid var(--border); border-radius:14px;
+            padding:28px 28px 24px; text-decoration:none; color:var(--text);
+            transition:border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+        .blog-card:hover {
+            border-color:rgba(91,127,255,0.3); transform:translateY(-3px);
+            box-shadow:0 8px 24px rgba(0,0,0,0.04); text-decoration:none;
+        }
+        .blog-date { font-size:0.72rem; color:var(--muted); margin-bottom:6px; }
+        .blog-title { font-size:1.1rem; font-weight:600; margin-bottom:8px; line-height:1.4; }
+        .blog-excerpt { font-size:0.85rem; color:var(--muted); line-height:1.6; }
+        .blog-arrow { color:var(--accent); font-size:0.85rem; margin-top:12px; display:inline-block; transition:transform 0.2s; }
+        .blog-card:hover .blog-arrow { transform:translateX(4px); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="/" class="nav-logo">do<span>·</span>it</a>
+    <a href="/" class="nav-back">← 홈으로</a>
+</nav>
+
+<section class="blog-hero">
+    <h1>do·it <em>블로그</em></h1>
+    <p>일정 관리, 생산성, 할 일 관리에 대한 실용적인 팁과 방법론을 공유합니다.</p>
+</section>
+
+<div class="blog-grid">
+
+    <a href="/blog/daily-task-routine" class="blog-card">
+        <div class="blog-date">2026.03</div>
+        <div class="blog-title">직장인 할 일 관리 루틴 — 매일 5분으로 하루를 정리하는 방법</div>
+        <div class="blog-excerpt">매일 아침 5분 투자로 하루 업무를 체계적으로 관리하는 실전 루틴을 소개합니다. 우선순위 정하기, 마감일 기반 정리, 지연 작업 처리까지 단계별로 안내합니다.</div>
+        <div class="blog-arrow">읽기 →</div>
+    </a>
+
+</div>
+
+<footer th:replace="~{fragments/guide-footer :: guide-footer}"></footer>
+
+</body>
+</html>
