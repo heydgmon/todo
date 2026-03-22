@@ -21,7 +21,7 @@
             <a th:href="@{/todo}">📝 할 일 관리</a>
         </li>
         <li>
-            <a th:href="@{/workspace}">👥 워크스페이스</a>
+            <a th:href="@{/workspace}" onclick="if(window.__loggedIn!==true){event.preventDefault();document.getElementById('wsLoginAlert').style.display='flex';}">👥 워크스페이스</a>
         </li>
         <li>
             <a th:href="@{/settings}">

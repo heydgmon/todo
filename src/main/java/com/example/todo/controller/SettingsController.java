@@ -17,6 +17,7 @@ public class SettingsController {
             model.addAttribute("name", user.getAttribute("name"));
             model.addAttribute("email", user.getAttribute("email"));
             model.addAttribute("attributes", user.getAttributes());
+            model.addAttribute("loggedIn", true);  // ★ 이 줄 추가
         }
 
         return "settings";
