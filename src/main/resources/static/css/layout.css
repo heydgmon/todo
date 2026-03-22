@@ -105,6 +105,35 @@
     background: #e7f1ff;
 }
 
+/* ===== 도움말 플로팅 버튼 ===== */
+.help-fab {
+    position: fixed;
+    right: 20px;
+    bottom: 28px;
+    z-index: 200;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #5b7fff;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(91,127,255,0.25);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    line-height: 1;
+}
+
+.help-fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(91,127,255,0.35);
+}
+
 /* ===== FullCalendar 완료 이벤트 ===== */
 .fc-event.completed-event {
     background-color: #999 !important;
