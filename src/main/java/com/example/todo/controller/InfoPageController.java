@@ -26,4 +26,9 @@ public class InfoPageController {
     public String contact() {
         return "contact";
     }
+
+    @GetMapping("/guide")
+    public String guide() {
+        return "guide";
+    }
 }
