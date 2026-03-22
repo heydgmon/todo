@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /oauth2/
+Disallow: /login
+Disallow: /logout
+Disallow: /settings
+
+Sitemap: https://taskall.click/sitemap.xml
