@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GTD(Getting Things Done), 아이젠하워 매트릭스, 1-3-5 규칙 등 검증된 할 일 관리 방법론을 비교 분석합니다. 자신에게 맞는 방법을 찾아보세요.">
+    <title>할 일 관리 방법론 비교: GTD, 아이젠하워, 1-3-5 - do·it 생산성 가이드</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/guide.css}">
+</head>
+<body>
+
+<nav>
+    <a href="/" class="nav-logo">do<span>·</span>it</a>
+    <div class="nav-links"><a href="/tips" class="nav-back">← 생산성 가이드</a></div>
+</nav>
+
+<main class="page-wrap">
+    <p style="font-size:0.78rem;color:var(--accent);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">방법론</p>
+    <h1>할 일 관리 방법론 비교: GTD, 아이젠하워, 1-3-5</h1>
+    <p class="page-subtitle">수십 년간 검증된 세 가지 할 일 관리 프레임워크를 비교하고, 자신에게 맞는 방법을 찾아보세요.</p>
+
+    <h2>왜 방법론이 필요한가</h2>
+    <p>할 일 목록을 만드는 것만으로는 부족합니다. 목록이 길어질수록 무엇부터 해야 할지 판단이 어려워지고, 결국 중요한 일보다 급한 일에 끌려다니게 됩니다. 좋은 방법론은 할 일을 단순히 나열하는 것이 아니라, 우선순위를 정하고 실행 가능한 단위로 쪼개는 사고 체계를 제공합니다.</p>
+    <p>여기서 소개하는 세 가지 방법론은 각각 다른 철학을 가지고 있습니다. 자신의 업무 스타일과 성격에 맞는 것을 선택하거나, 여러 방법을 조합해서 쓸 수도 있습니다.</p>
+
+    <hr class="divider">
+
+    <h2>1. GTD (Getting Things Done)</h2>
+    <p>데이비드 앨런(David Allen)이 2001년에 제안한 GTD는 "머릿속을 비우는 것"에서 출발합니다. 할 일, 아이디어, 걱정거리를 전부 외부 시스템에 기록하면 뇌는 기억 대신 사고에 집중할 수 있다는 원리입니다.</p>
+
+    <div class="feature-box">
+        <h3>📥 GTD의 5단계 프로세스</h3>
+        <p><strong>수집(Capture):</strong> 머릿속에 떠오르는 모든 것을 한 곳에 모읍니다. 이메일, 메모, 음성 녹음 등 형태는 상관없습니다. 핵심은 "생각나는 즉시 기록"하는 습관입니다.</p>
+        <p><strong>명확화(Clarify):</strong> 수집한 각 항목에 대해 "이것은 실행 가능한 일인가?"를 판단합니다. 실행 가능하다면 다음 행동(Next Action)을 구체적으로 정의합니다. "프로젝트 진행하기"가 아니라 "김 팀장에게 기획서 초안 이메일 보내기"처럼요.</p>
+        <p><strong>정리(Organize):</strong> 명확화된 항목을 적절한 범주로 분류합니다. 프로젝트 목록, 언젠가/아마도 목록, 대기 목록, 참고 자료 등으로 나눕니다.</p>
+        <p><strong>검토(Reflect):</strong> 정기적으로 목록을 훑어보며 누락된 일이 없는지, 우선순위가 바뀐 것은 없는지 확인합니다. 특히 주간 리뷰가 GTD의 핵심 엔진입니다.</p>
+        <p><strong>실행(Engage):</strong> 현재 상황(시간, 에너지, 맥락)에 맞는 일을 선택해서 합니다. 미리 정리해둔 덕분에 "지금 뭘 해야 하지?"라는 고민 없이 바로 실행할 수 있습니다.</p>
+    </div>
+
+    <p><strong>GTD가 맞는 사람:</strong> 여러 프로젝트를 동시에 관리해야 하는 사람, 머릿속이 복잡해서 자주 불안한 사람, 체계적인 시스템을 좋아하는 사람에게 적합합니다. 초기 설정에 시간이 걸리지만, 일단 습관이 되면 강력합니다.</p>
+
+    <hr class="divider">
+
+    <h2>2. 아이젠하워 매트릭스</h2>
+    <p>미국 34대 대통령 드와이트 아이젠하워의 의사결정 방식에서 유래한 이 방법은 모든 할 일을 "긴급함"과 "중요함"의 두 축으로 분류합니다. 단순하지만 강력한 우선순위 도구입니다.</p>
+
+    <div class="feature-box">
+        <h3>📊 4개의 사분면</h3>
+        <p><strong>1사분면 — 긴급하고 중요한 일 (즉시 실행):</strong> 오늘 마감인 보고서, 긴급 고객 대응, 건강 문제 등. 여기 속한 일은 지금 바로 해야 합니다. 다만, 이 사분면에 일이 너무 많다면 사전 계획이 부족하다는 신호입니다.</p>
+        <p><strong>2사분면 — 긴급하지 않지만 중요한 일 (계획하여 실행):</strong> 운동, 독서, 장기 프로젝트 기획, 인간관계 관리 등. 가장 가치 있지만 가장 미루기 쉬운 일들입니다. 생산성의 핵심은 이 사분면에 충분한 시간을 투자하는 것입니다.</p>
+        <p><strong>3사분면 — 긴급하지만 중요하지 않은 일 (위임):</strong> 대부분의 이메일, 일부 회의, 전화 응대 등. 급해 보이지만 실제로 나의 목표와 직결되지 않는 일들입니다. 가능하면 다른 사람에게 위임하거나 간소화합니다.</p>
+        <p><strong>4사분면 — 긴급하지도 중요하지도 않은 일 (제거):</strong> 습관적 SNS 스크롤, 불필요한 웹 서핑, 의미 없는 알림 확인 등. 이런 활동은 과감히 줄이거나 없앱니다.</p>
+    </div>
+
+    <p><strong>아이젠하워 매트릭스가 맞는 사람:</strong> 할 일은 많은데 정작 중요한 일은 못 하는 사람, "바쁜데 성과가 없다"고 느끼는 사람에게 적합합니다. 복잡한 시스템 없이 종이 한 장으로도 시작할 수 있어 진입 장벽이 낮습니다.</p>
+
+    <hr class="divider">
+
+    <h2>3. 1-3-5 규칙</h2>
+    <p>하루에 해야 할 일을 딱 9개로 제한하는 방법입니다. 큰 일 1개, 중간 일 3개, 작은 일 5개. 이것만 정하면 하루의 우선순위가 명확해집니다.</p>
+
+    <div class="feature-box">
+        <h3>🎯 1-3-5의 구조</h3>
+        <p><strong>1개의 큰 일:</strong> 오늘 반드시 끝내야 하는 가장 중요한 일입니다. 이것 하나만 완료해도 오늘 하루가 성공적이라고 느낄 수 있는 일을 고릅니다. 예: "프로젝트 제안서 초안 완성", "분기 실적 보고서 작성".</p>
+        <p><strong>3개의 중간 일:</strong> 큰 일만큼은 아니지만 꼭 처리해야 할 업무입니다. 30분~1시간 정도 소요되는 일이 적당합니다. 예: "팀 미팅 자료 준비", "코드 리뷰 3건 처리".</p>
+        <p><strong>5개의 작은 일:</strong> 금방 끝나는 자잘한 업무입니다. 이메일 답장, 경비 정산, 일정 확인 등 5~15분이면 처리 가능한 일들입니다.</p>
+    </div>
+
+    <p><strong>1-3-5 규칙이 맞는 사람:</strong> 할 일 목록이 20개, 30개로 늘어나서 부담스러운 사람, 완벽한 시스템보다 "오늘 뭘 할지"만 빠르게 정하고 싶은 사람에게 적합합니다. 가장 단순하고 시작이 쉬운 방법입니다.</p>
+
+    <hr class="divider">
+
+    <h2>세 가지 방법 한눈에 비교</h2>
+
+    <div class="compare-wrap">
+        <table class="compare">
+            <thead>
+            <tr><th>항목</th><th>GTD</th><th>아이젠하워</th><th>1-3-5</th></tr>
+            </thead>
+            <tbody>
+            <tr><td>핵심 원리</td><td>머릿속 비우기</td><td>긴급/중요 분류</td><td>개수 제한</td></tr>
+            <tr><td>복잡도</td><td>높음</td><td>낮음</td><td>매우 낮음</td></tr>
+            <tr><td>초기 설정</td><td>시간 필요</td><td>즉시 시작</td><td>즉시 시작</td></tr>
+            <tr><td>적합한 상황</td><td>다중 프로젝트</td><td>우선순위 혼란</td><td>과부하 상태</td></tr>
+            <tr><td>약점</td><td>유지 비용 높음</td><td>세부 실행 부족</td><td>복잡한 업무 한계</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2>do·it에서 활용하기</h2>
+    <p>do·it의 우선순위 기능(HIGH, MEDIUM, LOW)은 아이젠하워 매트릭스와 자연스럽게 연결됩니다. 중요하고 긴급한 일은 HIGH로, 중요하지만 긴급하지 않은 일은 MEDIUM으로, 나머지는 LOW로 설정하세요.</p>
+    <p>1-3-5 규칙을 적용한다면, 매일 아침 대시보드에서 오늘 할 일을 확인하고 HIGH 1개, MEDIUM 3개, LOW 5개로 분류해보세요. do·it의 "오늘" 필터를 활용하면 오늘 처리할 일만 모아볼 수 있습니다.</p>
+    <p>GTD를 실천한다면, do·it의 할 일 등록 기능을 수집함(Inbox)으로, 캘린더를 일정 정리 도구로, 대시보드를 주간 리뷰 도구로 활용할 수 있습니다.</p>
+
+    <div class="tip-box">
+        <strong>💡 핵심 메시지</strong>
+        <p>완벽한 방법론은 없습니다. 중요한 것은 자신의 상황에 맞는 방법을 선택하고, 꾸준히 실천하는 것입니다. 처음이라면 가장 단순한 1-3-5 규칙부터 시작해서, 필요에 따라 아이젠하워나 GTD 요소를 추가해 나가는 것을 추천합니다.</p>
+    </div>
+
+    <div class="guide-nav">
+        <a href="/tips" class="prev">← 생산성 가이드</a>
+        <a href="/tips/time-management" class="next">시간 관리 원칙 →</a>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/tips-footer :: tips-footer}"></footer>
+
+</body>
+</html>

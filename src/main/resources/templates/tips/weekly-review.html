@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="매주 30분 투자로 업무 누수를 막고 우선순위를 재정렬하는 주간 리뷰 프로세스. 구체적인 체크리스트와 실천 방법을 안내합니다.">
+    <title>주간 리뷰: 한 주를 정리하고 다음 주를 설계하는 방법 - do·it 생산성 가이드</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/guide.css}">
+</head>
+<body>
+
+<nav>
+    <a href="/" class="nav-logo">do<span>·</span>it</a>
+    <div class="nav-links"><a href="/tips" class="nav-back">← 생산성 가이드</a></div>
+</nav>
+
+<main class="page-wrap">
+    <p style="font-size:0.78rem;color:var(--accent);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">루틴</p>
+    <h1>주간 리뷰: 한 주를 정리하고 다음 주를 설계하는 방법</h1>
+    <p class="page-subtitle">매주 30분이면 충분합니다. 주간 리뷰는 생산성 시스템을 유지하는 가장 확실한 방법입니다.</p>
+
+    <h2>왜 주간 리뷰가 필요한가</h2>
+    <p>아무리 좋은 할 일 관리 시스템을 갖추고 있어도, 정기적으로 점검하지 않으면 서서히 무너집니다. 등록해놓고 잊은 일, 상황이 바뀌어 더 이상 유효하지 않은 일, 빠뜨린 중요한 일들이 쌓이기 시작합니다.</p>
+    <p>주간 리뷰는 이런 누수를 막는 정비 시간입니다. 비행기 조종사가 이륙 전 체크리스트를 확인하듯, 매주 한 번 자신의 할 일 시스템을 점검하는 것입니다. GTD의 창시자 데이비드 앨런은 주간 리뷰를 "GTD를 살아있게 만드는 심장"이라고 표현했습니다.</p>
+
+    <hr class="divider">
+
+    <h2>주간 리뷰의 3단계</h2>
+
+    <div class="feature-box">
+        <h3>📋 1단계: 정리하기 (10분)</h3>
+        <p>먼저 이번 한 주를 깨끗이 정리합니다.</p>
+        <p><strong>수집함 비우기:</strong> 메모, 이메일, 메시지 등에 흩어져 있는 할 일이나 아이디어를 모두 do·it에 등록합니다. 머릿속에 떠도는 것도 포함됩니다. "아, 그것도 해야 하는데"라는 생각이 있다면 지금 적어두세요.</p>
+        <p><strong>완료 항목 정리:</strong> 이미 끝난 일인데 아직 완료 처리하지 않은 것들을 체크합니다. do·it에서 완료 버튼을 눌러 깨끗하게 정리하세요.</p>
+        <p><strong>무효 항목 삭제:</strong> 상황이 바뀌어 더 이상 할 필요 없는 일은 과감히 삭제합니다. 할 일 목록이 늘어날수록 심리적 부담이 커지므로, 불필요한 항목은 적극적으로 걸러내세요.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>🔍 2단계: 검토하기 (10분)</h3>
+        <p>정리가 끝나면 전체 상황을 조감합니다.</p>
+        <p><strong>지연된 일 점검:</strong> do·it 대시보드의 "지연" 항목을 확인합니다. 마감일이 지난 일이 있다면, 새로운 마감일을 설정하거나 우선순위를 조정합니다. 지연이 반복되는 일은 근본 원인을 생각해보세요. 일이 너무 크다면 작게 쪼개고, 동기가 부족하다면 왜 이 일을 해야 하는지 재확인합니다.</p>
+        <p><strong>캘린더 확인:</strong> 지난주 캘린더를 보며 빠뜨린 후속 조치가 없는지 확인합니다. 회의에서 나온 액션 아이템, 약속 후 해야 할 일 등을 점검합니다. 그리고 다음 주 캘린더를 보며 준비가 필요한 일정이 있는지 확인합니다.</p>
+        <p><strong>프로젝트별 현황:</strong> 진행 중인 프로젝트가 여러 개라면, 각 프로젝트의 다음 행동(Next Action)이 명확한지 확인합니다. "프로젝트 A 진행"이 아니라 "프로젝트 A의 데이터 분석 결과를 김 팀장에게 공유"처럼 구체적인 다음 단계가 있어야 합니다.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>🎯 3단계: 계획하기 (10분)</h3>
+        <p>마지막으로 다음 주를 설계합니다.</p>
+        <p><strong>주간 핵심 목표 설정:</strong> 다음 주에 반드시 달성할 1~3가지 핵심 목표를 정합니다. "이번 주가 끝나면 무엇이 완료되어 있어야 하는가?"라는 질문에 답하세요.</p>
+        <p><strong>일별 대략적 배분:</strong> 핵심 목표를 달성하기 위한 작업을 요일별로 대략 배분합니다. do·it 캘린더에 마감일을 설정하면 자연스럽게 주간 계획이 됩니다.</p>
+        <p><strong>우선순위 조정:</strong> 전체 할 일 목록을 훑어보며 우선순위를 재설정합니다. 이번 주에는 LOW였지만 다음 주에는 HIGH가 되어야 하는 일이 있을 수 있습니다.</p>
+    </div>
+
+    <hr class="divider">
+
+    <h2>주간 리뷰를 습관으로 만드는 팁</h2>
+
+    <p><strong>요일과 시간을 고정하세요.</strong> 가장 많이 추천되는 시간은 금요일 오후입니다. 한 주의 기억이 생생한 상태에서 정리하고, 월요일 아침에 바로 실행할 수 있기 때문입니다. 금요일이 어렵다면 일요일 저녁도 좋습니다.</p>
+
+    <p><strong>완벽하게 하려고 하지 마세요.</strong> 30분이면 충분합니다. 처음에는 15분만 해도 괜찮습니다. 완벽한 리뷰를 가끔 하는 것보다, 간단한 리뷰를 매주 하는 것이 훨씬 효과적입니다.</p>
+
+    <p><strong>편안한 환경을 만드세요.</strong> 좋아하는 카페에서, 좋아하는 음악을 틀며, 좋아하는 음료를 마시면서 하세요. 주간 리뷰가 "해야 하는 일"이 아니라 "나를 위한 시간"이 되면 꾸준히 할 수 있습니다.</p>
+
+    <p><strong>리뷰 후 작은 보상을 주세요.</strong> 주간 리뷰를 마친 후 좋아하는 간식을 먹거나, 넷플릭스 한 편을 보는 등 보상을 연결하면 습관 형성에 도움이 됩니다.</p>
+
+    <h2>do·it으로 주간 리뷰하기</h2>
+    <p>do·it은 주간 리뷰에 필요한 모든 정보를 한 곳에서 제공합니다. 대시보드에서 이번 주 현황(오늘 할 일, 이번 주 할 일, 지연 건수)을 한눈에 파악하고, 할 일 관리 페이지에서 전체 목록을 검토하고, 캘린더에서 다음 주 일정을 확인하세요.</p>
+    <p>"이번주" 필터를 활용하면 이번 주에 해야 할 일만 모아볼 수 있어 리뷰가 더 빨라집니다.</p>
+
+    <div class="tip-box">
+        <strong>💡 핵심 메시지</strong>
+        <p>주간 리뷰는 생산성 시스템의 "유지보수"입니다. 자동차도 정기 점검 없이 계속 달리면 고장 나듯, 할 일 관리도 정기 점검이 필요합니다. 매주 30분의 투자가 한 주 내내 명확한 방향을 유지하게 해줍니다.</p>
+    </div>
+
+    <div class="guide-nav">
+        <a href="/tips/remote-work" class="prev">← 재택근무 생산성</a>
+        <a href="/tips/habit-building" class="next">습관 만들기 →</a>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/tips-footer :: tips-footer}"></footer>
+
+</body>
+</html>

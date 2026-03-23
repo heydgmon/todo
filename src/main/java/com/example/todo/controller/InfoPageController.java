@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  * - 개인정보 처리방침 (Privacy Policy)
  * - 문의 (Contact)
  * - 사용 가이드 허브 + 개별 가이드 페이지
+ * - 생산성 가이드 허브 + 개별 아티클 페이지
  */
 @Controller
 public class InfoPageController {
@@ -71,5 +72,37 @@ public class InfoPageController {
     @GetMapping("/guide/tips")
     public String guideTips() {
         return "guide/tips";
+    }
+
+    // ===== 생산성 가이드 (Tips) =====
+
+    @GetMapping("/tips")
+    public String tips() {
+        return "tips";
+    }
+
+    @GetMapping("/tips/productivity")
+    public String tipsProductivity() {
+        return "tips/productivity";
+    }
+
+    @GetMapping("/tips/time-management")
+    public String tipsTimeManagement() {
+        return "tips/time-management";
+    }
+
+    @GetMapping("/tips/remote-work")
+    public String tipsRemoteWork() {
+        return "tips/remote-work";
+    }
+
+    @GetMapping("/tips/weekly-review")
+    public String tipsWeeklyReview() {
+        return "tips/weekly-review";
+    }
+
+    @GetMapping("/tips/habit-building")
+    public String tipsHabitBuilding() {
+        return "tips/habit-building";
     }
 }
