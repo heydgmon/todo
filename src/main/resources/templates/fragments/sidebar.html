@@ -21,10 +21,10 @@
             <a th:href="@{/todo}">📝 할 일 관리</a>
         </li>
         <li>
-            <a th:href="@{/workspace}" onclick="if(window.__loggedIn!==true){event.preventDefault();document.getElementById('wsLoginAlert').style.display='flex';}">👥 워크스페이스</a>
+            <a th:href="@{/workspace}" data-login-required="true">👥 워크스페이스</a>
         </li>
         <li>
-            <a th:href="@{/settings}">
+            <a th:href="@{/settings}" data-login-required="true">
                 ⚙ 설정
             </a>
         </li>
@@ -33,20 +33,84 @@
     <!-- 오른쪽 하단 도움말 버튼 (position:fixed이므로 sidebar 안에 있어도 화면 우하단에 표시됨) -->
     <a th:href="@{/guide}" class="help-fab" title="사용 가이드">?</a>
 
-    <!-- 로그인 필요 팝업 -->
-    <div id="wsLoginAlert" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);z-index:9999;justify-content:center;align-items:center;" onclick="if(event.target===this)this.style.display='none'">
-        <div style="background:#fff;border-radius:20px;padding:36px 32px 28px;max-width:360px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.15);">
-            <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#dbeafe,#bfdbfe);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.5rem;">🔒</div>
-            <h4 style="font-size:1.05rem;font-weight:600;color:#111827;margin-bottom:8px;">로그인이 필요합니다</h4>
-            <p style="font-size:0.88rem;color:#6b7280;margin-bottom:24px;line-height:1.5;">워크스페이스는 로그인 후<br>사용할 수 있는 기능입니다.</p>
-            <a href="/oauth2/authorization/cognito" style="display:inline-block;background:linear-gradient(135deg,#5b7fff,#7c9cff);color:#fff;border:none;padding:10px 36px;border-radius:12px;font-size:0.9rem;font-weight:500;cursor:pointer;text-decoration:none;">로그인하기</a>
-            <div style="margin-top:12px;">
-                <button onclick="document.getElementById('wsLoginAlert').style.display='none'" style="background:none;border:none;color:#6b7280;font-size:0.82rem;cursor:pointer;">닫기</button>
-            </div>
-        </div>
-    </div>
-
 </div>
+
+<!-- ===== 게스트용: 로그인 필요 안내 모달 + 클릭 인터셉트 ===== -->
+<script>
+    (function() {
+        document.addEventListener('DOMContentLoaded', function() {
+            // 로그인 상태면 아무것도 하지 않음
+            if (window.__loggedIn === true) return;
+
+            /* ── 1) 모달 HTML을 body 맨 끝에 동적 삽입 ──
+                  sidebar나 .content 안이 아닌 body 직속이므로
+                  z-index 겹침/stacking context 문제가 발생하지 않음 */
+            var modalEl = document.createElement('div');
+            modalEl.id = 'sb-login-modal';
+            modalEl.style.cssText =
+                'display:none; position:fixed; top:0; left:0; width:100%; height:100%;' +
+                'background:rgba(0,0,0,0.45); backdrop-filter:blur(4px);' +
+                'z-index:99999; justify-content:center; align-items:center;';
+
+            modalEl.innerHTML =
+                '<div style="' +
+                    'background:#fff; border-radius:20px; padding:36px 32px 28px;' +
+                    'max-width:360px; width:90%; text-align:center;' +
+                    'box-shadow:0 20px 60px rgba(0,0,0,0.18);' +
+                    'animation:sbSlideUp 0.3s cubic-bezier(0.16,1,0.3,1);' +
+                '">' +
+                    '<div style="' +
+                        'width:56px; height:56px; border-radius:50%;' +
+                        'background:linear-gradient(135deg,#dbeafe,#bfdbfe);' +
+                        'display:flex; align-items:center; justify-content:center;' +
+                        'margin:0 auto 16px; font-size:1.5rem;' +
+                    '">🔒</div>' +
+                    '<h4 style="font-size:1.05rem; font-weight:600; color:#111827; margin:0 0 8px;">로그인이 필요합니다</h4>' +
+                    '<p style="font-size:0.88rem; color:#6b7280; margin:0 0 24px; line-height:1.5;">' +
+                        '이 기능은 로그인 후 이용할 수 있습니다.<br>로그인하시겠습니까?' +
+                    '</p>' +
+                    '<div style="display:flex; gap:10px; justify-content:center;">' +
+                        '<button id="sb-login-close" style="' +
+                            'padding:10px 24px; border-radius:12px; font-size:0.9rem; font-weight:500;' +
+                            'cursor:pointer; border:none; background:#e5e7eb; color:#374151;' +
+                        '">닫기</button>' +
+                        '<a href="/oauth2/authorization/cognito" style="' +
+                            'padding:10px 24px; border-radius:12px; font-size:0.9rem; font-weight:500;' +
+                            'cursor:pointer; border:none; text-decoration:none; display:inline-block;' +
+                            'background:linear-gradient(135deg,#5b7fff,#7c9cff); color:#fff;' +
+                        '">로그인</a>' +
+                    '</div>' +
+                '</div>';
+
+            document.body.appendChild(modalEl);
+
+            // keyframes 추가 (고유 이름으로 충돌 방지)
+            var style = document.createElement('style');
+            style.textContent = '@keyframes sbSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}';
+            document.head.appendChild(style);
+
+            /* ── 2) 모달 열기/닫기 ── */
+            function openModal()  { modalEl.style.display = 'flex'; }
+            function closeModal() { modalEl.style.display = 'none'; }
+
+            document.getElementById('sb-login-close').addEventListener('click', closeModal);
+            modalEl.addEventListener('click', function(e) { if (e.target === modalEl) closeModal(); });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modalEl.style.display === 'flex') closeModal();
+            });
+
+            /* ── 3) data-login-required 링크 클릭 인터셉트 ── */
+            var links = document.querySelectorAll('[data-login-required="true"]');
+            for (var i = 0; i < links.length; i++) {
+                links[i].addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openModal();
+                });
+            }
+        });
+    })();
+</script>
 
 </body>
 </html>
