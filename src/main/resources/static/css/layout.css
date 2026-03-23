@@ -1,4 +1,9 @@
 /* ===== 전체 레이아웃 ===== */
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
 .layout {
     display: flex;
     min-height: 100vh;
@@ -22,6 +27,7 @@
 
 /* 로고 */
 .sidebar .logo {
+    font-family: 'Instrument Serif', serif;
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 40px;
