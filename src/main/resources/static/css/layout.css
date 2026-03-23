@@ -1,9 +1,14 @@
-/* ===== 전체 레이아웃 ===== */
+/* ===== 글로벌 리셋 (Bootstrap 유무와 무관하게 동일 렌더링) ===== */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 html, body {
     margin: 0;
     padding: 0;
 }
 
+/* ===== 전체 레이아웃 ===== */
 .layout {
     display: flex;
     min-height: 100vh;
